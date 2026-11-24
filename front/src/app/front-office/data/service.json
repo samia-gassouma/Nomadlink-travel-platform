@@ -1,0 +1,30 @@
+[
+    {
+        "id":1,
+        "title":"Book Hotel",
+        "image": "assets/Homepic/h1.jpg",
+        "text":"Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "link":"/hotel-grid"
+    },
+    {
+        "id":2,
+        "title":"Book Flights",
+        "image": "assets/Homepic/f3.jpg",
+        "text":"Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "link":"/flight-grid"
+    },
+    {
+        "id":3,
+        "title":"Book Cruise",
+        "image": "assets/Homepic/c1.jpg",
+        "text":"Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "link":"/cruise-grid"
+    },
+    {
+        "id":4,
+        "title":"Hire Cars",
+        "image": "assets/Homepic/c2.jpg",
+        "text":"Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "link":"/car-grid"
+    }
+]

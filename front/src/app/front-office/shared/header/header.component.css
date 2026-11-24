@@ -1,0 +1,24 @@
+.cart-info .cart-icon {
+    position: relative;
+}
+
+.cart-info .cart-quantity {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red; /* cercle rouge */
+    color: white;           /* texte blanc */
+    border-radius: 50%;     /* forme ronde */
+    padding: 3px 7px;       /* ajusté pour réduire la taille */
+    font-size: 10px;        /* taille du texte réduite */
+    font-weight: bold;
+    min-width: 20px;        /* largeur minimale pour que le cercle ne devienne pas trop petit */
+    height: 20px;           /* hauteur du cercle */
+    display: flex;
+    align-items: center;    /* centrer le texte verticalement */
+    justify-content: center; /* centrer le texte horizontalement */
+}
+
+.cart-info .cart-icon i {
+    font-size: 24px;        /* taille de l'icône */
+}

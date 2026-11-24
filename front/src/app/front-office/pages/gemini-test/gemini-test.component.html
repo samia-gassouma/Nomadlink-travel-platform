@@ -1,0 +1,155 @@
+<!-- gemini-test.component.html -->
+<app-header></app-header>
+<div class="assistant-container">
+  <div class="header">
+    <div class="assistant-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 16.5H2C2 16.5 7 10 7 6C7 3.79 8.79 2 11 2H13C15.21 2 17 3.79 17 6C17 10 22 16.5 22 16.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M9 22L11.05 16.5H12.95L15 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="header-title">TravelAssist</div>
+    <div class="date">{{ today | date:'dd MMMM yyyy' }}</div>
+  </div>
+
+  <div class="chat-area" #chatArea>
+    <!-- État vide -->
+    <div class="empty-state" *ngIf="!formattedResponse && !errorMessage && !isLoading">
+      <div class="empty-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 12.998V18.998C22 19.5304 21.7893 20.0391 21.4142 20.4142C21.0391 20.7893 20.5304 20.998 19.998 20.998H3.998C3.46557 20.998 2.95686 20.7893 2.58179 20.4142C2.20672 20.0391 1.998 19.5304 1.998 18.998V4.998C1.998 4.46557 2.20672 3.95686 2.58179 3.58179C2.95686 3.20672 3.46557 2.998 3.998 2.998H9.998" stroke="#5B8AF5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M14.998 12.498L19.998 12.998L17.998 8.998L14.998 2.998H11.998L14.998 12.498Z" stroke="#5B8AF5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="empty-text">Comment puis-je vous aider avec votre voyage aujourd'hui ?</div>
+
+      <div class="suggestion-categories">
+        <div class="category-title">Réservation de vol</div>
+        <div class="suggestion-chips">
+          <div class="chip" (click)="selectSuggestion('Je cherche un vol Paris-New York pour 2 personnes avec un budget de 800€ max')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 12.998H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 18.998V6.998" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Recherche par budget
+          </div>
+          <div class="chip" (click)="selectSuggestion('Quelles sont les meilleures compagnies pour voler vers Barcelone ?')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 16V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 8H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Comparer compagnies
+          </div>
+          <div class="chip" (click)="selectSuggestion('Vol avec le meilleur rapport qualité-prix pour Tokyo')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 1L15 9H21L16 14L18 22L12 17.5L6 22L8 14L3 9H9L12 1Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Meilleur rapport qualité-prix
+          </div>
+        </div>
+
+        <div class="category-title">Services voyageur</div>
+        <div class="suggestion-chips">
+          <div class="chip" (click)="selectSuggestion('Conseils pour bagages long-courrier')">Conseils bagages</div>
+          <div class="chip" (click)="selectSuggestion('Options d\'enregistrement anticipé')">Enregistrement</div>
+          <div class="chip" (click)="selectSuggestion('Quelles sont les meilleures options de siège pour un vol de 8h ?')">Choix de siège</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message d'erreur -->
+    <div class="error-message" *ngIf="errorMessage">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M12 8V12" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M12 16H12.01" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      {{ errorMessage }}
+      <button class="retry-button" (click)="retryRequest()">Réessayer</button>
+    </div>
+
+    <!-- Message utilisateur -->
+    <div class="message user-message" *ngIf="userPrompt && (isLoading || formattedResponse)">
+      <div class="message-avatar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="message-content">
+        {{ userPrompt }}
+      </div>
+    </div>
+
+    <!-- Animation de chargement -->
+    <div class="loading" *ngIf="isLoading">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- Réponse Assistant -->
+    <div class="message ai-message" *ngIf="formattedResponse">
+      <div class="message-avatar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 16.5H2C2 16.5 7 10 7 6C7 3.79 8.79 2 11 2H13C15.21 2 17 3.79 17 6C17 10 22 16.5 22 16.5Z" stroke="#5B8AF5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M9 22L11.05 16.5H12.95L15 22" stroke="#5B8AF5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="message-content" [innerHTML]="formattedResponse"></div>
+    </div>
+  </div>
+
+  <div class="input-container">
+    <form (ngSubmit)="sendRequest()">
+      <div class="input-wrapper">
+        <input
+                type="text"
+                class="input-field"
+                [(ngModel)]="userPrompt"
+                name="userPrompt"
+                placeholder="Questions sur les vols, destinations, budget..."
+                autocomplete="off"
+                [disabled]="isLoading"
+        >
+        <div class="input-actions">
+          <button
+                  type="button"
+                  class="voice-button"
+                  *ngIf="!isListening"
+                  (click)="startVoiceInput()"
+                  [disabled]="isLoading"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M19 10v2a7 7 0 01-14 0v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 19v4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M8 23h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button
+                  type="button"
+                  class="voice-button listening"
+                  *ngIf="isListening"
+                  (click)="stopVoiceInput()"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 6L6 18" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6 6L18 18" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button
+                  type="submit"
+                  class="send-button"
+                  [disabled]="isLoading || !userPrompt.trim()"
+          >
+            <svg class="send-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="currentColor"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

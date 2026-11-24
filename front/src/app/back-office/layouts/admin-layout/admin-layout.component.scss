@@ -1,0 +1,25 @@
+.admin-container {
+  display: flex;
+  flex-direction: column; /* Arrange topbar, sidebar, and content vertically */
+  height: 100vh;
+}
+
+.admin-content {
+  display: flex;
+  flex: 1; /* Ensure it takes the remaining space */
+}
+
+.content {
+  display: flex;
+  justify-content: center; /* Horizontally center the content */
+  align-items: center; /* Vertically center the content */
+  height: 100%; /* Ensure it fills the container's height */
+  width: 100%; /* Ensure it fills the container's width */
+}
+
+.wrapper-content {
+  display: flex;
+  padding: 20px; /* Optional: Add padding around the content */
+  max-width: 1200px; /* Optional: Set a max width for the content */
+  width: 100%; /* Ensure the wrapper takes full width */
+}

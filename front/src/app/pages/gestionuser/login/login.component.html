@@ -1,0 +1,134 @@
+<!-- auth-page wrapper -->
+<div class="auth-page-wrapper auth-bg-cover py-5 d-flex justify-content-center align-items-center min-vh-100">
+  <div class="bg-overlay"></div>
+  <!-- auth-page content -->
+  <div class="auth-page-content overflow-hidden pt-lg-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card overflow-hidden m-0">
+            <div class="row justify-content-center g-0">
+              <!-- Left panel with branding and travel quote -->
+              <div class="col-lg-6">
+                <div class="p-lg-5 p-4 auth-one-bg h-100">
+                  <div class="bg-overlay"></div>
+                  <div class="position-relative h-100 d-flex flex-column">
+                    <div class="mb-4">
+                      <a routerLink="/" class="d-block">
+                        <h2 class="text-white">NomadLink</h2>
+                      </a>
+                    </div>
+
+                    <!-- Featured image from assets -->
+                    <div class="text-center my-5">
+                      <img src="../../../../assets/gestionuser/u14.png" alt="Travel" class="img-fluid">
+                    </div>
+
+                    <div class="mt-auto text-center">
+                      <div class="mb-3">
+                        <i class="ri-double-quotes-l display-4 text-white"></i>
+                      </div>
+                      <p class="fs-15 text-white">"In attractive way to travel"</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right panel with login form -->
+              <div class="col-lg-6">
+                <div class="p-lg-5 p-4">
+                  <div>
+                    <h5 class="text-primary">Welcome Back!</h5>
+                    <p class="text-muted">Sign in to continue to your journey.</p>
+                  </div>
+
+                  <!-- Alert messages -->
+                  <div *ngIf="errorMsg.length" class="alert alert-danger mt-4">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <span *ngFor="let msg of errorMsg">{{ msg }}</span>
+                  </div>
+
+                  <div class="mt-4">
+                    <form (ngSubmit)="login()">
+                      <!-- Email -->
+                      <div class="mb-3">
+                        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="email" [(ngModel)]="authRequest.email"
+                               name="email" placeholder="Enter your email" required>
+                      </div>
+
+                      <!-- Password -->
+                      <div class="mb-3">
+                        <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+                        <div class="position-relative auth-pass-inputgroup">
+                          <input [type]="passwordVisible ? 'text' : 'password'" class="form-control pe-5" id="password"
+                                 [(ngModel)]="authRequest.password" name="password" placeholder="Enter your password" required>
+                          <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none shadow-none text-muted password-addon"
+                                  type="button" (click)="togglePasswordVisibility()">
+                            <i class="ri-eye-fill align-middle" [ngClass]="{'ri-eye-off-fill': !passwordVisible, 'ri-eye-fill': passwordVisible}"></i>
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- Remember me / Forgot password -->
+                      <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="remember-check">
+                          <label class="form-check-label" for="remember-check">Remember me</label>
+                        </div>
+<!--                        <a href="javascript:void(0);" class="text-primary text-decoration-underline">Forgot password?</a>-->
+                        <div class="form-group text-end">
+                          <a [routerLink]="['/forget-password']" class="forgot-password-link">Forgot password?</a>
+                        </div>
+                      </div>
+
+                      <!-- Login button -->
+                      <div class="mt-4">
+                        <button class="btn btn-primary w-100" type="submit" [disabled]="loading">
+                          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                          {{ loading ? 'Signing in...' : 'Sign In' }}
+                        </button>
+                      </div>
+
+                      <!-- Social login options -->
+                      <div class="mt-4 text-center">
+                        <div class="signin-other-title">
+                          <h5 class="fs-13 mb-4 title text-muted">Sign in with</h5>
+                        </div>
+
+                        <div class="d-flex gap-2 justify-content-center">
+                          <button type="button" class="btn btn-primary btn-icon waves-effect waves-light"><i class="ri-facebook-fill fs-16"></i></button>
+                          <button type="button" class="btn btn-danger btn-icon waves-effect waves-light"><i class="ri-google-fill fs-16"></i></button>
+                          <button type="button" class="btn btn-dark btn-icon waves-effect waves-light"><i class="ri-github-fill fs-16"></i></button>
+                          <button type="button" class="btn btn-info btn-icon waves-effect waves-light"><i class="ri-twitter-fill fs-16"></i></button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+
+                  <!-- Register link -->
+                  <div class="mt-5 text-center">
+                    <p class="mb-0">Don't have an account? <a (click)="register()" class="fw-semibold text-primary text-decoration-underline cursor-pointer">Sign Up</a></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="text-center">
+            <p class="mb-0">&copy; {{2025}} All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>

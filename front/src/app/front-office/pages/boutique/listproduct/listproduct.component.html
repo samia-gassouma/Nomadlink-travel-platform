@@ -1,0 +1,160 @@
+<app-header></app-header>
+
+<section class="product-showcase bg-light">
+  <div class="container py-5">
+    <!-- Bouton flottant Commandes avec badge pour les commandes en attente -->
+    <div class="floating-command-button" (click)="openCommandes()" title="Voir mes commandes">
+      <div class="command-button-content">
+        <i class="fas fa-receipt"></i>
+        <span class="notification-badge" *ngIf="pendingOrdersCount > 0">{{pendingOrdersCount}}</span>
+      </div>
+      <span class="tooltip-text">Mes Commandes</span>
+    </div>
+
+    <!-- En-tête avec titre et filtres -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="section-header">
+          <h2 class="section-title">Nos Produits</h2>
+          <p class="text-muted">Découvrez notre sélection de {{filteredProducts.length}} articles</p>
+        </div>
+        
+        <div class="filters-container">
+          <div class="category-chips">
+            <div class="chip" [class.active]="selectedCategoryId === null" (click)="selectedCategoryId = null; filterByCategory()">
+              Tous
+            </div>
+            <div class="chip" *ngFor="let cat of filteredCategories" 
+                 [class.active]="selectedCategoryId === cat.id" 
+                 (click)="selectedCategoryId = cat.id; filterByCategory()">
+              {{cat.name}}
+            </div>
+          </div>
+          
+          <div class="sort-dropdown">
+            <select class="form-select" [(ngModel)]="sortOption" (change)="sortProducts()">
+              <option value="nameAsc">Nom A-Z</option>
+              <option value="nameDesc">Nom Z-A</option>
+              <option value="priceAsc">Prix ↑</option>
+              <option value="priceDesc">Prix ↓</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grille des produits -->
+    <div class="row g-4">
+      <div class="col-sm-6 col-lg-4" *ngFor="let product of filteredProducts.slice((page - 1) * itemsPerPage, page * itemsPerPage)">
+        <div class="product-card">
+          <!-- Image du produit -->
+          <div class="product-image">
+            <ngb-carousel *ngIf="getAllImageUrls(product).length > 0"
+                         [interval]="getAllImageUrls(product).length > 1 ? 3000 : 0"
+                         [showNavigationArrows]="getAllImageUrls(product).length > 1"
+                         [showNavigationIndicators]="getAllImageUrls(product).length > 1">
+              <ng-template ngbSlide *ngFor="let imgUrl of getAllImageUrls(product); let i = index">
+                <img [src]="imgUrl" [alt]="product.nom" class="product-img">
+              </ng-template>
+            </ngb-carousel>
+            
+            <div class="category-badge">{{getCategoryName(product.categorie)}}</div>
+            
+            <div class="stock-status" [class.out-of-stock]="product.stock === 0">
+              {{product.stock > 0 ? 'En stock' : 'Rupture'}}
+            </div>
+          </div>
+
+          <!-- Contenu du produit -->
+          <div class="product-content">
+            <h4 class="product-title">
+              <a [routerLink]="['/product-details', product.id]">{{product.nom}}</a>
+            </h4>
+            
+            <div class="product-price">
+              <span class="price-value">{{product.prix | number: '1.2-2'}} <small>TND</small></span>
+            </div>
+            
+            <p class="product-description">
+              {{ isDescriptionExpanded(product.id) 
+                  ? product.description 
+                  : (product.description?.slice(0, 100) + ((product.description?.length ?? 0) > 100 ? '...' : '')) 
+              }}
+            
+              <a *ngIf="(product.description?.length ?? 0) > 100"
+                 (click)="toggleDescription(product.id)" 
+                 class="read-more">
+                {{ isDescriptionExpanded(product.id) ? 'Lire moins' : 'Lire plus' }}
+              </a>
+            </p>
+            <div class="rating-details">
+              <div class="stars-display">
+                <i class="fas fa-star"
+                   *ngFor="let star of [1,2,3,4,5]"
+                   [ngClass]="getStarClass(product.id, star)">
+                </i>
+              </div>
+              
+              <!-- Nombre d'avis affiché -->
+              <div class="rating-count">
+                {{ reviewCounts[product.id] || 0 }} avis
+              </div>
+            </div>
+            
+
+            <!-- Actions du produit -->
+            <div class="product-actions">
+              <div class="quantity-selector">
+                <button class="quantity-btn" (click)="decreaseQuantity(product.id)" [disabled]="(quantityByProductId[product.id] || 1) <= 1">-</button>
+                <input type="number" min="1" class="quantity-input" [(ngModel)]="quantityByProductId[product.id]" [value]="quantityByProductId[product.id] || 1">
+                <button class="quantity-btn" (click)="increaseQuantity(product.id)">+</button>
+              </div>
+              
+              <div class="action-buttons">
+                <button class="btn-view" [routerLink]="['/product-details', product.id]">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn-cart" (click)="addToCart(product)" [disabled]="product.stock === 0">
+                  <i class="fas fa-shopping-cart"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Message si aucun produit -->
+      <div class="col-12" *ngIf="filteredProducts.length === 0">
+        <div class="empty-products">
+          <i class="fas fa-box-open"></i>
+          <p>Aucun produit disponible dans cette catégorie.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-container" *ngIf="filteredProducts.length > itemsPerPage">
+      <button class="pagination-btn" [disabled]="page === 1" (click)="setPage(page - 1)">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      
+      <div class="page-numbers">
+        <button *ngFor="let p of [].constructor(totalPages < 5 ? totalPages : 5); let i = index"
+               [class.active]="getPageNumberToShow(i) === page"
+               (click)="setPage(getPageNumberToShow(i))" 
+               class="page-number">
+          {{getPageNumberToShow(i)}}
+        </button>
+      </div>
+      
+      <button class="pagination-btn" [disabled]="page === totalPages" (click)="setPage(page + 1)">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Bouton retour en haut -->
+    <button *ngIf="windowScrolled" class="back-to-top" (click)="scrollToTopOnClick()">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+  </div>
+</section>

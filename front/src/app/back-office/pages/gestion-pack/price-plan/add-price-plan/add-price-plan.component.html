@@ -1,0 +1,30 @@
+<form [formGroup]="pricePlanForm" (ngSubmit)="submitForm()">
+    <div class="col-xxl-3 col-md-6">
+    <div class="mb-3">
+        <label for="placeholderInput" class="form-label">Description:</label>
+        <input formControlName="description" type="text" class="form-control" id="placeholderInput"
+            placeholder="description">
+    </div>
+</div>
+    <div class="col-xxl-3 col-md-6">
+        <div class="mb-3">
+            <label for="choices-single-default" class="form-label">Plan Type:</label>
+            <select formControlName="name" class="form-select mb-3" aria-label="Default select example">
+                <option *ngFor="let type of pricePlanTypes" [value]="type">{{ type }}</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="col-xxl-3 col-md-6">
+        <div>
+            <label for="placeholderInput" class="form-label">Price</label>
+            <input formControlName="price" type="number" class="form-control" id="placeholderInput"
+                placeholder="Percentage">
+        </div>
+    </div>
+    <div class="col-lg-4 mt-4 mb-4">
+        <div class="text-end">
+            <button  [disabled]="pricePlanForm.invalid" type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+</form>

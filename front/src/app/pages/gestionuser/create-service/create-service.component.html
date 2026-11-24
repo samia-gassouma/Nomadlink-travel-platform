@@ -1,0 +1,190 @@
+<app-header></app-header>
+<div class="service-creation-container">
+
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="alert alert-success mb-3">
+        {{ successMessage }}
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-danger mb-3">
+        {{ errorMessage }}
+    </div>
+
+    <div class="col-12 mb-4">
+        <div class="header-container d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Create New Service</h2>
+            <button class="btn btn-outline-secondary" (click)="onCancel()">
+                <i class="fas fa-arrow-left me-1"></i> Back to Profile
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Image Upload Section -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title mb-3">Service Image</h3>
+                    <div class="text-center">
+                        <div class="service-image position-relative d-inline-block mx-auto mb-3">
+                            <img *ngIf="imageUrl; else defaultImage"
+                                 [src]="imageUrl"
+                                 class="img-fluid rounded service-preview-image shadow"
+                                 alt="Service Image"
+                                 (error)="handleImageError()">
+                            <ng-template #defaultImage>
+                                <div class="default-image bg-light rounded d-flex justify-content-center align-items-center">
+                                    <i class="fas fa-image fa-3x text-muted"></i>
+                                </div>
+                            </ng-template>
+
+                            <div class="mt-3">
+                                <input id="service-img-file-input" type="file" class="d-none"
+                                       accept="image/*" (change)="onFileSelected($event)">
+                                <label for="service-img-file-input" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-upload me-1"></i> Upload Image
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Show selected file name if needed -->
+                        <div *ngIf="selectedFile" class="mt-2 text-muted small">
+                            Selected: {{ selectedFile.name }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service Creation Form -->
+        <div class="col-md-8">
+            <form [formGroup]="serviceForm" (ngSubmit)="onSubmit()" class="service-form">
+                <div class="card">
+                    <div class="card-body">
+                        <!-- Service Name -->
+                        <div class="form-group mb-3">
+                            <label for="name">Service Name*</label>
+                            <input
+                                    type="text"
+                                    id="name"
+                                    formControlName="name"
+                                    class="form-control"
+                                    [ngClass]="{'is-invalid': name?.invalid && (name?.dirty || name?.touched)}"
+                            >
+                            <div *ngIf="name?.invalid && (name?.dirty || name?.touched)" class="invalid-feedback">
+                                <div *ngIf="name?.errors?.['required']">Service name is required.</div>
+                                <div *ngIf="name?.errors?.['minlength']">Service name must be at least 3 characters.</div>
+                            </div>
+                        </div>
+
+                        <!-- Service Description -->
+                        <div class="form-group mb-3">
+                            <label for="description">Description*</label>
+                            <textarea
+                                    id="description"
+                                    formControlName="description"
+                                    class="form-control"
+                                    rows="4"
+                                    [ngClass]="{'is-invalid': description?.invalid && (description?.dirty || description?.touched)}"
+                            ></textarea>
+                            <div *ngIf="description?.invalid && (description?.dirty || description?.touched)" class="invalid-feedback">
+                                <div *ngIf="description?.errors?.['required']">Description is required.</div>
+                                <div *ngIf="description?.errors?.['minlength']">Description must be at least 10 characters.</div>
+                            </div>
+                        </div>
+
+                        <!-- Service Price -->
+                        <div class="form-group mb-3">
+                            <label for="price">Price*</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div>
+                                <input
+                                        type="number"
+                                        id="price"
+                                        formControlName="price"
+                                        class="form-control"
+                                        min="0"
+                                        step="0.01"
+                                        [ngClass]="{'is-invalid': price?.invalid && (price?.dirty || price?.touched)}"
+                                >
+                                <div *ngIf="price?.invalid && (price?.dirty || price?.touched)" class="invalid-feedback">
+                                    <div *ngIf="price?.errors?.['required']">Price is required.</div>
+                                    <div *ngIf="price?.errors?.['min']">Price cannot be negative.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Service Category -->
+                        <div class="form-group mb-3">
+                            <label for="category">Category*</label>
+                            <select
+                                    id="category"
+                                    formControlName="category"
+                                    class="form-control"
+                                    [ngClass]="{'is-invalid': category?.invalid && (category?.dirty || category?.touched)}"
+                            >
+                                <option value="" disabled>Select a category</option>
+                                <option *ngFor="let cat of serviceCategories" [value]="cat">
+                                    {{ cat.replace('_', ' ') }}
+                                </option>
+                            </select>
+                            <div *ngIf="category?.invalid && (category?.dirty || category?.touched)" class="invalid-feedback">
+                                <div *ngIf="category?.errors?.['required']">Category is required.</div>
+                            </div>
+                        </div>
+                        <!-- Service Status -->
+                        <!-- Dropdown Status amélioré -->
+                        <!-- Alternative avec boutons radio au lieu d'un dropdown -->
+                        <div class="form-group mb-3">
+                            <label>Status*</label>
+                            <div class="status-toggle-container">
+                                <div class="status-toggle" [ngClass]="{'is-invalid': status?.invalid && (status?.dirty || status?.touched)}">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input visually-hidden" type="radio"
+                                               formControlName="status" id="statusAvailable" value="DISPONIBLE">
+                                        <label class="form-check-label status-label available-label" for="statusAvailable">
+                                            <i class="fas fa-check-circle me-1"></i> Available
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input visually-hidden" type="radio"
+                                               formControlName="status" id="statusUnavailable" value="INDISPONIBLE">
+                                        <label class="form-check-label status-label unavailable-label" for="statusUnavailable">
+                                            <i class="fas fa-times-circle me-1"></i> Unavailable
+                                        </label>
+                                    </div>
+                                </div>
+                                <div *ngIf="status?.invalid && (status?.dirty || status?.touched)" class="invalid-feedback">
+                                    <div *ngIf="status?.errors?.['required']">Status is required.</div>
+                                </div>
+                            </div>
+                        </div>                        <div class="form-group mt-4 d-flex justify-content-end">
+                            <button
+                                    type="button"
+                                    class="btn btn-secondary me-2"
+                                    [routerLink]="['/front-office/myprofilepartner']"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                    [disabled]="isLoading || serviceForm.invalid"
+                            >
+                                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                {{ isLoading ? 'Creating...' : 'Create Service' }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <p class="text-muted">* Required fields</p>
+    </div>
+</div>

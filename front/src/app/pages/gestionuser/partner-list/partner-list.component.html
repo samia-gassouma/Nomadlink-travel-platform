@@ -1,0 +1,283 @@
+<!-- partner-list.component.html -->
+<div class="partner-list-container">
+  <div class="list-header">
+    <div class="title-section">
+      <h2>Partner Management</h2>
+      <p class="results-count">Showing {{ filteredPartners.length }} partners</p>
+    </div>
+    <!-- Bouton pour créer un partenaire -->
+    <button class="btn-new-partner" (click)="navigateToCreatePartner()">
+      <i class="fas fa-plus"></i> New Partner
+    </button>
+  </div>
+  <!-- Statistics Widgets -->
+  <div class="statistics-dashboard">
+    <!-- Total Partners Widget -->
+    <div class="stat-widget">
+      <div class="total-services">
+        <div class="stat-icon">
+          <i class="fas fa-building"></i>
+        </div>
+        <div class="stat-content">
+          <h2 class="stat-value">{{ partners.length }}</h2>
+          <p class="stat-label">Total Partners</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Partners Widget -->
+    <div class="stat-widget">
+      <div class="total-services">
+        <div class="stat-icon available-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="stat-content">
+          <h2 class="stat-value">{{ getActivePartnersCount() }}</h2>
+          <p class="stat-label">Active Partners</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inactive Partners Widget -->
+    <div class="stat-widget">
+      <div class="total-services">
+        <div class="stat-icon unavailable-icon">
+          <i class="fas fa-times-circle"></i>
+        </div>
+        <div class="stat-content">
+          <h2 class="stat-value">{{ getInactivePartnersCount() }}</h2>
+          <p class="stat-label">Inactive Partners</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pending Partners Widget -->
+    <div class="stat-widget">
+      <div class="total-services">
+        <div class="stat-icon pending-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="stat-content">
+          <h2 class="stat-value">{{ getPendingPartnersCount() }}</h2>
+          <p class="stat-label">Pending Partners</p>
+        </div>
+      </div>
+    </div>
+    <!-- Deuxième ligne: Partenaires par catégorie, plus populaires, plus de services -->
+
+    <!-- Most Popular Partners (with most clients) -->
+    <div class="stat-widget popular-partners">
+      <div class="stat-header">
+        <i class="fas fa-users"></i>
+        <h3>Most Popular Partners</h3>
+      </div>
+      <div class="stat-chart">
+        <div class="chart-bar" *ngFor="let partner of getMostPopularPartners().slice(0, 5)">
+          <div class="bar-label">{{ partner.firstname }} {{ partner.lastname }}</div>
+          <div class="bar-container">
+            <div class="bar-fill" [style.width.%]="(getClientCountForPartner(partner.id) / getMaxClientCount()) * 100"></div>
+            <span class="bar-value">{{ getClientCountForPartner(partner.id) }} clients</span>
+          </div>
+        </div>
+        <p *ngIf="getMostPopularPartners().length === 0" class="no-data-text">No partner data available</p>
+      </div>
+    </div>
+    <div class="stat-widget category-distribution">
+      <div class="stat-header">
+        <i class="fas fa-chart-pie"></i>
+        <h3>Partners by Category</h3>
+      </div>
+      <div class="categories-grid">
+        <div class="category-stat-card" *ngFor="let category of businessCategories">
+          <div class="category-label" [ngClass]="'category-' + category.toLowerCase()">
+            {{ category.replace('_', ' ') }}
+          </div>
+          <div class="category-count">
+            {{ getPartnersCountByCategory(category) || 0 }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Partners with Most Services -->
+    <div class="stat-widget service-rich-partners">
+      <div class="stat-header">
+        <i class="fas fa-clipboard-list"></i>
+        <h3>Partners with Most Services</h3>
+      </div>
+      <div class="stat-chart">
+        <div class="chart-bar" *ngFor="let partner of getMostServicePartners().slice(0, 5)">
+          <div class="bar-label">{{ partner.firstname }} {{ partner.lastname }}</div>
+          <div class="bar-container">
+            <div class="bar-fill" [style.width.%]="(getServiceCountForPartner(partner.id) / getMaxServiceCount()) * 100"></div>
+            <span class="bar-value">{{ getServiceCountForPartner(partner.id) }} services</span>
+          </div>
+        </div>
+        <p *ngIf="getMostServicePartners().length === 0" class="no-data-text">No service data available</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="filter-controls">
+    <div class="search-container">
+      <input type="text" [formControl]="searchTerm" placeholder="Search partners..." class="search-input">
+      <select [formControl]="searchField" class="search-field-select">
+        <option value="name">By Name</option>
+        <option value="email">By Email</option>
+        <option value="phoneNumber">By Phone Number</option>
+      </select>
+    </div>
+
+    <div class="filter-options">
+      <div class="filter-group">
+        <label>Sort by:</label>
+        <select [formControl]="sortOrder" class="filter-select">
+          <option value="latestModified">Latest Modified</option>
+          <option value="oldestModified">Oldest Modified</option>
+          <option value="latestCreated">Latest Created</option>
+          <option value="oldestCreated">Oldest Created</option>
+          <option value="mostServices">Most Services</option>
+          <option value="fewestServices">Fewest Services</option>
+          <option value="mostClients">Most Clients</option>
+          <option value="fewestClients">Fewest Clients</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Account Status:</label>
+        <select [formControl]="enabledStatusFilter" class="filter-select">
+          <option value="all">All Partners</option>
+          <option value="active">Active Only</option>
+          <option value="inactive">Inactive Only</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Partnership Status:</label>
+        <select [formControl]="partnershipStatusFilter" class="filter-select">
+          <option value="all">All Statuses</option>
+          <option value="PENDING">Pending</option>
+          <option value="ACTIVE">Active</option>
+          <option value="INACTIVE">Inactive</option>
+          <option value="SUSPENDED">Suspended</option>
+          <option value="TERMINATED">Terminated</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Business Category:</label>
+        <select [formControl]="businessCategoryFilter" class="filter-select">
+          <option value="all">All Categories</option>
+          <option *ngFor="let category of businessCategories" [value]="category">
+            {{ category }}
+          </option>
+        </select>
+      </div>
+      <button class="btn btn-reset" (click)="resetFilters()">
+        <i class="fas fa-undo"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="loading-container" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Loading partners...</p>
+  </div>
+
+  <div class="table-responsive" *ngIf="!isLoading">
+    <table class="partner-table">
+      <thead>
+      <tr>
+        <th class="th-avatar">Photo</th>
+        <th class="th-name">Name</th>
+        <th class="th-email">Email</th>
+        <th class="th-category">Business Category</th>
+        <th class="th-phone">Phone Number</th>
+        <!-- Ajouter ces colonnes dans le <thead> -->
+        <th class="th-services-count">Services</th>
+        <th class="th-clients-count">Clients</th>
+
+        <th class="th-account-status">Account</th>
+        <th class="th-partnership-status">Partnership</th>
+        <th class="th-actions">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let partner of displayedPartners">
+        <!-- Cellule pour l'image de profil -->
+        <td class="td-avatar">
+          <div class="partner-avatar" [attr.data-partner-id]="partner.id">
+            <img *ngIf="getPartnerImageUrl(partner)" [src]="getPartnerImageUrl(partner)"
+                 alt="Profile" (error)="handleImageError($event)">
+            <div *ngIf="!getPartnerImageUrl(partner)" class="avatar-placeholder">
+              {{ getPartnerInitials(partner) }}
+            </div>
+          </div>
+        </td>
+        <td class="td-text-truncate" [title]="partner.firstname">{{ partner.firstname }}</td>
+        <td class="td-text-truncate" [title]="partner.email">{{ partner.email }}</td>
+        <td class="td-text-truncate" [title]="partner.businessCategory || 'N/A'">{{ partner.businessCategory || 'N/A' }}</td>
+        <td class="td-text-truncate" [title]="partner.phoneNumber || 'N/A'">{{ partner.phoneNumber || 'N/A' }}</td>
+        <!-- Ajouter ces cellules dans le <tr> pour chaque partenaire -->
+        <td>{{ getServiceCountForPartner(partner.id) }}</td>
+        <td>{{ getClientCountForPartner(partner.id) }}</td>
+        <td>
+          <span class="status-badge" [ngClass]="{'status-active': partner.enabled, 'status-inactive': !partner.enabled}">
+            {{ partner.enabled ? 'Active' : 'Inactive' }}
+          </span>
+        </td>
+        <td>
+          <span class="status-badge" [ngClass]="{
+            'status-pending': partner.partnershipStatus === 'PENDING',
+            'status-active': partner.partnershipStatus === 'ACTIVE',
+            'status-inactive': partner.partnershipStatus === 'INACTIVE',
+            'status-suspended': partner.partnershipStatus === 'SUSPENDED',
+            'status-terminated': partner.partnershipStatus === 'TERMINATED'
+          }">
+            {{ partner.partnershipStatus }}
+          </span>
+        </td>
+        <td class="actions-column">
+          <button class="icon-btn view-btn" title="View Details" (click)="onViewDetails(partner.id)">
+            <i class="fas fa-eye"></i>
+          </button>
+          <button class="icon-btn edit-btn" title="Edit Partner" (click)="onEdit(partner.id)">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="icon-btn delete-btn" title="Delete Partner" (click)="onDelete(partner.id)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="displayedPartners.length === 0 && !isLoading">
+        <td colspan="8" class="no-data">No partners found</td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination-container" *ngIf="totalPages > 1">
+      <div class="pagination">
+        <button class="pagination-btn" [disabled]="currentPage === 1" (click)="prevPage()">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <button *ngFor="let page of getPageArray()"
+                class="pagination-btn"
+                [class.active]="page === currentPage"
+                (click)="changePage(page)">
+          {{ page }}
+        </button>
+
+        <button class="pagination-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <div class="pagination-info">
+        Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ Math.min(currentPage * itemsPerPage, filteredPartners.length) }} of {{ filteredPartners.length }} partners
+      </div>
+    </div>
+  </div>
+</div>

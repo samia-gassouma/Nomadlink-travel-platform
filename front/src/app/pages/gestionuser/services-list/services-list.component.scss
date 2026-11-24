@@ -1,0 +1,805 @@
+.services-container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  margin: 20px auto;
+  max-width: 1200px;
+}
+
+// Header styling
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f0f0f0;
+
+  .title-section {
+    h2 {
+      color: #333;
+      font-size: 24px;
+      margin: 0 0 8px;
+    }
+
+    .results-count {
+      color: #777;
+      font-size: 14px;
+      margin: 0;
+    }
+  }
+}
+
+// Filter controls
+.filter-controls {
+  margin-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search-container {
+  display: flex;
+  flex: 1;
+  min-width: 200px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  label {
+    font-weight: 500;
+    color: #555;
+    white-space: nowrap;
+  }
+}
+
+.filter-select {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+  font-size: 14px;
+}
+
+.sort-order-btn {
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #e9ecef;
+  }
+
+  i {
+    color: #495057;
+  }
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 4px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+
+  &.btn-reset {
+    background-color: #f8f9fa;
+    color: #495057;
+    border: 1px solid #ced4da;
+
+    &:hover {
+      background-color: #e9ecef;
+    }
+  }
+}
+
+// Loading and error states
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid #3498db;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 16px;
+  border-radius: 4px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  i {
+    font-size: 18px;
+  }
+}
+
+// Table styling
+.table-responsive {
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+
+.services-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+// Column widths
+.th-image {
+  width: 80px;
+}
+
+.th-name {
+  width: 15%;
+}
+
+.th-partner {
+  width: 15%;
+}
+
+.th-category {
+  width: 10%;
+}
+
+.th-price {
+  width: 8%;
+}
+
+.th-status {
+  width: 10%;
+}
+
+.th-partnership {
+  width: 12%;
+}
+
+.th-actions {
+  width: 100px;
+}
+
+.services-table th,
+.services-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.services-table th {
+  background-color: #f9f9f9;
+  font-weight: 600;
+  color: #555;
+}
+
+.services-table tr:hover {
+  background-color: #f5f8fa;
+}
+
+// Service image styling
+.td-image {
+  padding: 8px !important;
+}
+
+.service-image {
+  width: 60px;
+  height: 45px;
+  overflow: hidden;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 18px;
+  }
+}
+
+// Text truncation
+.td-text-truncate {
+  max-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: default;
+}
+
+// Partner link styling
+.td-partner {
+  .partner-link {
+    color: #3498db;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// Category badge
+.td-category {
+  text-align: center;
+}
+
+.category-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: #e2f0ff;
+  color: #2c7be5;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+// Price column
+.td-price {
+  font-weight: 500;
+  color: #28a745;
+}
+
+// Status badges
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  display: inline-block;
+  min-width: 80px;
+}
+
+.status-available {
+  background-color: #e6f7ed;
+  color: #2ecc71;
+}
+
+.status-unavailable {
+  background-color: #fae9e8;
+  color: #e74c3c;
+}
+
+// Partnership status badges
+.partnership-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  display: inline-block;
+  min-width: 80px;
+}
+
+.status-active {
+  background-color: #e6f7ed;
+  color: #2ecc71;
+}
+
+.status-inactive {
+  background-color: #f8f9fa;
+  color: #6c757d;
+}
+
+.status-pending {
+  background-color: #fff3cd;
+  color: #856404;
+  margin-left: -10px;
+}
+
+.status-suspended {
+  background-color: #f8d7da;
+  color: #721c24;
+  margin-left: -10px;
+}
+
+.status-terminated {
+  background-color: #212529;
+  color: #ffffff;
+  margin-left: -10px;
+}
+
+.status-unknown {
+  background-color: #f8f9fa;
+  color: #6c757d;
+}
+
+// Action buttons
+.td-actions {
+  white-space: nowrap;
+  text-align: center;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  margin: 0 4px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: white;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.view-btn {
+  background-color: #3498db;
+
+  &:hover {
+    background-color: #2980b9;
+  }
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+
+  &:hover {
+    background-color: #c0392b;
+  }
+}
+
+// Empty state
+.no-data {
+  text-align: center;
+  padding: 40px 0 !important;
+}
+
+.no-data-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #6c757d;
+
+  i {
+    font-size: 24px;
+    margin-bottom: 12px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 16px;
+  }
+}
+
+// Pagination
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #eaeaea;
+}
+
+.pagination {
+  display: flex;
+  gap: 8px;
+}
+
+.pagination-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    background-color: #f0f0f0;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.active {
+    background-color: #3498db;
+    color: white;
+  }
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .filter-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-container {
+    margin-bottom: 16px;
+  }
+
+  .filter-options {
+    justify-content: flex-start;
+  }
+
+  .pagination-container {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .pagination {
+    justify-content: center;
+  }
+
+  .pagination-info {
+    text-align: center;
+  }
+}
+// Column width for users
+.th-users {
+  width: 8%;
+}
+
+// User count styling
+.td-users {
+  text-align: center;
+}
+
+.user-count {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: #f0f7ff;
+  color: #3498db;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 40px;
+}
+/* Statistics Dashboard */
+.statistics-dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-widget {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  overflow: hidden;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.total-services, .available-services, .unavailable-services {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.total-services .stat-icon {
+  background-color: #3498db;
+}
+
+.available-icon {
+  background-color: #2ecc71;
+}
+
+.unavailable-icon {
+  background-color: #e74c3c;
+}
+
+.stat-icon i {
+  font-size: 20px;
+  color: white;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 30px;
+  font-weight: 700;
+  margin: 0;
+  color: #333;
+}
+
+.stat-label {
+  margin: 5px 0 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.stat-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.stat-header i {
+  color: #3498db;
+  font-size: 18px;
+}
+
+.stat-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.category-stat-card {
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  padding: 8px;
+  text-align: center;
+}
+
+.category-label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.category-count {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.chart-bar {
+  margin-bottom: 8px;
+}
+
+.bar-label {
+  font-size: 13px;
+  margin-bottom: 3px;
+  font-weight: 500;
+  color: #555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bar-container {
+  height: 18px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background-color: #3498db;
+  transition: width 0.5s ease;
+}
+
+.bar-value {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+}
+
+.popular-item {
+  margin-top: 10px;
+}
+
+.item-name {
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-count {
+  font-size: 11px;
+  color: #666;
+}
+
+.no-data {
+  color: #999;
+  font-style: italic;
+  font-size: 12px;
+}
+
+.no-data-text {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 20px 0;
+}
+
+/* Styles pour chaque catégorie */
+.category-accommodation {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.category-transport {
+  background-color: #cce5ff;
+  color: #004085;
+}
+
+.category-tour_guide {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.category-activity {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.category-restaurant {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.category-wellness {
+  background-color: #e2e3e5;
+  color: #383d41;
+}
+
+.category-entertainment {
+  background-color: #e6d9f2;
+  color: #583d72;
+}
+
+.category-shopping {
+  background-color: #d6f5d6;
+  color: #285928;
+}
+
+.category-adventure {
+  background-color: #f5e6cc;
+  color: #73510d;
+}
+
+.category-event {
+  background-color: #ffe6e6;
+  color: #990000;
+}
+
+.category-sports {
+  background-color: #e6f9ff;
+  color: #006080;
+}
+
+.category-cruise {
+  background-color: #f2e6ff;
+  color: #4d0099;
+}
+
+.category-culture {
+  background-color: #fff0e6;
+  color: #804600;
+}
+
+.category-equipment_rental {
+  background-color: #e6ffe6;
+  color: #006600;
+}
+
+.category-travel_insurance {
+  background-color: #ffe6f2;
+  color: #990066;
+}
+
+.category-other {
+  background-color: #e6e6e6;
+  color: #333333;
+}
+
+/* Media queries */
+@media (max-width: 992px) {
+  .statistics-dashboard {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .statistics-dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-widget {
+    max-height: 250px;
+  }
+}

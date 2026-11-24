@@ -1,0 +1,167 @@
+<!-- Product Reviews Section -->
+<div class="product-reviews" *ngIf="product">
+  <h3 class="section-title">Avis clients</h3>
+  
+  <!-- Reviews Summary Card -->
+  <div class="reviews-summary-card">
+    <div class="rating-overview">
+      <div class="rating-circle">
+        <span class="rating-value">{{ averageRating | number:'1.1-1' }}</span>
+        <span class="rating-max">/5</span>
+      </div>
+      
+      <div class="rating-details">
+        <div class="stars-display">
+          <i class="fas fa-star" *ngFor="let star of [1,2,3,4,5]" 
+             [ngClass]="{
+               'active': star <= averageRating,
+               'half': star - 0.5 <= averageRating && star > averageRating
+             }"></i>
+        </div>
+        <div class="rating-count">{{ reviews.length }} avis</div>
+      </div>
+    </div>
+    
+    <button class="btn-write-review" (click)="toggleReviewForm()">
+      <i class="fas fa-pencil-alt"></i>
+      <span class="btn-text">Écrire un avis</span>
+    </button>
+  </div>
+  
+  <!-- Review Form - Animated Slide-down -->
+  <div class="review-form-container" [@slideInOut]="showReviewForm ? 'in' : 'out'">
+    <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+      <h4 class="form-title">Partagez votre avis</h4>
+      
+      <div class="form-group rating-group">
+        <label>Votre note</label>
+        <div class="rating-selector">
+          <i class="fas fa-star" *ngFor="let star of [1,2,3,4,5]; let i = index" 
+             [ngClass]="{
+               'active': i < selectedRating,
+               'hovered': i <= hoveredRating
+             }"
+             (mouseenter)="hoveredRating = i"
+             (mouseleave)="hoveredRating = -1"
+             (click)="selectRating(i + 1)"></i>
+        </div>
+        <div class="rating-text" *ngIf="selectedRating > 0">
+          {{ getRatingText(selectedRating) }}
+        </div>
+        <div class="form-error" *ngIf="reviewForm.get('rating')?.invalid && reviewForm.get('rating')?.touched">
+          Veuillez sélectionner une note
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="reviewerName">Votre nom</label>
+        <input type="text" id="reviewerName" formControlName="reviewerName" placeholder="Entrez votre nom">
+        <div class="form-error" *ngIf="reviewForm.get('reviewerName')?.invalid && reviewForm.get('reviewerName')?.touched">
+          Veuillez entrer votre nom
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="reviewComment">Votre avis</label>
+        <textarea id="reviewComment" formControlName="comment" rows="4" placeholder="Partagez votre expérience avec ce produit"></textarea>
+        <div class="form-error" *ngIf="reviewForm.get('comment')?.invalid && reviewForm.get('comment')?.touched">
+          Veuillez entrer un commentaire d'au moins 10 caractères
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="toggleReviewForm()">Annuler</button>
+        <button type="submit" class="btn-submit" [disabled]="reviewForm.invalid || isSubmitting">
+          <span *ngIf="!isSubmitting">Soumettre</span>
+          <span *ngIf="isSubmitting"><i class="fas fa-spinner fa-spin"></i></span>
+        </button>
+      </div>
+    </form>
+  </div>
+  
+  <!-- Filter and Sort Options -->
+  <div class="reviews-controls" *ngIf="reviews.length > 0">
+    <div class="filter-options">
+      <label>Filtrer par :</label>
+      <div class="star-filters">
+        <button class="star-filter-btn" 
+                *ngFor="let star of [5,4,3,2,1]" 
+                [class.active]="activeStarFilter === star"
+                (click)="filterByRating(star)">
+          {{ star }} <i class="fas fa-star"></i>
+        </button>
+        <button class="star-filter-btn all" 
+                [class.active]="activeStarFilter === 0"
+                (click)="resetFilter()">
+          Tous
+        </button>
+      </div>
+    </div>
+    
+    <div class="sort-options">
+      <label for="sortReviews">Trier par :</label>
+      <select id="sortReviews" (change)="sortReviews($event)">
+        <option value="newest">Plus récents</option>
+        <option value="oldest">Plus anciens</option>
+        <option value="highest">Note la plus élevée</option>
+        <option value="lowest">Note la plus basse</option>
+      </select>
+    </div>
+  </div>
+  
+  <!-- Reviews List with Card Design -->
+  <div class="reviews-list" *ngIf="filteredReviews.length > 0">
+    <div class="review-card" *ngFor="let review of filteredReviews" [@fadeIn]>
+      <div class="review-header">
+        <div class="reviewer-avatar">
+          {{ review.reviewerName.charAt(0).toUpperCase() }}
+        </div>
+        
+        <div class="reviewer-info">
+          <span class="reviewer-name">{{ review.reviewerName }}</span>
+          <span class="review-date">{{ review.date | date:'dd MMM yyyy' }}</span>
+        </div>
+      </div>
+      
+      <div class="review-rating">
+        <span class="rating-value">{{ review.rating }}</span>
+        <div class="stars">
+          <i class="fas fa-star" *ngFor="let star of [1,2,3,4,5]" 
+             [class.active]="star <= review.rating"></i>
+        </div>
+      </div>
+      
+      <div class="review-content">
+        {{ review.comment }}
+      </div>
+      
+      <div class="review-actions">
+        <button class="btn-helpful" (click)="markHelpful(review.id)">
+          <i class="far fa-thumbs-up"></i>
+          <span>Utile</span>
+          <span class="count" *ngIf="review.helpfulCount">{{ review.helpfulCount }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Empty State -->
+  <div class="no-reviews" *ngIf="reviews.length === 0 && !isLoading">
+    <div class="empty-state">
+      <i class="fas fa-comment-alt"></i>
+      <h4>Aucun avis pour ce produit</h4>
+      <p>Soyez le premier à partager votre expérience !</p>
+      <button class="btn-write-review" (click)="toggleReviewForm()">
+        <i class="fas fa-pencil-alt"></i> Rédiger un avis
+      </button>
+    </div>
+  </div>
+  
+  <!-- Loading State -->
+  <div class="reviews-loading" *ngIf="isLoading">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>Chargement des avis...</p>
+    </div>
+  </div>
+</div>

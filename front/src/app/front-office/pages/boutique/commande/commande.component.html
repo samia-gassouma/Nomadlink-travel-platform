@@ -1,0 +1,203 @@
+<app-header></app-header>
+
+<section class="section-padding bg-light-white">
+  <div class="container">
+    <nav aria-label="breadcrumb" class="product-breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a [routerLink]="['/']"><i class="fas fa-home"></i> Accueil</a></li>
+          <li class="breadcrumb-item"><a [routerLink]="['/shop']">Boutique</a></li>
+         
+          <li class="breadcrumb-item active" aria-current="page">Mes commandes</li>
+        </ol>
+      </nav>
+<section class="section-padding bg-light-white">
+    <div class="container">
+      <section class="commande-section">
+        <div class="container">
+          <!-- Tabs pour sélectionner les commandes en cours ou l'historique -->
+          <div class="tabs">
+            <button (click)="selectTab('encours')" [class.active]="selectedTab === 'encours'" class="tab-button">
+              <i class="fas fa-clock"></i> Commandes en cours
+            </button>
+            <button (click)="selectTab('historique')" [class.active]="selectedTab === 'historique'" class="tab-button">
+              <i class="fas fa-history"></i> Historique des commandes
+            </button>
+          </div>
+          
+          <!-- Commandes en cours -->
+          <div *ngIf="selectedTab === 'encours'" class="commandes-list">
+            <div *ngFor="let commande of commandesEnCours" class="commande-card">
+              <div class="commande-header">
+                <div class="client-info">
+                  <i class="fas fa-user-circle profile-icon"></i>
+                  <div>
+                    <h5>{{ commande.nom }} {{ commande.prenom }}</h5>
+                    <p class="date"><i class="far fa-calendar-alt"></i> {{ commande.dateCommande | date:'dd/MM/yyyy' }}</p>
+                  </div>
+                </div>
+                <div class="status-badge" [ngClass]="getStatusClass(commande.statut)">
+                  <div class="status-icon">
+                    <i [class]="getStatusIcon(commande.statut)"></i>
+                  </div>
+                  <span>{{ commande.statut }}</span>
+                </div>
+              </div>
+              
+              <div class="commande-content">
+                <div *ngFor="let ligne of commande.lignesCommande" class="product-item">
+                  <div class="product-info">
+                    <div class="product-details">
+                      <h6>{{ ligne.produit.nom }}</h6>
+                      <p class="quantity"><i class="fas fa-shopping-basket"></i> Quantité: {{ ligne.quantite }}</p>
+                      <p class="price"><i class="fas fa-tag"></i> Prix: {{ ligne.prixUnitaire | currency:'EUR' }}</p>
+                    </div>
+                  </div>
+                  
+                  <!-- Carousel pour les produits avec plusieurs images -->
+                  <div class="product-carousel" *ngIf="hasMultipleImages(ligne.produit)">
+                    <div class="carousel-container">
+                      <div class="carousel-inner">
+                        <div *ngFor="let img of ligne.produit.images; let i = index" 
+                             class="carousel-item" 
+                             [class.active]="activeSlides[ligne.produit.id] === i">
+                          <img [src]="'data:image/jpeg;base64,' + img.image" alt="Image du produit" class="product-image"/>
+                        </div>
+                      </div>
+                      <button class="carousel-control carousel-prev" (click)="prevSlide(ligne.produit.id)">
+                        <i class="fas fa-chevron-left"></i>
+                      </button>
+                      <button class="carousel-control carousel-next" (click)="nextSlide(ligne.produit.id)">
+                        <i class="fas fa-chevron-right"></i>
+                      </button>
+                      <div class="carousel-indicators">
+                        <span *ngFor="let img of ligne.produit.images; let i = index"
+                              class="indicator" 
+                              [class.active]="activeSlides[ligne.produit.id] === i"></span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Affichage simple pour les produits avec une seule image -->
+                  <div *ngIf="!hasMultipleImages(ligne.produit)" class="product-images">
+                    <img [src]="getAllImageUrls(ligne.produit)[0]" alt="Image du produit" class="product-image"/>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="commande-footer">
+                <div class="progression-timeline" *ngIf="isActiveOrder(commande.statut)">
+                  <div class="timeline-step" [class.active]="isStepActive(commande.statut, 'VALIDEE')">
+                    <div class="step-icon"><i class="fas fa-check-circle"></i></div>
+                    <span>Validée</span>
+                  </div>
+                  <div class="timeline-line"></div>
+                  <div class="timeline-step" [class.active]="isStepActive(commande.statut, 'EN_PREPARATION')">
+                    <div class="step-icon"><i class="fas fa-box-open"></i></div>
+                    <span>En préparation</span>
+                  </div>
+                  <div class="timeline-line"></div>
+                  <div class="timeline-step" [class.active]="isStepActive(commande.statut, 'EXPEDIEE')">
+                    <div class="step-icon"><i class="fas fa-shipping-fast"></i></div>
+                    <span>Expédiée</span>
+                  </div>
+                  <div class="timeline-line"></div>
+                  <div class="timeline-step" [class.active]="isStepActive(commande.statut, 'LIVREE')">
+                    <div class="step-icon"><i class="fas fa-home"></i></div>
+                    <span>Livrée</span>
+                  </div>
+                </div>
+                <div class="total-price">
+                  <p><strong>Total: {{ calculateTotal(commande) | currency:'EUR' }}</strong></p>
+                </div>
+              </div>
+            </div>
+            
+            <div *ngIf="commandesEnCours.length === 0" class="empty-state">
+              <i class="fas fa-shopping-cart"></i>
+              <p>Vous n'avez pas de commandes en cours</p>
+            </div>
+          </div>
+          
+          <!-- Commandes historiques -->
+          <div *ngIf="selectedTab === 'historique'" class="commandes-list">
+            <div *ngFor="let commande of commandesHistoriques" class="commande-card">
+              <div class="commande-header">
+                <div class="client-info">
+                  <i class="fas fa-user-circle profile-icon"></i>
+                  <div>
+                    <h5>{{ commande.nom }} {{ commande.prenom }}</h5>
+                    <p class="date"><i class="far fa-calendar-alt"></i> {{ commande.dateCommande | date:'dd/MM/yyyy' }}</p>
+                  </div>
+                </div>
+                <div class="status-badge" [ngClass]="getStatusClass(commande.statut)">
+                  <div class="status-icon">
+                    <i [class]="getStatusIcon(commande.statut)"></i>
+                  </div>
+                  <span>{{ commande.statut }}</span>
+                </div>
+              </div>
+              
+              <div class="commande-content">
+                <div *ngFor="let ligne of commande.lignesCommande" class="product-item">
+                  <div class="product-info">
+                    <div class="product-details">
+                      <h6>{{ ligne.produit.nom }}</h6>
+                      <p class="quantity"><i class="fas fa-shopping-basket"></i> Quantité: {{ ligne.quantite }}</p>
+                      <p class="price"><i class="fas fa-tag"></i> Prix: {{ ligne.prixUnitaire| currency:'EUR' }}</p>
+                    </div>
+                  </div>
+                  
+                  <!-- Carousel pour les produits avec plusieurs images -->
+                  <div class="product-carousel" *ngIf="hasMultipleImages(ligne.produit)">
+                    <div class="carousel-container">
+                      <div class="carousel-inner">
+                        <div *ngFor="let img of ligne.produit.images; let i = index" 
+                             class="carousel-item" 
+                             [class.active]="activeSlides[ligne.produit.id] === i">
+                          <img [src]="'data:image/jpeg;base64,' + img.image" alt="Image du produit" class="product-image"/>
+                        </div>
+                      </div>
+                      <button class="carousel-control carousel-prev" (click)="prevSlide(ligne.produit.id)">
+                        <i class="fas fa-chevron-left"></i>
+                      </button>
+                      <button class="carousel-control carousel-next" (click)="nextSlide(ligne.produit.id)">
+                        <i class="fas fa-chevron-right"></i>
+                      </button>
+                      <div class="carousel-indicators">
+                        <span *ngFor="let img of ligne.produit.images; let i = index"
+                              class="indicator" 
+                              [class.active]="activeSlides[ligne.produit.id] === i"></span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Affichage simple pour les produits avec une seule image -->
+                  <div *ngIf="!hasMultipleImages(ligne.produit)" class="product-images">
+                    <img [src]="getAllImageUrls(ligne.produit)[0]" alt="Image du produit" class="product-image"/>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="commande-footer">
+                <div class="completed-date" *ngIf="commande.statut === 'LIVREE'">
+                  <i class="fas fa-check-circle"></i> Livrée le {{ commande.dateCommande | date:'dd/MM/yyyy' }}
+                </div>
+                <div class="cancelled-date" *ngIf="commande.statut === 'ANNULEE'">
+                  <i class="fas fa-times-circle"></i> Annulée le {{ commande.dateCommande | date:'dd/MM/yyyy' }}
+                </div>
+                <div class="total-price">
+                  <p><strong>Total: {{ calculateTotal(commande) | currency:'EUR' }}</strong></p>
+                </div>
+              </div>
+            </div>
+            
+            <div *ngIf="commandesHistoriques.length === 0" class="empty-state">
+              <i class="fas fa-history"></i>
+              <p>Vous n'avez pas d'historique de commandes</p>
+            </div>
+          </div>
+          
+        </div>
+      </section>
+    </div>
+  </section>
+</div>
+</section>

@@ -1,0 +1,163 @@
+
+<!-- ADMIN PAGE HTML -->
+<div class="admin-dashboard">
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <header>
+      <h1>Création d’un vol ✈️</h1>
+    </header>
+
+    <!-- Info cards dynamiques -->
+    <section class="info-cards">
+      <div class="card">
+        <h4>Vols aujourd'hui</h4>
+        <p>{{ volsAujourdhui }}</p>
+      </div>
+      <div class="card">
+        <h4>Vols annulés</h4>
+        <p>{{ volsAnnules }}</p>
+      </div>
+      <div class="card">
+        <h4>Total vols créés</h4>
+        <p>{{ totalVols }}</p>
+      </div>
+    </section>
+
+    <!-- Formulaire -->
+    <section class="form-section">
+      <form [formGroup]="createVolForm" (ngSubmit)="submitForm()">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="compagnie">Compagnie</label>
+            <input id="compagnie" formControlName="compagnie" type="text" required>
+            <div *ngIf="createVolForm.get('compagnie')?.invalid && createVolForm.get('compagnie')?.touched" class="text-danger">
+              Ce champ est requis.
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="numeroVol">Numéro du vol</label>
+            <input id="numeroVol" formControlName="numeroVol" type="text" required>
+            <div *ngIf="createVolForm.get('numeroVol')?.invalid && createVolForm.get('numeroVol')?.touched" class="text-danger">
+              Ce champ est requis.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="aeroportDepart">Aéroport départ</label>
+            <input id="aeroportDepart" formControlName="aeroportDepart" type="text" required>
+            <div *ngIf="createVolForm.get('aeroportDepart')?.invalid && createVolForm.get('aeroportDepart')?.touched" class="text-danger">
+              Ce champ est requis.
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="aeroportArrivee">Aéroport arrivée</label>
+            <input id="aeroportArrivee" formControlName="aeroportArrivee" type="text" required>
+            <div *ngIf="createVolForm.get('aeroportArrivee')?.invalid && createVolForm.get('aeroportArrivee')?.touched" class="text-danger">
+              Ce champ est requis.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dateDepart">Date départ</label>
+            <input id="dateDepart" formControlName="dateDepart" type="datetime-local" required>
+            <div *ngIf="createVolForm.get('dateDepart')?.invalid && createVolForm.get('dateDepart')?.touched" class="text-danger">
+              Ce champ est requis.
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="dateArrivee">Date arrivée</label>
+            <input id="dateArrivee" formControlName="dateArrivee" type="datetime-local" required>
+            <div *ngIf="createVolForm.get('dateArrivee')?.invalid && createVolForm.get('dateArrivee')?.touched" class="text-danger">
+              Ce champ est requis.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dureeVol">Durée</label>
+            <input id="dureeVol" formControlName="dureeVol" type="text" required>
+            <div *ngIf="createVolForm.get('dureeVol')?.invalid && createVolForm.get('dureeVol')?.touched" class="text-danger">
+              Ce champ est requis.
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="typeAvion">Type d’avion</label>
+            <input id="typeAvion" formControlName="typeAvion" type="text" required>
+            <div *ngIf="createVolForm.get('typeAvion')?.invalid && createVolForm.get('typeAvion')?.touched" class="text-danger">
+              Ce champ est requis.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="prix">Prix</label>
+            <input id="prix" formControlName="prix" type="number" required>
+            <div *ngIf="createVolForm.get('prix')?.invalid && createVolForm.get('prix')?.touched" class="text-danger">
+              Ce champ est requis.
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="siegesDisponibles">Sièges disponibles</label>
+            <input id="siegesDisponibles" formControlName="siegesDisponibles" type="number" required>
+            <div *ngIf="createVolForm.get('siegesDisponibles')?.invalid && createVolForm.get('siegesDisponibles')?.touched" class="text-danger">
+              Ce champ est requis.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="classe">Classe</label>
+            <select id="classe" formControlName="classe" required>
+              <option value="">-- Choisir --</option>
+              <option value="Économie">Économie</option>
+              <option value="Affaires">Affaires</option>
+              <option value="Première">Première</option>
+            </select>
+            <div *ngIf="createVolForm.get('classe')?.invalid && createVolForm.get('classe')?.touched" class="text-danger">
+              Ce champ est requis.
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="statut">Statut</label>
+            <select id="statut" formControlName="statut" required>
+              <option value="">-- Choisir --</option>
+              <option value="Programmé">Programmé</option>
+              <option value="Retardé">Retardé</option>
+              <option value="Annulé">Annulé</option>
+            </select>
+            <div *ngIf="createVolForm.get('statut')?.invalid && createVolForm.get('statut')?.touched" class="text-danger">
+              Ce champ est requis.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="bagagesAutorises">Bagages autorisés</label>
+            <input id="bagagesAutorises" formControlName="bagagesAutorises" type="text" required>
+            <div *ngIf="createVolForm.get('bagagesAutorises')?.invalid && createVolForm.get('bagagesAutorises')?.touched" class="text-danger">
+              Ce champ est requis.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group button-group">
+          <button type="submit" [disabled]="!createVolForm.valid">Ajouter le vol</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Confirmation message -->
+    <div *ngIf="successMessage" class="success-message">
+      {{ successMessage }}
+    </div>
+  </div>
+</div>

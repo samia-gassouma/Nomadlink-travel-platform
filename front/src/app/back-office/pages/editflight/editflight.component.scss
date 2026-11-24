@@ -1,0 +1,161 @@
+/* Conteneur général */
+.page-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    animation: fadeInUp 0.6s ease-out;
+  }
+  
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* En-tête de la page */
+  .page-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .page-header h1 {
+    font-size: 2rem;
+    color: #333;
+    font-weight: bold;
+  }
+  
+  .page-header p {
+    color: #666;
+  }
+  
+  /* Informations sur le vol */
+  .flight-info {
+    margin-bottom: 30px;
+  }
+  
+  .flight-info h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  .flight-info ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .flight-info li {
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  /* Formulaire d'édition */
+  .edit-flight-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .edit-flight-container h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    font-weight: bold;
+    color: #555;
+    font-size: 1rem;
+    margin-bottom: 8px;
+    display: block;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-group input:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+  }
+  
+  /* Boutons */
+  .form-action {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .submit-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submit-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .back-to-list {
+    margin-top: 30px;
+    text-align: center;
+  }
+  
+  .back-btn {
+    background-color: #6c757d;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .back-btn:hover {
+    background-color: #5a6268;
+  }
+  
+  /* Amélioration de l'aspect général */
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f2f5;
+  }
+  /* Applique le même style que les champs input à la liste déroulante */
+form .form-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 15px;
+  }
+  
+  form .form-group select:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  

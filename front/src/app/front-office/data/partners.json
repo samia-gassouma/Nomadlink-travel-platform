@@ -1,0 +1,35 @@
+[
+    {
+        "id":1,
+        "image": "assets/Homepic/p1.jpg"
+    },
+    {
+        "id":2,
+        "image": "assets/Homepic/p5.png"
+    },
+    {
+        "id":3,
+        "image": "assets/Homepic/p3.jpg"
+    },
+    {
+        "id":4,
+        "image": "assets/Homepic/p4.jpg"
+    },
+    {
+        "id":5,
+        "image": "assets/Homepic/p2.jpg"
+
+    },
+    {
+        "id":6,
+        "image": "assets/Homepic/p6.jpg"
+    },
+    {
+        "id":7,
+        "image": "assets/Homepic/p7.jpg"
+    },
+    {
+        "id":8,
+        "image": "assets/Homepic/p8.jpg"
+    }
+]

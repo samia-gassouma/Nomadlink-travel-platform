@@ -1,0 +1,65 @@
+<app-header></app-header>
+<div *ngIf="destinationDetails" class="destination-card">
+  <!-- Best Time Badge -->
+  <div class="best-time">{{ bestTimeToVisit }}</div>
+  
+  <h2>{{ destinationDetails.name }}</h2>
+  
+  <!-- Main Image -->
+  <img *ngIf="destinationDetails.mainImageUrl" [src]="'http://localhost:9000/picloud/api/activities/images/' + destinationDetails.mainImageUrl" alt="Activity image"  />
+  
+  <!-- Description -->
+  <p class="description">{{ destinationDetails.description }}</p>
+  
+  <!-- Basic Information -->
+  <div class="destination-info">
+    <div class="info-item">
+      <strong>Country</strong>
+      <p>{{ destinationDetails.country }}</p>
+    </div>
+    
+    <div class="info-item">
+      <strong>Language</strong>
+      <p>{{ destinationDetails.language }}</p>
+    </div>
+    
+    <div class="info-item">
+      <strong>Currency</strong>
+      <p>{{ destinationDetails.currency }}</p>
+    </div>
+    
+    <div class="info-item">
+      <strong>Climate</strong>
+      <p>{{ destinationDetails.climate }}</p>
+    </div>
+    
+    <div class="info-item">
+      <strong>Visa Required</strong>
+      <p>{{ destinationDetails.visaRequired ? 'Yes' : 'No' }}</p>
+    </div>
+  </div>
+  
+  <!-- Safety Tips -->
+  <div class="safety-tips">
+    <strong>Safety Tips</strong>
+    <p>{{ destinationDetails.safetyTips }}</p>
+  </div>
+  
+  <!-- Gallery Section -->
+  <div *ngIf="imageGallery.length > 0" class="gallery-section">
+    <h3>Gallery</h3>
+    <div class="gallery">
+      <div *ngFor="let img of imageGallery" class="gallery-item">
+        <img [src]="'http://localhost:9000/picloud/api/activities/images/' + img" alt="Gallery Image" />
+      </div>
+    </div>
+  </div>
+  
+  <!-- Map Section -->
+  <div *ngIf="mapLoaded" class="map-section">
+    <h3>Map</h3>
+    <div class="map-container">
+      <iframe [src]="safeMapUrl" height="400" frameborder="0"></iframe>
+    </div>
+  </div>
+</div>

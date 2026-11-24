@@ -1,0 +1,154 @@
+<div class="services-list-container">
+    <div class="list-header">
+        <div class="title-section">
+            <h2>Selected Services for {{ user?.firstname }} {{ user?.lastname }}</h2>
+            <p class="results-count">Showing {{ filteredServices.length }} services</p>
+        </div>
+<!--        <button class="btn-back" (click)="navigateBack()">-->
+<!--            <i class="fas fa-arrow-left"></i> Back to User Details-->
+<!--        </button>-->
+    </div>
+
+    <!-- Filter controls -->
+    <div class="filter-controls">
+        <div class="search-container">
+            <input
+                    type="text"
+                    [formControl]="searchTerm"
+                    placeholder="Search services..."
+                    class="search-input">
+
+            <select [formControl]="searchField" class="search-field-select">
+                <option value="name">Search by Name</option>
+                <option value="description">Search by Description</option>
+                <option value="category">Search by Category</option>
+            </select>
+        </div>
+
+        <div class="filter-options">
+            <div class="filter-group">
+                <label for="categoryFilter">Category:</label>
+                <select id="categoryFilter" [formControl]="categoryFilter" class="filter-select">
+                    <option *ngFor="let category of serviceCategories" [value]="category.value">
+                        {{ category.label }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="sortOrder">Sort by:</label>
+                <select id="sortOrder" [formControl]="sortOrder" class="filter-select">
+                    <option *ngFor="let option of sortOptions" [value]="option.value">
+                        {{ option.label }}
+                    </option>
+                </select>
+            </div>
+            <button class="btn-reset" (click)="resetFilters()">
+                <i class="fas fa-undo"></i> Reset Filters
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading spinner -->
+    <div *ngIf="isLoading" class="loading-container">
+        <div class="spinner"></div>
+        <p>Loading services...</p>
+    </div>
+
+    <!-- Error message -->
+    <div *ngIf="errorMessage" class="error-message">
+        <i class="fas fa-exclamation-circle"></i>
+        <p>{{ errorMessage }}</p>
+    </div>
+
+    <!-- Services table -->
+    <div *ngIf="!isLoading && !errorMessage" class="table-responsive">
+        <table class="services-table" *ngIf="displayedServices.length > 0">
+            <thead>
+            <tr>
+                <th class="th-image">Image</th>
+                <th class="th-name">Name</th>
+                <th class="th-category">Category</th>
+                <th class="th-price">Price</th>
+                <th class="th-status">Status</th>
+                <th class="th-actions">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let service of displayedServices">
+                <td class="td-image">
+                    <div class="service-image" [attr.data-service-id]="service.id">
+                        <img *ngIf="getServiceImageUrl(service.imageUrl)"
+                             [src]="getServiceImageUrl(service.imageUrl)"
+                             alt="{{ service.name }}"
+                             (error)="handleImageError($event)">
+                        <div *ngIf="!getServiceImageUrl(service.imageUrl)" class="service-icon-placeholder">
+                            <i class="fas" [ngClass]="getIconForCategory(service.category)"></i>
+                        </div>
+                    </div>
+                </td>
+                <td class="td-text-truncate" title="{{ service.name }}">{{ service.name }}</td>
+                <td>
+                    <div class="category-badge">
+                        <i class="fas" [ngClass]="getIconForCategory(service.category)"></i>
+                        {{ service.category }}
+                    </div>
+                </td>
+                <td class="td-price">{{ service.price | currency:'EUR' }}</td>
+                <td>
+            <span class="status-badge" [ngClass]="service.status === 'DISPONIBLE' ? 'status-available' : 'status-unavailable'">
+              {{ service.status === 'DISPONIBLE' ? 'Available' : 'Unavailable' }}
+            </span>
+                </td>
+                <td class="actions-column">
+                    <button class="icon-btn view-btn" (click)="viewServiceDetails(service.id)" title="View Details">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- No data message -->
+        <div *ngIf="!isLoading && displayedServices.length === 0" class="no-data-container">
+            <i class="fas fa-shopping-basket"></i>
+            <p>No services found</p>
+            <p *ngIf="searchTerm.value || categoryFilter.value !== 'all'" class="no-data-subtext">
+                Try changing your search criteria or filters
+            </p>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="!isLoading && filteredServices.length > 0" class="pagination-container">
+        <div class="pagination">
+            <button
+                    class="pagination-btn"
+                    [disabled]="currentPage === 1"
+                    (click)="prevPage()">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <button
+                    *ngFor="let page of getPageArray()"
+                    class="pagination-btn"
+                    [class.active]="page === currentPage"
+                    (click)="changePage(page)">
+                {{ page }}
+            </button>
+
+            <button
+                    class="pagination-btn"
+                    [disabled]="currentPage === totalPages"
+                    (click)="nextPage()">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <div class="pagination-info">
+            Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to
+            {{ Math.min(currentPage * itemsPerPage, filteredServices.length) }}
+            of {{ filteredServices.length }} services
+        </div>
+    </div>
+</div>

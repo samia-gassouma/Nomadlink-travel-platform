@@ -1,0 +1,70 @@
+<div class="destination-table-container">
+  <h1>Liste des événements</h1>
+
+  <!-- Loading State -->
+  <div class="loading-spinner" *ngIf="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Error Message -->
+  <div class="error-message" *ngIf="errorMessage && !loading">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Table Content -->
+  <div class="table-responsive-wrapper" *ngIf="!loading && events && events.length > 0">
+    <table class="destination-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Titre</th>
+          <th>Description</th>
+          <th>Type</th>
+          <th>Début</th>
+          <th>Fin</th>
+          <th>Lieu</th>
+          <th>Langue</th>
+          <th>Frais</th>
+          <th>Image</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let event of events; trackBy: trackById">
+          <td>{{ event.id_event || 'N/A' }}</td>
+          <td>{{ event.title }}</td>
+          <td>{{ truncateText(event.description, 100) }}</td>
+          <td>{{ event.type }}</td>
+          <td>{{ event.startDateTime | date:'short' }}</td>
+          <td>{{ event.endDateTime | date:'short' }}</td>
+          <td>{{ event.location }}</td>
+          <td>{{ event.language }}</td>
+          <td>{{ event.registrationFee | currency:'EUR' }}</td>
+          <td>
+            <img [src]="formatImageUrl(event.imageUrl)" alt="Event Image">
+
+          </td>
+          <td class="actions">
+            <button [routerLink]="['/back-office/events/edit', event.id_event]" class="btn-edit">
+              <i class="fas fa-edit"></i>
+            </button>
+          
+            <!-- Delete Icon -->
+            <button class="btn-delete" (click)="deleteEvent(event.id_event)" [disabled]="!event.id_event">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Empty State -->
+  <div class="no-events" *ngIf="!loading && (!events || events.length === 0)">
+    <h3>Aucun événement trouvé</h3>
+    <p>Commencez par ajouter des événements à votre liste!</p>
+    <button class="btn-add-event" (click)="navigateToAddEvent()">
+      Ajouter un événement
+    </button>
+  </div>
+</div>

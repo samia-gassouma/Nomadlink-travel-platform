@@ -1,0 +1,99 @@
+<app-header></app-header>
+<section class="section-padding bg-light-white">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="section-header text-center mb-4">
+                    <h2 class="section-title">Our Active Partners</h2>
+                    <p class="section-subtitle">Discover our trusted business partners ready to make your journey unforgettable</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading spinner -->
+        <div *ngIf="isLoading" class="row">
+            <div class="col-12">
+                <div class="loading-container">
+                    <div class="spinner"></div>
+                    <p>Loading partners...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- No partners message -->
+        <div *ngIf="!isLoading && activePartners.length === 0" class="row">
+            <div class="col-12">
+                <div class="no-partners">
+                    <i class="fas fa-users-slash mb-3"></i>
+                    <p>No active partners found at the moment.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Partners grid layout -->
+        <div *ngIf="!isLoading && activePartners.length > 0" class="row">
+            <div *ngFor="let partner of displayedPartners" class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                <div class="partner-card">
+                    <div class="card-header">
+                        <div class="partner-avatar" (click)="viewPartnerDetails(partner.id)">
+                            <img *ngIf="getPartnerImageUrl(partner)"
+                                 [src]="getPartnerImageUrl(partner)"
+                                 alt="{{ partner.firstname }} {{ partner.lastname }}"
+                                 (error)="handleImageError($event, partner)">
+                        </div>
+                        <div class="partner-info">
+                            <h3 class="partner-name">{{ partner.firstname }} {{ partner.lastname }}</h3>
+                            <span class="partner-category" *ngIf="partner.businessCategory">{{ partner.businessCategory }}</span>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <p class="partner-description">
+                            {{ partner.partnerDescription || 'This partner is ready to provide exceptional services for your travel needs.' }}
+                        </p>
+                    </div>
+
+                    <div class="card-footer">
+                        <div class="contact-info">
+                            <div class="info-item" *ngIf="partner.email">
+                                <i class="fas fa-envelope"></i>
+                                <span>{{ partner.email }}</span>
+                            </div>
+                            <div class="info-item" *ngIf="partner.phoneNumber">
+                                <i class="fas fa-phone"></i>
+                                <span>{{ partner.phoneNumber }}</span>
+                            </div>
+                            <div class="info-item" *ngIf="partner.websiteURL">
+                                <i class="fas fa-globe"></i>
+                                <span>{{ partner.websiteURL }}</span>
+                            </div>
+                        </div>
+
+                        <button class="view-details-btn" (click)="viewPartnerDetails(partner.id)">
+                            <i class="fas fa-user-circle mr-2"></i> View Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Pagination -->
+    <div class="row" *ngIf="activePartners.length > itemsPerPage">
+        <div class="col-12">
+            <nav class="pagination_layout section-padding-top">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" [class.disabled]="currentPage === 1">
+                        <a class="page-link" (click)="pageChanged(currentPage - 1)" style="cursor: pointer;">Prev</a>
+                    </li>
+                    <li class="page-item" *ngFor="let page of [].constructor(Math.ceil(activePartners.length / itemsPerPage)); let i = index"
+                        [class.active]="currentPage === i + 1">
+                        <a class="page-link" (click)="pageChanged(i + 1)" style="cursor: pointer;">{{ i + 1 }}</a>
+                    </li>
+                    <li class="page-item" [class.disabled]="currentPage === Math.ceil(activePartners.length / itemsPerPage)">
+                        <a class="page-link" (click)="pageChanged(currentPage + 1)" style="cursor: pointer;">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>

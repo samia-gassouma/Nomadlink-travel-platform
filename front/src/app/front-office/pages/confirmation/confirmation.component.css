@@ -1,0 +1,128 @@
+.step-indicator {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .step {
+    padding: 10px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    background-color: #ddd;
+  }
+  
+  .step.active {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .card {
+    transition: 0.3s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: scale(1.02);
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  
+  .confirmation-modal {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  #ms-container {
+    width: 100%;
+    height: 100vh;
+    background: #1c9cf2;
+}
+
+.ms-content {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    border: 10px solid #2ea4f2;
+    border-radius: 100%;
+}
+
+#ms-download {
+    display: none;
+}
+
+#ms-download:checked ~ .ms-line-down-container {
+    transform: rotate(-360deg);
+    transition: transform 1.5s ease 1.25s;
+}
+.steps-wrapper {
+  position: relative;
+  margin-top: 2rem;
+  padding: 1rem 0;
+}
+
+.step-line {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  right: 10%;
+  height: 4px;
+  background-color: #dee2e6;
+  z-index: 1;
+  transform: translateY(-50%);
+}
+
+.step-indicator {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.step-box {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  text-align: center;
+  width: 100px;
+  transition: 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.step-icon {
+  font-size: 1.5rem;
+}
+
+.step-label {
+  margin-top: 0.5rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.step-box.active {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+  transform: scale(1.05);
+}
+.swal-custom-popup {
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0, 128, 0, 0.3);
+}
+
+.swal-custom-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.swal-custom-text {
+  font-size: 16px;
+  color: #4caf50;
+}

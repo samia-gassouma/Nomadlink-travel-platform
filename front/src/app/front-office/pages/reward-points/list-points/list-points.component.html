@@ -1,0 +1,74 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex align-items-center flex-wrap gap-2">
+                    <div class="flex-grow-1">
+                        <h4 class="mb-sm-0">Reward Points List </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="listPoints?.length" class="card-body">
+        <div class="live-preview">
+            <div class="table-responsive">
+                <table class="table align-middle table-nowrap mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">User</th>
+                            <th scope="col">Points</th>
+                            <th scope="col">Value</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Updated at</th>
+                            <th scope="col">Token</th>
+                            <th scope="col">Token applied</th>
+                            <th scope="col">Valid until</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let points of listPoints; let i = index">
+                            <th>
+                                <div class="d-flex gap-2 align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <img [src]="imageBaseUrl + points.user.profilePicture"
+                                            alt="" class="avatar-xs rounded-circle" />
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        {{points.user.firstname}} {{points.user.lastname}}
+                                    </div>
+                                </div>
+                            </th>
+                            <td>{{points.points}}</td>
+                            <td>{{points.value}}</td>
+                            <td [ngSwitch]="points.is_active">
+                                <span *ngSwitchCase="true" class="badge bg-success-subtle text-success">Active</span>
+                                <span *ngSwitchCase="false" class="badge bg-danger-subtle text-danger">Disabled</span>
+                            </td>
+                            <td>{{points.updated_at | date : "dd MMM, yyyy HH:mm"}}</td>
+                            <td>{{points.token}}</td>
+                            <td [ngSwitch]="points.token_applied">
+                                <span *ngSwitchCase="true" class="badge bg-success-subtle text-success">Yes</span>
+                                <span *ngSwitchCase="false" class="badge bg-danger-subtle text-danger">No</span>
+
+                            </td>
+                            <td>{{points.valid_until | date : "dd MMM, yyyy HH:mm"}}</td>
+                            <td>
+                                <ul class="list-inline hstack gap-2 mb-0">
+                                    <li class="list-inline-item" ngbTooltip="Edit" placement="top">
+                                      <a [routerLink]="['/back-office/reward-points', 'update',points.id]" class="edit-item-btn"
+                                        data-bs-toggle="modal"><i class="ri-pencil-fill align-bottom text-muted"></i></a>
+                                    </li>
+                                  </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="!listPoints?.length">
+    <h6>No Points added.</h6>
+</div>

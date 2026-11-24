@@ -1,0 +1,147 @@
+<div class="user-details-container">
+  <div class="header-container">
+    <h2>User Details</h2>
+    <div class="header-buttons">
+      <button class="btn btn-edit" *ngIf="user" (click)="navigateToEditUser()">
+        <i class="fas fa-edit"></i> Edit
+      </button>
+      <button class="btn btn-services" *ngIf="user" (click)="navigateToUserPreferences()">
+        <i class="fas fa-heart"></i> View Preferences
+      </button>
+      <button class="btn btn-services" *ngIf="user" (click)="navigateToUserServices()">
+        <i class="fas fa-list-ul"></i> View Selected Services
+      </button>
+      <button class="btn btn-back" (click)="navigateToUserList()">
+        <i class="fas fa-arrow-left"></i> Back to User List
+      </button>
+    </div>
+  </div>
+
+  <!-- Loader -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading data...</p>
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="error" class="error-container">
+    <div class="error-icon">
+      <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <div class="error-content">
+      <h3>An error occurred</h3>
+      <p>{{ error }}</p>
+      <button class="btn btn-retry" (click)="loadUserDetails()">Retry</button>
+    </div>
+  </div>
+
+  <!-- User details card -->
+  <div *ngIf="!isLoading && !error && user" class="user-card">
+    <div class="user-header">
+      <div class="user-avatar">
+        <img *ngIf="imageUrl" [src]="imageUrl"
+             alt="Photo de profil" class="img-thumbnail rounded-circle"
+             (error)="handleImageError()">
+        <img *ngIf="!imageUrl" src="assets/gestionuser/profile.jpg"
+             alt="Photo de profil" class="img-thumbnail rounded-circle">
+      </div>
+      <div class="user-title">
+        <h3>{{ user.firstname }} {{ user.lastname }}</h3>
+        <span class="user-role" [ngClass]="user.role?.toLowerCase()">{{ user.role }}</span>
+      </div>
+    </div>
+
+    <div class="user-details">
+      <div class="details-section">
+        <h4>Personal Information</h4>
+        <div class="details-grid">
+          <div class="detail-item">
+            <span class="detail-label">First Name</span>
+            <span class="detail-value">{{ user.firstname || 'Not provided' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Last Name</span>
+            <span class="detail-value">{{ user.lastname || 'Not provided' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Email</span>
+            <span class="detail-value">{{ user.email || 'Not provided' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Phone</span>
+            <span class="detail-value">{{ user.phoneNumber || 'Not provided' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Gender</span>
+            <span class="detail-value">
+              {{ user.genre === 'MALE' ? 'Male' :
+              user.genre === 'FEMALE' ? 'Female' :
+                user.genre === 'OTHER' ? 'Other' : 'Not provided' }}
+            </span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Date of Birth</span>
+            <span class="detail-value">
+              {{ user.dateOfBirth ? (user.dateOfBirth | date:'dd/MM/yyyy') : 'Not provided' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="details-section">
+        <h4>Address</h4>
+        <div class="details-grid">
+          <div class="detail-item">
+            <span class="detail-label">Address</span>
+            <span class="detail-value">{{ user.address || 'Not provided' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Country</span>
+            <span class="detail-value">{{ user.country || 'Not provided' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="details-section">
+        <h4>Account</h4>
+        <div class="details-grid">
+          <div class="detail-item">
+            <span class="detail-label">Role</span>
+            <span class="detail-value role-badge" [ngClass]="user.role?.toLowerCase()">
+              {{ user.role === 'USER' ? 'User' :
+              user.role === 'ADMIN' ? 'Administrator' :
+                user.role === 'PARTNER' ? 'Partner' : user.role }}
+            </span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Account Status</span>
+            <span class="detail-value">
+              <span class="status-indicator" [ngClass]="user.enabled ? 'active' : 'inactive'"></span>
+              {{ user.enabled ? 'Active' : 'Inactive' }}
+            </span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Created On</span>
+            <span class="detail-value">
+              {{ user.createdDate ? (user.createdDate | date:'dd/MM/yyyy HH:mm') : 'Not provided' }}
+            </span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Last Modified</span>
+            <span class="detail-value">
+              {{ user.lastModifiedDate ? (user.lastModifiedDate | date:'dd/MM/yyyy HH:mm') : 'Not provided' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No user found message -->
+  <div *ngIf="!isLoading && !error && !user" class="empty-state">
+    <i class="fas fa-user-slash"></i>
+    <h3>No User Found</h3>
+    <p>The user you are looking for does not exist or has been deleted.</p>
+    <button class="btn btn-primary" (click)="navigateToUserList()">Back to User List</button>
+  </div>
+</div>

@@ -1,0 +1,533 @@
+<app-header></app-header>
+<div class="container mt-5">
+    <!-- Profile header with cover color and profile image -->
+    <div class="position-relative mx-n4 mt-n4">
+        <div class="profile-wid-bg">
+            <!-- Cover color with gradient -->
+            <div class="bg-blue-gradient" style="height: 240px; width: 100%;">
+                <!-- Overlay content positioned on top of the background -->
+                <div class="profile-overlay-content">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <!-- Profile picture moved slightly up -->
+                                <div class="avatar-lg" style="margin-top: -70px;">
+                                    <div class="profile-image-container">
+                                        <img *ngIf="imageUrl" [src]="imageUrl" alt="user-img" class="img-thumbnail rounded-circle" (error)="handleImageError($event)" />
+                                        <img *ngIf="!imageUrl" src="assets/gestionuser/profile.jpg"
+                                             alt="user-img" class="img-thumbnail rounded-circle" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <!-- Name and role moved slightly up -->
+                                <div class="p-2" style="margin-top: -50px;">
+                                    <h3 class="mb-1 text-white">{{ currentUser?.firstname }} {{ currentUser?.lastname }}</h3>
+                                    <p class="text-white d-flex align-items-center">
+                                        <!-- Icon for partner -->
+                                        <i class="ri-building-2-line me-1"></i>
+                                        <span>Service Provider</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- Action buttons with status above them -->
+                            <div class="col-auto ms-auto" style="margin-top: -45px;">
+                                <div class="status-buttons-container">
+                                    <!-- Partnership Status displayed above buttons -->
+                                    <div class="partnership-status-container">
+                                        <span class="badge"
+                                              [ngClass]="{'bg-active': partnerDetails?.partnershipStatus?.toLowerCase() === 'active',
+                                                        'bg-pending': partnerDetails?.partnershipStatus?.toLowerCase() === 'pending',
+                                                        'bg-inactive': partnerDetails?.partnershipStatus?.toLowerCase() === 'inactive',
+                                                        'bg-suspended': partnerDetails?.partnershipStatus?.toLowerCase() === 'suspended',
+                                                        'bg-terminated': partnerDetails?.partnershipStatus?.toLowerCase() === 'terminated',
+                                                        'bg-secondary': !partnerDetails?.partnershipStatus}">
+                                            {{ partnerDetails?.partnershipStatus || 'Not Set' }}
+                                        </span>
+                                    </div>
+                                    <!-- Action buttons below status -->
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-light" [routerLink]="['/front-office/editprofilepartner']">Edit Profile</button>
+<!--                                        <button class="btn btn-danger" (click)="logout()">Log Out</button>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content area moved up to overlap with cover -->
+    <div class="row mt-n5">
+        <!-- Main content area -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <ul class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" [ngClass]="{'active': activeTab === 1}" (click)="changeTab(1)" role="tab">
+                                <i class="ri-user-fill me-1"></i> Informations
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [ngClass]="{'active': activeTab === 2}" (click)="changeTab(2)" role="tab">
+                                <i class="ri-store-2-line  me-1"></i> Services
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [ngClass]="{'active': activeTab === 3}" (click)="changeTab(3)" role="tab">
+                                <i class="ri-group-line me-1"></i> Clients
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <!-- Tab content -->
+                    <div class="tab-content pt-4">
+                        <!-- My Information content -->
+                        <div [ngClass]="{'active show': activeTab === 1}" class="tab-pane">
+                            <div class="card content-card">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-3"> <i class="ri-user-3-line me-2"></i>Basic Information</h5>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Name</label>
+                                                <p class="form-control-static border p-2 rounded bg-light">{{currentUser?.firstname || 'Not provided'}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Other Name (Optional)</label>
+                                                <p class="form-control-static border p-2 rounded bg-light">{{currentUser?.lastname || 'Not provided'}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Email</label>
+                                                <p class="form-control-static border p-2 rounded bg-light">{{currentUser?.email || 'Not provided'}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Phone</label>
+                                                <p class="form-control-static border p-2 rounded bg-light">{{currentUser?.phoneNumber || 'Not provided'}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h5 class="card-title mb-3 mt-4"><i class="ri-map-pin-line me-2"></i>Address Information</h5>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Country</label>
+                                                <p class="form-control-static border p-2 rounded bg-light">{{currentUser?.country || 'Not provided'}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Address</label>
+                                                <p class="form-control-static border p-2 rounded bg-light">
+                                                    {{currentUser?.address || 'Not provided'}}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Website</label>
+                                                <p class="form-control-static border p-2 rounded bg-light">
+                                                    <a *ngIf="partnerDetails?.websiteURL" [href]="partnerDetails?.websiteURL" target="_blank">
+                                                        {{partnerDetails?.websiteURL}}
+                                                    </a>
+                                                    <span *ngIf="!partnerDetails?.websiteURL">Not provided</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h5 class="card-title mb-3 mt-4"><i class="ri-briefcase-4-line me-2"></i>Business Information</h5>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Business Category</label>
+                                                <p class="form-control-static border p-2 rounded bg-light">
+                                                    {{partnerDetails?.businessCategory || 'Not specified'}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Description</label>
+                                                <p class="form-control-static content-large border p-2 rounded bg-light">
+                                                    {{partnerDetails?.partnerDescription || 'Not provided'}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h5 class="card-title mb-3 mt-4"> <i class="ri-file-text-line me-2"></i>Contract Information</h5>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Contract Start Date</label>
+                                                <p class="form-control-static border p-2 rounded bg-light">
+                                                    <ng-container *ngIf="partnerDetails?.contractStartDate; else noStartDate">
+                                                        {{partnerDetails?.contractStartDate | date:'mediumDate'}}
+                                                    </ng-container>
+                                                    <ng-template #noStartDate>Not provided</ng-template>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Contract End Date</label>
+                                                <p class="form-control-static border p-2 rounded bg-light">
+                                                    <ng-container *ngIf="partnerDetails?.contractEndDate; else noEndDate">
+                                                        {{partnerDetails?.contractEndDate | date:'mediumDate'}}
+                                                    </ng-container>
+                                                    <ng-template #noEndDate>Not provided</ng-template>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Created On</label>
+                                                <p class="form-control-static border p-2 rounded bg-light">
+                                                    <ng-container *ngIf="currentUser?.createdDate; else noCreatedDate">
+                                                        {{currentUser?.createdDate | date:'medium'}}
+                                                    </ng-container>
+                                                    <ng-template #noCreatedDate>Not available</ng-template>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Last Modified</label>
+                                                <p class="form-control-static border p-2 rounded bg-light">
+                                                    <ng-container *ngIf="currentUser?.lastModifiedDate; else noModifiedDate">
+                                                        {{currentUser?.lastModifiedDate | date:'medium'}}
+                                                    </ng-container>
+                                                    <ng-template #noModifiedDate>Not modified</ng-template>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- My Services content -->
+<!--                        <div [ngClass]="{'active show': activeTab === 2}" class="tab-pane">-->
+<!--                            <div class="card content-card">-->
+<!--                                <div class="card-body">-->
+<!--                                    <h5 class="card-title mb-3">My Services</h5>-->
+<!--                                    &lt;!&ndash; Placeholder for future preference content &ndash;&gt;-->
+<!--                                    <p class="text-muted">Your services settings will appear here.</p>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                        <div [ngClass]="{'active show': activeTab === 2}" class="tab-pane">
+                            <div class="card content-card">
+                                <div class="card-body">
+                                    <div class="listing-top-heading mb-xl-20">
+                                        <h6 class="no-margin text-custom-black">Showing {{ filteredServices.length }} Results</h6>
+                                        <div class="sort-by">
+                                            <span class="text-custom-black fs-14 fw-600">Sort by</span>
+                                            <div class="group-form">
+                                                <select [(ngModel)]="sortBy" (change)="changeSortBy(sortBy)" class="form-control custom-select">
+                                                    <option *ngFor="let option of sortOptions" [value]="option.value">
+                                                        {{option.label}}
+                                                    </option>
+                                                </select>
+                                                <button *ngIf="sortBy !== 'none'" class="btn btn-sm btn-outline-secondary sort-dir-btn"
+                                                        (click)="toggleSortOrder()">
+                                                    <i class="fas" [ngClass]="sortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Filters and Sorting -->
+                                    <div class="filters-section mb-xl-20">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="search-bar">
+                                                    <input
+                                                            type="text"
+                                                            [(ngModel)]="searchTerm"
+                                                            (ngModelChange)="updateDisplayedServices()"
+                                                            placeholder="Search services..."
+                                                            class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="category-filter">
+                                                    <select [(ngModel)]="selectedCategory" (ngModelChange)="updateDisplayedServices()" class="form-control custom-select">
+                                                        <option value="">All Categories</option>
+                                                        <option *ngFor="let category of serviceCategories" [value]="category">
+                                                            {{category}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="status-filter">
+                                                    <select [(ngModel)]="selectedStatus" (ngModelChange)="updateDisplayedServices()" class="form-control custom-select">
+                                                        <option value="">All Statuses</option>
+                                                        <option *ngFor="let status of statusOptions" [value]="status">
+                                                            {{status === 'DISPONIBLE' ? 'Available' : 'Unavailable'}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="d-flex">
+                                                    <button class="btn btn-outline-secondary flex-grow-1 me-2" (click)="resetFilters()">
+                                                        Reset Filters
+                                                    </button>
+                                                    <button class="btn btn-primary" (click)="createNewService()">
+                                                        <i class="fas fa-plus"></i> Add New
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Loading spinner or error message -->
+                                    <div *ngIf="isLoading" class="col-12 text-center py-5">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="errorMessage" class="col-12">
+                                        <div class="alert alert-danger">
+                                            {{errorMessage}}
+                                        </div>
+                                    </div>
+
+                                    <!-- No services message -->
+                                    <div *ngIf="!isLoading && displayedServices.length === 0" class="col-12 py-5 text-center">
+                                        <div class="no-services">
+                                            <p *ngIf="searchTerm || selectedCategory || selectedStatus">No services match your search criteria.</p>
+                                            <p *ngIf="!searchTerm && !selectedCategory && !selectedStatus">You haven't created any services yet. Click "Add New Service" to get started.</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Services list -->
+                                    <div class="row">
+                                        <div class="col-xl-3 col-lg-4 col-md-6" *ngFor="let service of displayedServices">
+                                            <div class="hotel-grid mb-xl-30">
+                                                <div class="hotel-grid-wrapper bx-wrapper">
+                                                    <div class="image-sec animate-img">
+                                                        <a (click)="viewServiceDetails(service.id)" style="cursor: pointer;">
+                                                            <img *ngIf="getServiceImageUrl(service.imageUrl)"
+                                                                 [src]="getServiceImageUrl(service.imageUrl)"
+                                                                 class="full-width"
+                                                                 alt="{{service.name}}"
+                                                                 (error)="handleImageError($event)">
+                                                            <div *ngIf="!getServiceImageUrl(service.imageUrl)" class="placeholder-img">
+                                                                <i class="fas" [ngClass]="getIconForCategory(service.category)"></i>
+                                                            </div>
+                                                        </a>
+                                                        <div class="service-status-badge" [ngClass]="service.status === 'DISPONIBLE' ? 'status-available' : 'status-unavailable'">
+                                                            {{service.status === 'DISPONIBLE' ? 'Available' : 'Unavailable'}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="hotel-grid-caption padding-20 bg-custom-white p-relative">
+                                                        <h4 class="title fs-16">
+                                                            <a (click)="viewServiceDetails(service.id)" class="text-custom-black" style="cursor: pointer;">
+                                                                {{service.name}}
+                                                                <small class="text-light-dark d-block mt-1">
+                                                                    <span class="category-badge">{{service.category}}</span>
+                                                                </small>
+                                                            </a>
+                                                        </h4>
+                                                        <div class="service-description">
+                                                            <p class="text-light-dark mb-2">
+                                                                {{ service.description ? (service.description | slice:0:25) + (service.description.length > 25 ? '...' : '') : 'No description available' }}
+                                                            </p>
+                                                        </div>
+                                                        <span class="price"><small>Price</small>{{service.price | currency:'EUR'}}</span>
+                                                        <div class="action">
+                                                            <a (click)="viewServiceDetails(service.id)" class="btn-second btn-small" style="cursor: pointer;">View</a>
+                                                            <a (click)="editService(service.id)" class="btn-first btn-small" style="cursor: pointer;">Edit</a>
+                                                            <a (click)="deleteService(service.id)" class="btn-danger btn-small" style="cursor: pointer;">Delete</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Pagination -->
+                                    <div class="row" *ngIf="filteredServices.length > itemsPerPage">
+                                        <div class="col-12">
+                                            <nav class="pagination_layout section-padding-top">
+                                                <ul class="pagination justify-content-center">
+                                                    <li class="page-item" [class.disabled]="currentPage === 1">
+                                                        <a class="page-link" (click)="pageChanged(currentPage - 1)" style="cursor: pointer;">Prev</a>
+                                                    </li>
+                                                    <li class="page-item" *ngFor="let page of [].constructor(Math.ceil(filteredServices.length / itemsPerPage)); let i = index"
+                                                        [class.active]="currentPage === i + 1">
+                                                        <a class="page-link" (click)="pageChanged(i + 1)" style="cursor: pointer;">{{ i + 1 }}</a>
+                                                    </li>
+                                                    <li class="page-item" [class.disabled]="currentPage === Math.ceil(filteredServices.length / itemsPerPage)">
+                                                        <a class="page-link" (click)="pageChanged(currentPage + 1)" style="cursor: pointer;">Next</a>
+                                                    </li>
+                                                </ul>
+                                            </nav>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+<!--                        &lt;!&ndash; My Clients content &ndash;&gt;-->
+<!--                        <div [ngClass]="{'active show': activeTab === 3}" class="tab-pane">-->
+<!--                            <div class="card content-card">-->
+<!--                                <div class="card-body">-->
+<!--                                    <h5 class="card-title mb-3">My Clients</h5>-->
+<!--                                    &lt;!&ndash; Placeholder for future services content &ndash;&gt;-->
+<!--                                    <p class="text-muted">Your Clients information will appear here.</p>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                        <!-- My Clients content -->
+                        <div [ngClass]="{'active show': activeTab === 3}" class="tab-pane">
+                            <div class="card content-card">
+                                <div class="card-body">
+                                    <div class="listing-top-heading mb-xl-20">
+                                        <h2 class="text-custom-black">My Clients</h2>
+                                        <h6 class="no-margin text-custom-black">Showing {{ filteredClients.length }} Results</h6>
+                                        <div class="sort-by">
+                                            <span class="text-custom-black fs-14 fw-600">Sort by</span>
+                                            <div class="group-form">
+                                                <select [(ngModel)]="sortByClient" (change)="changeSortByClient(sortByClient)" class="form-control custom-select">
+                                                    <option *ngFor="let option of clientSortOptions" [value]="option.value">
+                                                        {{option.label}}
+                                                    </option>
+                                                </select>
+                                                <button *ngIf="sortByClient !== 'none'" class="btn btn-sm btn-outline-secondary sort-dir-btn"
+                                                        (click)="toggleSortOrderClient()">
+                                                    <i class="fas" [ngClass]="sortOrderClient === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Filters and Sorting -->
+                                    <div class="filters-section mb-xl-20">
+                                        <div class="row">
+                                            <div class="col-md-9">
+                                                <div class="search-bar">
+                                                    <input
+                                                            type="text"
+                                                            [(ngModel)]="searchTermClient"
+                                                            (ngModelChange)="updateDisplayedClients()"
+                                                            placeholder="Search clients by name, email or phone..."
+                                                            class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button class="btn btn-outline-secondary w-100" (click)="resetFiltersClient()">
+                                                    Reset Filters
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Loading spinner or error message -->
+                                    <div *ngIf="isLoading" class="col-12 text-center py-5">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="errorMessage" class="col-12">
+                                        <div class="alert alert-danger">
+                                            {{errorMessage}}
+                                        </div>
+                                    </div>
+
+                                    <!-- No clients message -->
+                                    <div *ngIf="!isLoading && displayedClients.length === 0" class="col-12 py-5 text-center">
+                                        <div class="no-clients">
+                                            <p *ngIf="searchTermClient">No clients match your search criteria.</p>
+                                            <p *ngIf="!searchTermClient">You don't have any clients yet. Users who select your services will appear here.</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Clients table -->
+                                    <div class="col-12" *ngIf="!isLoading && displayedClients.length > 0">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped bg-white">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Profile</th>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Email</th>
+                                                    <th scope="col">Phone</th>
+                                                    <th scope="col">Actions</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr *ngFor="let client of displayedClients; let i = index">
+                                                    <th scope="row">{{ (currentPageClient - 1) * itemsPerPageClient + i + 1 }}</th>
+                                                    <td>
+                                                        <div class="user-profile-pic" [attr.data-user-id]="client.id">
+                                                            <img *ngIf="getUserImageUrl(client)"
+                                                                 [src]="getUserImageUrl(client)"
+                                                                 class="rounded-circle profile-img"
+                                                                 alt="User Profile"
+                                                                 (error)="handleImageError($event)">
+                                                            <div *ngIf="!getUserImageUrl(client)" class="avatar-placeholder">
+                                                                {{ getUserInitials(client) }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>{{ client.firstname }} {{ client.lastname }}</td>
+                                                    <td>{{ client.email }}</td>
+                                                    <td>{{ client.phoneNumber || 'N/A' }}</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-primary" (click)="viewClientServices(client.id)">View Services</button>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <!-- Pagination -->
+                                    <div class="row" *ngIf="filteredClients.length > itemsPerPageClient">
+                                        <div class="col-12">
+                                            <nav class="pagination_layout section-padding-top">
+                                                <ul class="pagination justify-content-center">
+                                                    <li class="page-item" [class.disabled]="currentPageClient === 1">
+                                                        <a class="page-link" (click)="pageChangedClient(currentPageClient - 1)" style="cursor: pointer;">Prev</a>
+                                                    </li>
+                                                    <li class="page-item" *ngFor="let page of [].constructor(Math.ceil(filteredClients.length / itemsPerPageClient)); let i = index"
+                                                        [class.active]="currentPageClient === i + 1">
+                                                        <a class="page-link" (click)="pageChangedClient(i + 1)" style="cursor: pointer;">{{ i + 1 }}</a>
+                                                    </li>
+                                                    <li class="page-item" [class.disabled]="currentPageClient === Math.ceil(filteredClients.length / itemsPerPageClient)">
+                                                        <a class="page-link" (click)="pageChangedClient(currentPageClient + 1)" style="cursor: pointer;">Next</a>
+                                                    </li>
+                                                </ul>
+                                            </nav>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

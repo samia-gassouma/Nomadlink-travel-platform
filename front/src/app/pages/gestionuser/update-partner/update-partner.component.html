@@ -1,0 +1,328 @@
+<div class="container mt-5">
+  <div class="row">
+    <!-- Error banner at the top if there's an error -->
+    <div class="col-12 mb-4" *ngIf="submitError">
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        {{ submitError }}
+        <button type="button" class="btn-close" (click)="submitError = null" aria-label="Close"></button>
+      </div>
+    </div>
+
+    <div class="col-12 mb-4">
+      <div class="header-container d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">Update Partner</h2>
+        <button class="btn btn-outline-secondary" (click)="onCancel()">
+          <i class="fas fa-arrow-left me-1"></i> Back to Partner List
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading spinner -->
+    <div *ngIf="isLoading" class="col-12 text-center p-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-3">Loading partner data...</p>
+    </div>
+
+    <ng-container *ngIf="!isLoading && partner">
+      <!-- Profile Image Section - Left Card -->
+      <div class="col-md-4 col-xxl-3">
+        <div class="card">
+          <div class="card-body p-4">
+            <h3 class="card-title mb-4">Profile Picture</h3>
+            <div class="text-center">
+              <div class="profile-user position-relative d-inline-block mx-auto mb-4">
+                <img *ngIf="imageUrl; else defaultImage"
+                     [src]="imageUrl"
+                     class="rounded-circle avatar-xl img-thumbnail user-profile-image shadow"
+                     alt="Profile Picture"
+                     (error)="handleImageError()">
+                <ng-template #defaultImage>
+                  <img src="assets/gestionuser/profile.jpg"
+                       class="rounded-circle avatar-xl img-thumbnail user-profile-image shadow"
+                       alt="Default Profile Picture">
+                </ng-template>
+
+                <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
+                  <input id="profile-img-file-input" type="file" class="profile-img-file-input"
+                         accept="image/*" (change)="onFileSelected($event)">
+                  <label for="profile-img-file-input" class="profile-photo-edit avatar-xs">
+                    <span class="avatar-title rounded-circle bg-light text-body shadow">
+                      <i class="ri-camera-fill"></i>
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Show upload status if needed -->
+              <div *ngIf="selectedFile" class="mt-2 text-muted small">
+                <i class="fas fa-info-circle me-1"></i>
+                New image selected - will be uploaded on save
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Section - Right Content -->
+      <div class="col-md-8 col-xxl-9">
+        <form [formGroup]="partnerForm" (ngSubmit)="onUpdate()" class="partner-form">
+          <!-- Basic Information Card -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <h3 class="card-title mb-0">Basic Information</h3>
+            </div>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="name">Name <span class="required text-danger">*</span></label>
+                    <input
+                            type="text"
+                            id="name"
+                            formControlName="name"
+                            class="form-control"
+                            placeholder="Enter partner name"
+                            [class.is-invalid]="hasError('name', 'required') || hasError('name', 'minlength') || hasError('name', 'maxlength') || hasError('name', 'pattern')">
+                    <div class="invalid-feedback" *ngIf="hasError('name', 'required')">
+                      Name is required.
+                    </div>
+                    <div class="invalid-feedback" *ngIf="hasError('name', 'minlength')">
+                      Name must be at least 3 characters.
+                    </div>
+                    <div class="invalid-feedback" *ngIf="hasError('name', 'maxlength')">
+                      Name cannot exceed 15 characters.
+                    </div>
+                    <div class="invalid-feedback" *ngIf="hasError('name', 'pattern')">
+                      Name must contain only letters.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="otherName">Other Name</label>
+                    <input
+                            type="text"
+                            id="otherName"
+                            formControlName="otherName"
+                            class="form-control"
+                            placeholder="Enter other name (optional)"
+                            [class.is-invalid]="hasError('otherName', 'minlength') || hasError('otherName', 'maxlength') || hasError('otherName', 'pattern')">
+                    <div class="invalid-feedback" *ngIf="hasError('otherName', 'minlength')">
+                      Other name must be at least 3 characters.
+                    </div>
+                    <div class="invalid-feedback" *ngIf="hasError('otherName', 'maxlength')">
+                      Other name cannot exceed 15 characters.
+                    </div>
+                    <div class="invalid-feedback" *ngIf="hasError('otherName', 'pattern')">
+                      Other name must contain only letters.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="partnershipStatus">Partnership Status</label>
+                    <div class="status-select-container position-relative">
+                      <select id="partnershipStatus" formControlName="partnershipStatus" class="form-select">
+                        <option *ngFor="let status of partnershipStatuses" [value]="status.value">
+                          {{ status.label }}
+                        </option>
+                      </select>
+                      <div class="status-indicator position-absolute end-0 top-50 translate-middle-y me-3 rounded-circle"
+                           style="width: 12px; height: 12px;"
+                           [ngStyle]="{'background-color': getStatusColor(partnerForm.get('partnershipStatus')?.value)}"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="businessCategory">Business Category <span class="required text-danger">*</span></label>
+                    <select
+                            id="businessCategory"
+                            formControlName="businessCategory"
+                            class="form-select"
+                            [class.is-invalid]="hasError('businessCategory', 'required')">
+                      <option value="" disabled>Select business category</option>
+                      <option *ngFor="let category of businessCategories" [value]="category.value">
+                        {{ category.label }}
+                      </option>
+                    </select>
+                    <div class="invalid-feedback" *ngIf="hasError('businessCategory', 'required')">
+                      Business category is required.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Information Card -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <h3 class="card-title mb-0">Contact Information</h3>
+            </div>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="email">Email <span class="required text-danger">*</span></label>
+                    <input
+                            type="email"
+                            id="email"
+                            formControlName="email"
+                            class="form-control"
+                            placeholder="Enter email address"
+                            [class.is-invalid]="hasError('email', 'required') || hasError('email', 'email') || hasError('email', 'pattern')">
+                    <div class="invalid-feedback" *ngIf="hasError('email', 'required')">
+                      Email is required.
+                    </div>
+                    <div class="invalid-feedback" *ngIf="hasError('email', 'email') || hasError('email', 'pattern')">
+                      Please enter a valid email address.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="phoneNumber">Phone Number <span class="required text-danger">*</span></label>
+                    <input
+                            type="text"
+                            id="phoneNumber"
+                            formControlName="phoneNumber"
+                            class="form-control"
+                            placeholder="Enter phone number"
+                            [class.is-invalid]="hasError('phoneNumber', 'required') || hasError('phoneNumber', 'pattern')">
+                    <div class="invalid-feedback" *ngIf="hasError('phoneNumber', 'required')">
+                      Phone number is required.
+                    </div>
+                    <div class="invalid-feedback" *ngIf="hasError('phoneNumber', 'pattern')">
+                      Phone number must contain only digits.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="address">Address <span class="required text-danger">*</span></label>
+                    <input
+                            type="text"
+                            id="address"
+                            formControlName="address"
+                            class="form-control"
+                            placeholder="Enter address"
+                            [class.is-invalid]="hasError('address', 'required')">
+                    <div class="invalid-feedback" *ngIf="hasError('address', 'required')">
+                      Address is required.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="country">Country <span class="required text-danger">*</span></label>
+                    <select
+                            id="country"
+                            formControlName="country"
+                            class="form-select"
+                            [class.is-invalid]="hasError('country', 'required')">
+                      <option value="" disabled>Select country</option>
+                      <option *ngFor="let country of countries" [value]="country.code">
+                        {{ country.name }}
+                      </option>
+                    </select>
+                    <div class="invalid-feedback" *ngIf="hasError('country', 'required')">
+                      Country is required.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Partnership Details Card -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <h3 class="card-title mb-0">Partnership Details</h3>
+            </div>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="websiteURL">Website URL</label>
+                    <input
+                            type="text"
+                            id="websiteURL"
+                            formControlName="websiteURL"
+                            class="form-control"
+                            placeholder="Enter website URL"
+                            [class.is-invalid]="hasError('websiteURL', 'pattern')">
+                    <div class="invalid-feedback" *ngIf="hasError('websiteURL', 'pattern')">
+                      Please enter a valid URL.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="contractStartDate">Contract Start Date <span class="required text-danger">*</span></label>
+                    <input
+                            type="date"
+                            id="contractStartDate"
+                            formControlName="contractStartDate"
+                            class="form-control"
+                            [class.is-invalid]="hasError('contractStartDate', 'required')">
+                    <div class="invalid-feedback" *ngIf="hasError('contractStartDate', 'required')">
+                      Contract start date is required.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="contractEndDate">Contract End Date</label>
+                    <input
+                            type="date"
+                            id="contractEndDate"
+                            formControlName="contractEndDate"
+                            class="form-control">
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="form-group">
+                    <label for="partnerDescription">Partner Description <span class="required text-danger">*</span></label>
+                    <textarea
+                            id="partnerDescription"
+                            formControlName="partnerDescription"
+                            class="form-control"
+                            rows="3"
+                            placeholder="Enter partner description"
+                            [class.is-invalid]="hasError('partnerDescription', 'required')"></textarea>
+                    <div class="invalid-feedback" *ngIf="hasError('partnerDescription', 'required')">
+                      Partner description is required.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form buttons -->
+          <div class="d-flex justify-content-end gap-2 mb-4">
+            <button type="button" class="btn btn-soft-secondary" (click)="onCancel()">
+              <i class="fas fa-times me-1"></i> Cancel
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="partnerForm.invalid || isLoading">
+              <i class="fas fa-save me-1"></i> Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </ng-container>
+  </div>
+</div>

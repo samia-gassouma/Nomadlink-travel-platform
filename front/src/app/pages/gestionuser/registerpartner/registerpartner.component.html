@@ -1,0 +1,332 @@
+<!-- auth-page wrapper -->
+<div class="auth-page-wrapper auth-bg-cover py-5 d-flex justify-content-center align-items-center min-vh-100">
+  <div class="bg-overlay"></div>
+  <!-- auth-page content -->
+  <div class="auth-page-content overflow-hidden pt-lg-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card overflow-hidden m-0">
+            <div class="row justify-content-center g-0">
+              <!-- Left panel with branding and travel quote -->
+              <div class="col-lg-6">
+                <div class="p-lg-5 p-4 auth-one-bg h-100">
+                  <div class="bg-overlay"></div>
+                  <div class="position-relative h-100 d-flex flex-column">
+                    <div class="mb-4">
+                      <a routerLink="/" class="d-block">
+                        <h2 class="text-white">NomadLink</h2>
+                      </a>
+                    </div>
+
+                    <!-- Featured image from assets -->
+                    <div class="text-center my-5">
+                      <img src="../../../../assets/gestionuser/u14.png" alt="Travel" class="img-fluid">
+                    </div>
+
+                    <div class="mt-auto text-center">
+                      <div class="mb-3">
+                        <i class="ri-double-quotes-l display-4 text-white"></i>
+                      </div>
+                      <p class="fs-15 text-white">"In attractive way to travel"</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right panel with partner registration form -->
+              <div class="col-lg-6">
+                <div class="p-lg-5 p-4">
+                  <div>
+                    <h5 class="text-primary">Register as Partner</h5>
+                    <p class="text-muted">Create your partner account to join our travel platform.</p>
+                  </div>
+
+                  <!-- Alert messages -->
+                  <div *ngIf="successMessage" class="alert alert-success mt-4">
+                    <i class="fas fa-check-circle me-2"></i> {{ successMessage }}
+                  </div>
+                  <div *ngIf="errorMessage" class="alert alert-danger mt-4">
+                    <i class="fas fa-exclamation-circle me-2"></i> {{ errorMessage }}
+                  </div>
+
+                  <div class="mt-4">
+                    <form [formGroup]="createPartnerForm" (ngSubmit)="onSubmit()">
+                      <!-- Basic Information Section -->
+                      <h5 class="text-muted mb-3 small text-uppercase fw-semibold">Basic Information</h5>
+
+                      <!-- Name and Other Name -->
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="firstname" class="form-label">Name <span class="text-danger">*</span></label>
+                          <input type="text" class="form-control" id="firstname" formControlName="firstname"
+                                 [ngClass]="{ 'is-invalid': hasError('firstname', 'required') || hasError('firstname', 'minlength') || hasError('firstname', 'maxlength') || hasError('firstname', 'pattern') }">
+                          <div class="invalid-feedback" *ngIf="hasError('firstname', 'required')">
+                            Name is required.
+                          </div>
+                          <div class="invalid-feedback" *ngIf="hasError('firstname', 'minlength')">
+                            Name must be at least 3 characters.
+                          </div>
+                          <div class="invalid-feedback" *ngIf="hasError('firstname', 'maxlength')">
+                            Name cannot exceed 15 characters.
+                          </div>
+                          <div class="invalid-feedback" *ngIf="hasError('firstname', 'pattern')">
+                            Name must contain only letters.
+                          </div>
+                        </div>
+
+                        <div class="col-md-6">
+                          <label for="lastname" class="form-label">Other Name</label>
+                          <input type="text" class="form-control" id="lastname" formControlName="lastname"
+                                 [ngClass]="{ 'is-invalid': hasError('lastname', 'minlength') || hasError('lastname', 'maxlength') || hasError('lastname', 'pattern') }">
+                          <div class="invalid-feedback" *ngIf="hasError('lastname', 'minlength')">
+                            Other name must be at least 3 characters.
+                          </div>
+                          <div class="invalid-feedback" *ngIf="hasError('lastname', 'maxlength')">
+                            Other name cannot exceed 15 characters.
+                          </div>
+                          <div class="invalid-feedback" *ngIf="hasError('lastname', 'pattern')">
+                            Other name must contain only letters.
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Email -->
+                      <div class="mb-3">
+                        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="email" formControlName="email"
+                               [ngClass]="{ 'is-invalid': hasError('email', 'required') || hasError('email', 'email') || hasError('email', 'pattern') || hasEmailExistsError() }">
+                        <div class="invalid-feedback" *ngIf="hasError('email', 'required')">
+                          Email is required.
+                        </div>
+                        <div class="invalid-feedback" *ngIf="hasError('email', 'email') || hasError('email', 'pattern')">
+                          Please enter a valid email address.
+                        </div>
+                        <div class="invalid-feedback" *ngIf="hasEmailExistsError()">
+                          This email address is already registered in our system.
+                        </div>
+                      </div>
+
+                      <!-- Password field in the HTML template - replace the existing password section -->
+                      <div class="mb-3">
+                        <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+                        <div class="position-relative auth-pass-inputgroup">
+                          <input [type]="passwordVisible ? 'text' : 'password'" class="form-control pe-5" id="password"
+                                 formControlName="password"
+                                 [ngClass]="{ 'is-invalid': submitted && (createPartnerForm.get('password')?.errors || !isPasswordStrengthValid()) }">
+                          <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none shadow-none text-muted password-addon"
+                                  type="button" (click)="togglePasswordVisibility()">
+                            <i class="ri-eye-fill align-middle" [ngClass]="{'ri-eye-off-fill': !passwordVisible, 'ri-eye-fill': passwordVisible}"></i>
+                          </button>
+                        </div>
+
+                        <div class="invalid-feedback" *ngIf="submitted && createPartnerForm.get('password')?.hasError('required')">
+                          Password is required.
+                        </div>
+
+                        <!-- Password strength indicators - always show when typing -->
+                        <div class="p-3 bg-light mb-2 rounded mt-2" *ngIf="createPartnerForm.get('password')?.value && !isPasswordStrengthValid()">
+                          <h5 class="fs-13">Password must contain:</h5>
+                          <p class="fs-12 mb-2" [ngClass]="{'text-success': !hasPasswordStrengthError('upperCase'), 'text-danger': hasPasswordStrengthError('upperCase')}">
+                            <i [class]="!hasPasswordStrengthError('upperCase') ? 'ri-check-line' : 'ri-close-line'"></i>
+                            At least one uppercase letter
+                          </p>
+                          <p class="fs-12 mb-2" [ngClass]="{'text-success': !hasPasswordStrengthError('lowerCase'), 'text-danger': hasPasswordStrengthError('lowerCase')}">
+                            <i [class]="!hasPasswordStrengthError('lowerCase') ? 'ri-check-line' : 'ri-close-line'"></i>
+                            At least one lowercase letter
+                          </p>
+                          <p class="fs-12 mb-2" [ngClass]="{'text-success': !hasPasswordStrengthError('numeric'), 'text-danger': hasPasswordStrengthError('numeric')}">
+                            <i [class]="!hasPasswordStrengthError('numeric') ? 'ri-check-line' : 'ri-close-line'"></i>
+                            At least one number
+                          </p>
+                          <p class="fs-12 mb-2" [ngClass]="{'text-success': !hasPasswordStrengthError('specialChar'), 'text-danger': hasPasswordStrengthError('specialChar')}">
+                            <i [class]="!hasPasswordStrengthError('specialChar') ? 'ri-check-line' : 'ri-close-line'"></i>
+                            At least one special character
+                          </p>
+                          <p class="fs-12 mb-0" [ngClass]="{'text-success': !hasPasswordStrengthError('minLength'), 'text-danger': hasPasswordStrengthError('minLength')}">
+                            <i [class]="!hasPasswordStrengthError('minLength') ? 'ri-check-line' : 'ri-close-line'"></i>
+                            At least 8 characters
+                          </p>
+                        </div>
+                      </div>
+
+
+                      <!-- Phone Number and Address -->
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="phoneNumber" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                          <input type="text" class="form-control" id="phoneNumber" formControlName="phoneNumber"
+                                 [ngClass]="{ 'is-invalid': hasError('phoneNumber', 'required') || hasError('phoneNumber', 'pattern') }">
+                          <div class="invalid-feedback" *ngIf="hasError('phoneNumber', 'required')">
+                            Phone number is required.
+                          </div>
+                          <div class="invalid-feedback" *ngIf="hasError('phoneNumber', 'pattern')">
+                            Phone number must be digits.
+                          </div>
+                        </div>
+
+                        <div class="col-md-6">
+                          <label for="address" class="form-label">Address</label>
+                          <input type="text" class="form-control" id="address" formControlName="address">
+                        </div>
+                      </div>
+
+                      <!-- Country -->
+                      <div class="mb-3">
+                        <label for="country" class="form-label">Country <span class="text-danger">*</span></label>
+                        <select class="form-select" id="country" formControlName="country"
+                                [ngClass]="{ 'is-invalid': hasError('country', 'required') }">
+                          <option value="" disabled selected>Select a country</option>
+                          <option *ngFor="let country of countries" [value]="country.code">
+                            {{ country.name }}
+                          </option>
+                        </select>
+                        <div class="invalid-feedback" *ngIf="hasError('country', 'required')">
+                          Country is required.
+                        </div>
+                      </div>
+
+                      <!-- Partnership Information Section -->
+                      <h5 class="text-muted mb-3 mt-4 small text-uppercase fw-semibold">Partnership Information</h5>
+
+                      <!-- Business Category -->
+                      <div class="mb-3">
+                        <label for="businessCategory" class="form-label">Business Category <span class="text-danger">*</span></label>
+                        <select class="form-select" id="businessCategory" formControlName="businessCategory"
+                                [ngClass]="{ 'is-invalid': hasError('businessCategory', 'required') }">
+                          <option value="" disabled selected>Select a business category</option>
+                          <option *ngFor="let category of businessCategories" [value]="category.value">
+                            {{ category.label }}
+                          </option>
+                        </select>
+                        <div class="invalid-feedback" *ngIf="hasError('businessCategory', 'required')">
+                          Business category is required.
+                        </div>
+                      </div>
+
+                      <!-- Website URL -->
+                      <div class="mb-3">
+                        <label for="websiteURL" class="form-label">Website URL</label>
+                        <input type="text" class="form-control" id="websiteURL" formControlName="websiteURL"
+                               [ngClass]="{ 'is-invalid': hasError('websiteURL', 'pattern') }">
+                        <div class="invalid-feedback" *ngIf="hasError('websiteURL', 'pattern')">
+                          Please enter a valid URL.
+                        </div>
+                      </div>
+
+                      <!-- Partner Description -->
+                      <div class="mb-3">
+                        <label for="partnerDescription" class="form-label">Partner Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="partnerDescription" formControlName="partnerDescription" rows="3"
+                                  [ngClass]="{ 'is-invalid': hasError('partnerDescription', 'required') }"></textarea>
+                        <div class="invalid-feedback" *ngIf="hasError('partnerDescription', 'required')">
+                          Partner description is required.
+                        </div>
+                      </div>
+
+                      <!-- Contract Dates -->
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="contractStartDate" class="form-label">Contract Start Date <span class="text-danger">*</span></label>
+                          <input type="date" class="form-control" id="contractStartDate" formControlName="contractStartDate"
+                                 [ngClass]="{ 'is-invalid': hasError('contractStartDate', 'required') }">
+                          <div class="invalid-feedback" *ngIf="hasError('contractStartDate', 'required')">
+                            Contract start date is required.
+                          </div>
+                        </div>
+
+                        <div class="col-md-6">
+                          <label for="contractEndDate" class="form-label">Contract End Date</label>
+                          <input type="date" class="form-control" id="contractEndDate" formControlName="contractEndDate">
+                        </div>
+                      </div>
+                      <!-- Profile Picture Upload Section - Inline Version -->
+                      <div class="mb-4 mt-3">
+                        <div class="d-flex align-items-center justify-content-between">
+                          <!-- Left side: Image preview (only shown when available) -->
+                          <div *ngIf="profileImagePreview" class="profile-image-preview">
+                            <img [src]="profileImagePreview"
+                                 class="rounded-circle user-profile-image"
+                                 alt="Profile Picture"
+                                 (error)="handleImageError()">
+                          </div>
+
+                          <!-- If no image, show empty space or placeholder -->
+                          <div *ngIf="!profileImagePreview" class="profile-image-placeholder">
+                            <i class="ri-user-line text-muted"></i>
+                          </div>
+
+                          <!-- Right side: Upload button -->
+                          <div class="upload-button-container">
+                            <input id="profile-img-file-input" type="file" class="profile-img-file-input"
+                                   accept="image/*" (change)="onFileSelected($event)">
+                            <label for="profile-img-file-input" class="btn btn-sm btn-secondary">
+                              <i class="ri-camera-fill me-1"></i>
+                              {{ profileImagePreview ? 'Change Picture' : 'Upload Picture' }}
+                            </label>
+                          </div>
+                        </div>
+
+                        <!-- Show selected file name if needed -->
+                        <div *ngIf="selectedFile" class="text-muted small mt-2 text-end">
+                          <i class="fas fa-info-circle me-1"></i>
+                          Selected: {{ selectedFile.name }}
+                        </div>
+                      </div>
+                      <!-- Terms & Conditions -->
+                      <div class="mb-4">
+                        <p class="mb-0 fs-12 text-muted fst-italic">By registering you agree to the <a href="javascript:void(0);"
+                                                                                                       class="text-primary text-decoration-underline fst-normal fw-medium">Terms of Use</a></p>
+                      </div>
+
+                      <!-- Buttons -->
+                      <div class="mt-4">
+                        <button class="btn btn-primary w-100" type="submit" [disabled]="loading">
+                          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                          {{ loading ? 'Creating partner account...' : 'Create Partner Account' }}
+                        </button>
+                      </div>
+
+                      <!-- Alternative registration options -->
+                      <div class="mt-4 text-center">
+                        <div class="signin-other-title">
+                          <h5 class="fs-13 mb-4 title text-muted">Create account with</h5>
+                        </div>
+
+                        <div class="d-flex gap-2 justify-content-center">
+                          <button type="button" class="btn btn-primary btn-icon waves-effect waves-light"><i class="ri-facebook-fill fs-16"></i></button>
+                          <button type="button" class="btn btn-danger btn-icon waves-effect waves-light"><i class="ri-google-fill fs-16"></i></button>
+                          <button type="button" class="btn btn-dark btn-icon waves-effect waves-light"><i class="ri-github-fill fs-16"></i></button>
+                          <button type="button" class="btn btn-info btn-icon waves-effect waves-light"><i class="ri-twitter-fill fs-16"></i></button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+
+                  <!-- Login and Register as User links -->
+                  <div class="mt-5 text-center">
+                    <p class="mb-0">Already have an account? <a (click)="login()" class="fw-semibold text-primary text-decoration-underline cursor-pointer"> Sign In</a></p>
+                    <p class="mb-0 mt-3">Are you a traveler? <a (click)="registerAsUser()" class="fw-semibold text-primary text-decoration-underline cursor-pointer">Register as user</a></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="text-center">
+            <p class="mb-0">&copy; {{2025}} All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>

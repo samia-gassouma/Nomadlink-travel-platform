@@ -1,0 +1,57 @@
+<app-header></app-header>
+<div class="activities-list">
+    <h2>Activities for Destination</h2>
+    <ul *ngIf="activities.length > 0">
+      <li *ngFor="let activity of activities">
+        <h3>{{ activity.activityName }}</h3>
+        <p><strong>Description:</strong> {{ activity.activityDescription }}</p>
+        <p><strong>Activity Type:</strong> {{ activity.activityType }}</p>
+        <p><strong>Destination:</strong> {{ activity.destinationName || activity.destinationId }}</p>
+        <p><strong>Location:</strong> {{ activity.activityLocation }}</p>
+        <p><strong>Price Type:</strong> {{ activity.priceType }}</p>
+        <p><strong>Price Range:</strong> {{ activity.priceRange }}</p>
+        <p><strong>Booking Required:</strong> {{ activity.bookingRequired }}</p>
+        <p><strong>Duration:</strong> {{ activity.duration }}</p>
+        <p><strong>Difficulty Level:</strong> {{ activity.difficultyLevel }}</p>
+        <p><strong>Required Equipment:</strong> {{ activity.requiredEquipment }}</p>
+        <p><strong>Safety Tips:</strong> {{ activity.safetyTips }}</p>
+      
+        <!-- Accessibility List -->
+        <div *ngIf="activity.accessibility && activity.accessibility.length > 0">
+          <strong>Accessibility:</strong>
+          <ul>
+            <li *ngFor="let access of activity.accessibility">{{ access }}</li>
+          </ul>
+        </div>
+      
+        <!-- Languages List -->
+        <div *ngIf="activity.languages && activity.languages.length > 0">
+          <strong>Languages:</strong>
+          <ul>
+            <li *ngFor="let lang of activity.languages">{{ lang }}</li>
+          </ul>
+        </div>
+      
+        <!-- Main Image -->
+        <div *ngIf="activity.mainImage">
+          <img 
+            [src]="'http://localhost:9000/picloud/api/activities/images/' + activity.mainImage" 
+            alt="Activity Main Image"
+            style="width: 100%; max-width: 600px; height: auto; margin-top: 10px;"
+          />
+        </div>
+      
+        <!-- Gallery Images if any -->
+        <div *ngIf="activity.galleryImages && activity.galleryImages.length > 0">
+          <strong>Gallery:</strong>
+          <div class="gallery-images">
+            <img 
+              *ngFor="let img of activity.galleryImages.split(',')" 
+              [src]="img.trim()" 
+              alt="Gallery image" 
+              style="width: 150px; height: auto; margin: 5px;"
+            />
+          </div>
+        </div>
+      </li>
+      

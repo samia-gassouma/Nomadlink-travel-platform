@@ -1,0 +1,74 @@
+.container {
+  max-width: 100%;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h2 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background-color: #ffffff;
+}
+
+
+
+/* Styling for edit and delete buttons */
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.btn-edit i,
+.btn-delete i {
+  color: blue; /* Blue color for icons */
+  font-size: 1.2rem; /* Adjust size if needed */
+}
+
+.btn-edit:hover i,
+.btn-delete:hover i {
+  color: darkblue; /* Dark blue on hover */
+}
+
+.btn-delete:disabled i {
+  color: grey; /* Grey color for disabled state */
+}
+
+
+
+
+
+
+th,
+td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+}
+
+thead {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #343a40;
+}
+
+tr:hover {
+  background-color: #f1f3f5;
+  transition: background-color 0.2s ease-in-out;
+}
+
+img {
+  border-radius: 4px;
+  max-width: 100px;
+  max-height: 60px;
+  object-fit: cover;
+}

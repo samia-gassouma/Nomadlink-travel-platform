@@ -1,0 +1,107 @@
+<form [formGroup]="destinationForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" class="destination-form">
+    <h2>Ajouter une destination</h2>
+  
+    <div>
+      <label>Nom:</label>
+      <input type="text" formControlName="name" required />
+    </div>
+  
+    <div>
+      <label>Pays:</label>
+      <input type="text" formControlName="country" />
+    </div>
+  
+    <div>
+      <label>Type:</label>
+      <input type="text" formControlName="type" />
+    </div>
+  
+    <div>
+      <label>Description:</label>
+      <textarea formControlName="description"></textarea>
+    </div>
+  
+    <div>
+      <label>Langue:</label>
+      <input type="text" formControlName="language" />
+    </div>
+  
+    <div>
+      <label>Devise:</label>
+      <input type="text" formControlName="currency" />
+    </div>
+  
+    <div>
+      <label>Climat:</label>
+      <input type="text" formControlName="climate" />
+    </div>
+  
+    <div>
+      <label>Visa requis:</label>
+      <select formControlName="visaRequired">
+        <option value="false">Non</option>
+        <option value="true">Oui</option>
+      </select>
+    </div>
+  
+    <div>
+      <label>Conseils de sécurité:</label>
+      <textarea formControlName="safetyTips"></textarea>
+    </div>
+  
+    <div>
+      <label>Lien vers la carte (iframe):</label>
+      <input type="text" formControlName="mapUrl" />
+      <button type="button" (click)="mapLoaded = true; safeMapUrl = sanitizer.bypassSecurityTrustResourceUrl(destinationForm.value.mapUrl)">Charger la carte</button>
+    </div>
+  
+    <div *ngIf="mapLoaded && safeMapUrl">
+      <h4>Carte :</h4>
+      <iframe [src]="safeMapUrl" width="100%" height="300" frameborder="0" allowfullscreen></iframe>
+    </div>
+  
+    <div>
+      <label>Image principale:</label>
+      <input type="file" (change)="onImageChange($event)" accept="image/*" />
+      <div *ngIf="mainImagePreview">
+        <h4>Prévisualisation:</h4>
+        <img [src]="mainImagePreview" alt="Aperçu" width="200" />
+      </div>
+    </div>
+  
+    <div>
+      <label>Mois idéaux pour visiter:</label>
+      <div class="checkbox-group">
+        <label *ngFor="let month of months">
+          <input type="checkbox" [value]="month" (change)="onBestTimeChange($event)" />
+          {{ month }}
+        </label>
+      </div>
+    </div>
+  
+    <div>
+      <h4>Images Galerie</h4>
+      <div formArrayName="galleryImages">
+        <div *ngFor="let ctrl of galleryImages.controls; let i = index">
+          <input type="file" (change)="onGalleryImageChange($event, i)" accept="image/*" />
+          <button type="button" (click)="removeGalleryImage(i)">Supprimer</button>
+        </div>
+      </div>
+      <button type="button" (click)="addGalleryImage()">Ajouter une image</button>
+    </div>
+  
+    <div>
+      <button type="button" (click)="toggleDetails()">
+        {{ detailsVisible ? 'Masquer les détails' : 'Afficher plus de détails' }}
+      </button>
+    </div>
+  
+    <div *ngIf="detailsVisible">
+      <p>Section détails supplémentaires (à étendre si besoin)...</p>
+    </div>
+  
+    <div>
+      <button type="submit" [disabled]="destinationForm.invalid">Enregistrer la destination</button>
+    </div>
+  </form>
+  

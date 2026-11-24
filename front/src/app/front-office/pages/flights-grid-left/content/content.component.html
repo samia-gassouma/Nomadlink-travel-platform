@@ -1,0 +1,74 @@
+<section class="section-padding bg-light-white">
+    <div class="container">
+        <div class="row">
+            <!-- ✅ Colonne des filtres -->
+            <div class="col-lg-3 col-md-4">
+                <div class="filters bg-white p-4 rounded shadow-sm">
+                    <h5 class="fw-bold text-dark">Filtres</h5>
+                    
+                    <label for="depart">Aéroport de départ</label>
+                    <input id="depart" type="text" class="form-control" [(ngModel)]="filters.aeroportDepart">
+
+                    <label for="arrivee">Aéroport d'arrivée</label>
+                    <input id="arrivee" type="text" class="form-control" [(ngModel)]="filters.aeroportArrivee">
+
+                    <label for="classe">Classe</label>
+                    <select id="classe" class="form-control" [(ngModel)]="filters.classe">
+                        <option value="">-- Sélectionner --</option>
+                        <option value="Économie">Économie</option>
+                        <option value="Business">Business</option>
+                    </select>
+
+                    <label for="statut">Statut</label>
+                    <select id="statut" class="form-control" [(ngModel)]="filters.statut">
+                        <option value="">-- Sélectionner --</option>
+                        <option value="Programmé">Programmé</option>
+                        <option value="Retardé">Retardé</option>
+                    </select>
+
+                    <label for="dateDepart">Date de départ</label>
+                    <input id="dateDepart" type="date" class="form-control" [(ngModel)]="filters.dateDepart">
+                    
+                    <label for="prix">Prix maximum</label>
+                    <input id="prix" type="number" class="form-control" [(ngModel)]="filters.prix">
+
+                    <div class="d-flex justify-content-between mt-3">
+                        <button (click)="applyFilters()" class="btn btn-primary">Filtrer</button>
+                        <button (click)="resetFilters()" class="btn btn-secondary">Réinitialiser</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ✅ Colonne des résultats : Liste des vols en ligne -->
+            <div class="col-lg-9 col-md-8">
+                <div class="listing-top-heading mb-3">
+                    <h6 class="fw-bold text-dark">Résultats : {{ filteredFlights.length }} vols disponibles</h6>
+                </div>
+
+                <div class="flight-list">
+                    <div class="flight-item d-flex align-items-center p-3 shadow-sm bg-white rounded mb-3" *ngFor="let flight of filteredFlights">
+                        <div class="flight-info flex-grow-1">
+                            <h5 class="text-primary fw-bold">{{ flight.compagnie }}</h5>
+                            <p class="fw-bold text-dark fs-18">
+                                {{ flight.aeroportDepart }} 
+                                <span class="mx-3 text-blue fs-24">🡆</span>
+                                {{ flight.aeroportArrivee }}
+                            </p>
+                            <p class="text-secondary"><strong>Départ :</strong> {{ flight.dateDepart }}</p>
+                        </div>
+                        <div class="flight-details text-end">
+                            <p class="text-success fw-bold fs-20"><strong>${{ flight.prix }}</strong></p>
+                            <p class="text-danger fw-bold fs-16">🪑 
+                                <span class="seat-count" [ngClass]="{'updated': flight.idVol !== undefined && flight.siegesDisponibles < (initialSeats[flight.idVol] || flight.siegesDisponibles)}">
+                                    {{ flight.siegesDisponibles }}
+                                  </span>
+                                  
+                            </p>
+                            <a [routerLink]="['/front-office', 'booking', flight.idVol]" class="btn btn-lg btn-primary">Réserver</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

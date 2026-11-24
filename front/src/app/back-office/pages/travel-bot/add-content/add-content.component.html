@@ -1,0 +1,49 @@
+<div class="card">
+    <div class="card-header">
+      <h2>Add Knowledge</h2>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="Question" class="form-label">Question</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="Question" 
+            formControlName="Question" 
+            placeholder="E.g., What should I pack for a beach vacation?"
+          >
+          <div *ngIf="addForm.get('Question')?.invalid && addForm.get('Question')?.touched" class="text-danger">
+            Question is required and must be at least 5 characters.
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          <label for="Response" class="form-label">Response</label>
+          <textarea 
+            class="form-control" 
+            id="Response" 
+            formControlName="Response" 
+            rows="5" 
+            placeholder="Write a detailed answer..."
+          ></textarea>
+          <div *ngIf="addForm.get('Response')?.invalid && addForm.get('Response')?.touched" class="text-danger">
+            Response is required and must be at least 10 characters.
+          </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" [disabled]="addForm.invalid || loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          Add to Knowledge Base
+        </button>
+      </form>
+    </div>
+  </div>
+  
+  <div *ngIf="success" class="alert alert-success mt-3">
+    {{ success }}
+  </div>
+  
+  <div *ngIf="error" class="alert alert-danger mt-3">
+    {{ error }}
+  </div>

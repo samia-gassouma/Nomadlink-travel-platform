@@ -1,0 +1,163 @@
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3 col-lg-2 sidebar-wrapper p-0" [class.d-none]="isSidebarHidden">
+      <app-sidebar></app-sidebar>
+    </div>
+
+    <!-- Main content -->
+    <div class="col">
+      <div class="card px-4 py-3">
+        <div class="card-header">
+          <h4 class="card-title">Modifier le produit</h4>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+              <!-- Colonne Images -->
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Images du produit</label>
+                  <div
+                    class="image-upload-container"
+                    (dragover)="onDragOver($event)"
+                    (drop)="onDrop($event)"
+                    (dragleave)="onDragLeave($event)"
+                  >
+                    <input
+                      type="file"
+                      #fileInput
+                      (change)="onImagesSelected($event)"
+                      accept="image/jpeg,image/png"
+                      multiple
+                      hidden
+                    />
+
+                    <div class="image-preview" [class.has-images]="images.length > 0" [class.drag-over]="isDragging">
+                      <div *ngIf="images.length === 0" class="no-image text-center">
+                        <i class="mdi mdi-cloud-upload mdi-48px text-muted"></i>
+                        <p class="mt-2 mb-0">Glissez-déposez des images ici</p>
+                        <p class="text-muted">ou</p>
+                        <button type="button" class="btn btn-primary" (click)="fileInput.click()">
+                          <i class="mdi mdi-folder-open me-1"></i> Sélectionner des images
+                        </button>
+                        <small class="text-muted d-block mt-2">Format: JPG, PNG (max 2MB par image)</small>
+                      </div>
+
+                      <div *ngIf="images.length > 0" class="image-grid">
+                        <div class="image-item" *ngFor="let image of images; let i = index">
+                          <img [src]="image.preview" class="preview-image" />
+                          <button type="button" class="btn btn-danger btn-sm remove-image" (click)="removeImage(i)">
+                            <i class="mdi mdi-close"></i>
+                          </button>
+                        </div>
+
+                        <div *ngIf="images.length < maxImages" class="image-item add-more">
+                          <button type="button" class="btn btn-light" (click)="fileInput.click()">
+                            <i class="mdi mdi-plus mdi-24px"></i> <span>Ajouter</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="image-info mt-2">
+                      <small class="text-muted">{{ images.length }}/{{ maxImages }} images</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Colonne Infos produit -->
+              <div class="col-md-6">
+                <!-- Catégorie -->
+                <div class="mb-3">
+                  <label class="form-label">Catégorie</label>
+                  <select
+                    class="form-select"
+                    formControlName="category"
+                    [ngClass]="{ 'is-invalid': productForm.get('category')?.invalid && productForm.get('category')?.touched }"
+                  >
+                    <option value="">Sélectionnez une catégorie</option>
+                    <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+                  </select>
+                  <div class="invalid-feedback" *ngIf="productForm.get('category')?.invalid && productForm.get('category')?.touched">
+                    La catégorie est requise
+                  </div>
+                </div>
+
+                <!-- Nom -->
+                <div class="mb-3">
+                  <label class="form-label">Nom du produit</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="name"
+                    placeholder="Entrez le nom du produit"
+                    [ngClass]="{ 'is-invalid': productForm.get('name')?.invalid && productForm.get('name')?.touched }"
+                  />
+                  <div class="invalid-feedback" *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+                    Le nom est requis et doit contenir au moins 3 caractères
+                  </div>
+                </div>
+
+                <!-- Prix et Stock -->
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label class="form-label">Prix</label>
+                      <div class="input-group">
+                        <input
+                          type="number"
+                          class="form-control"
+                          formControlName="price"
+                          placeholder="0.00"
+                          [ngClass]="{ 'is-invalid': productForm.get('price')?.invalid && productForm.get('price')?.touched }"
+                        />
+                        <span class="input-group-text">TND</span>
+                      </div>
+                      <div class="invalid-feedback" *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched">
+                        Le prix est requis et doit être positif
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label class="form-label">Stock</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        formControlName="stock"
+                        placeholder="0"
+                        [ngClass]="{ 'is-invalid': productForm.get('stock')?.invalid && productForm.get('stock')?.touched }"
+                      />
+                      <div class="invalid-feedback" *ngIf="productForm.get('stock')?.invalid && productForm.get('stock')?.touched">
+                        Le stock est requis et doit être positif
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-3">
+                  <label class="form-label">Description</label>
+                  <textarea
+                    class="form-control"
+                    formControlName="description"
+                    rows="3"
+                    placeholder="Entrez la description du produit"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Boutons -->
+            <div class="text-end">
+              <button type="button" class="btn btn-light me-2" routerLink="/back-office/listProduct">Annuler</button>
+              <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid">Enregistrer</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

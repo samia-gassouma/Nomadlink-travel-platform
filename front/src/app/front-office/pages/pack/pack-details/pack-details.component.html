@@ -1,0 +1,170 @@
+<app-header></app-header>
+
+
+<section class="section-padding bg-light-white listing-details">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="listing-details-inner bx-wrapper bg-custom-white padding-20">
+
+          <!-- Title: Pack Details -->
+          <div class="text-center mb-4">
+            <h2 class="text-custom-black font-weight-bold">Pack Details</h2>
+            <p class="text-muted">Explore the details of the selected pack and related activities.</p>
+          </div>
+
+          <div class="row">
+            <!-- Left Column: Image Gallery -->
+            <div class="col-lg-8">
+              <div class="detail-slider-for mb-xl-20 magnific-gallery">
+                <div class="slide-item">
+                  <a class="popup">
+                    <img [src]="imageBaseUrl + pack?.packImage" class="image-fit" alt="Pack Image">
+                  </a>
+                </div>
+              </div>
+              <hr>
+            </div>
+
+            <!-- Right Column: Quick Quote & Pack Information -->
+            <div class="col-lg-4">
+              <div class="row">
+                <div class="col-12">
+                  <div class="quick-quote bx-wrapper padding-20 mb-xl-30">
+                    <h5 class="text-custom-black">Enquiry Now</h5>
+
+                    <!-- Pack Information -->
+                    <div *ngFor="let pa of packAssociationList; let i = index">
+                      <div *ngIf="i == 0">
+                        <h6 class="font-weight-bold text-primary">Name: {{ pa.pack.packName }}</h6>
+                        <p>Description: {{ pa.pack.packDescription }}</p>
+                        <p class="font-italic text-muted">Operated by: {{ pa.pack.vol.compagnie }}</p>
+                      </div>
+                      <h6 class="text-muted">Destination {{ i + 1 }}: <strong>{{ pa.destination.name }}</strong></h6>
+                      <div *ngFor="let act of pa.activities; let j = index">
+                        <p><strong>Activity {{ j + 1 }}:</strong> {{ act.activityName}}</p>
+                      </div>
+                    </div>
+
+                    <!-- Discount Information -->
+                    <div *ngIf="pack?.discount" class="mt-3">
+                      <p><strong>Discount Available:</strong> </p>
+                      <p class="text-success">{{ pack?.discount?.reduction_percent }}% off</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="row justify-content-center">
+  <div class="col-xl-9">
+    <div class="row">
+      <div *ngFor="let p of pack?.pricePlans; let i = index" class="col-lg-4">
+        <div class="card pricing-box">
+          <div class="card-body p-4 m-2">
+            <div class="ribbon-two ribbon-two-danger">
+              <span>Popular</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <div class="flex-grow-1">
+                <h5 class="mb-1 fw-semibold">{{ p.name }}</h5>
+                <p class="text-muted mb-0">{{ p.description }}</p>
+              </div>
+            </div>
+            <div *ngIf="pack?.discount; else noDiscount" class="pt-4">
+              <h2 class="text-danger"><del>
+                  {{ p.price }} </del> <sup><small>TND</small></sup>
+              </h2>
+              <h2 class="text-success fw-bold">
+                {{ prices[i] }} <sup><small>TND</small></sup>
+              </h2>
+            </div>
+            <ng-template #noDiscount>
+              <div class="pt-4">
+                <h2 class="text-primary fw-bold">
+                  {{ p.price }} <sup><small>TND</small></sup>
+                </h2>
+              </div>
+            </ng-template>
+
+            <hr class="my-4 text-muted" />
+            <div>
+              <ul class="list-unstyled text-muted vstack gap-3">
+                <li>
+                  <div class="d-flex">
+                    <div class="flex-shrink-0 text-success me-1">
+                      <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
+                    </div>
+                    <div class="flex-grow-1">Accommodation</div>
+                  </div>
+                </li>
+                <li>
+                  <div class="d-flex">
+                    <div class="flex-shrink-0 text-success me-1">
+                      <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
+                    </div>
+                    <div class="flex-grow-1">Local transportation</div>
+                  </div>
+                </li>
+                <li>
+                  <div class="d-flex">
+                    <div class="flex-shrink-0 text-success me-1">
+                      <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
+                    </div>
+                    <div class="flex-grow-1"> Tour guide</div>
+                  </div>
+                </li>
+                <li>
+                  <div class="d-flex">
+                    <div class="flex-shrink-0 text-success me-1">
+                      <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
+                    </div>
+                    <div class="flex-grow-1">Entry fees to tourist sites</div>
+                  </div>
+                </li>
+                <li>
+                  <div class="d-flex">
+                    <div class="flex-shrink-0 me-1">
+                      <i class="fs-15 align-middle"></i>
+                    </div>
+                    <div class="flex-grow-1"><b>24/7</b> Support</div>
+                  </div>
+                </li>
+                <li>
+                  <div class="d-flex">
+                    <div class="flex-shrink-0 me-1">
+                      <i class="fs-15 align-middle"></i>
+                    </div>
+                    <div class="flex-grow-1">Travel insurance</div>
+                  </div>
+                </li>
+                <li>
+                  <div class="d-flex">
+                    <div class="flex-shrink-0 me-1">
+                      <i class="fs-15 align-middle"></i>
+                    </div>
+                    <div class="flex-grow-1"> Airport pickup and drop-off</div>
+                  </div>
+                </li>
+              </ul>
+              <div class="mt-4">
+                <a (click)="goToCheckout(prices[i] ?? p.price)"
+                  class="btn w-100 waves-effect waves-light bg-success text-custom-white">Purchase</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--end col-->
+    </div>
+    <!--end row-->
+  </div>
+  <!--end col-->
+</div>
+<!--end row-->

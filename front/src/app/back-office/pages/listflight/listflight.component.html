@@ -1,0 +1,95 @@
+
+<!-- Bouton pour cacher/afficher la sidebar -->
+<button class="toggle-sidebar" (click)="toggleSidebar()">
+  <i class="fas" [ngClass]="isSidebarHidden ? 'fa-arrow-right' : 'fa-arrow-left'"></i>
+</button>
+<div class="flight-list-container">
+  <!-- Filtres -->
+  <div class="filters">
+    <div class="filter-group">
+      <input 
+        type="text" 
+        [(ngModel)]="filters.aeroportDepart" 
+        placeholder="Aéroport de départ" 
+        (input)="applyFilters()"
+      >
+      <input 
+        type="text" 
+        [(ngModel)]="filters.aeroportArrivee" 
+        placeholder="Aéroport d'arrivée" 
+        (input)="applyFilters()"
+      >
+      <input 
+        type="text" 
+        [(ngModel)]="filters.compagnie" 
+        placeholder="Compagnie" 
+        (input)="applyFilters()"
+      >
+    </div>
+
+    <div class="filter-group">
+      <input 
+        type="text" 
+        [(ngModel)]="filters.numeroVol" 
+        placeholder="Numéro de vol" 
+        (input)="applyFilters()"
+      >
+      <input 
+        type="date" 
+        [(ngModel)]="filters.dateDepart" 
+        (input)="applyFilters()"
+      >
+      <input 
+        type="date" 
+        [(ngModel)]="filters.dateArrivee" 
+        (input)="applyFilters()"
+      >
+    </div>
+
+    <button class="reset-filters" (click)="resetFilters()">Réinitialiser les filtres</button>
+  </div>
+
+  <!-- Notification Pop-up en cas de succès -->
+  <div *ngIf="showSuccessPopup" class="popup-success">
+    <div class="popup-message">
+      <i class="fas fa-check-circle"></i> Vol supprimé avec succès!
+    </div>
+  </div>
+
+  <!-- Tableau des vols -->
+  <table class="flights-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Compagnie</th>
+        <th>Numéro de vol</th>
+        <th>Aéroport de départ</th>
+        <th>Aéroport d'arrivée</th>
+        <th>Statut</th>
+        <th>Sièges disponibles</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let flight of filteredFlights" class="flight-row">
+        <td>{{ flight.idVol }}</td>
+        <td>{{ flight.compagnie }}</td>
+        <td>{{ flight.numeroVol }}</td>
+        <td>{{ flight.aeroportDepart }}</td>
+        <td>{{ flight.aeroportArrivee }}</td>
+        <td [ngClass]="{
+          'statut-programme': flight.statut === 'Programmé',
+          'statut-annule': flight.statut === 'Annulé',
+          'statut-retarde': flight.statut === 'Retardé',
+        }">
+          {{ flight.statut }}
+        </td>
+        <td>{{ flight.siegesDisponibles }}</td>
+        <td class="actions">
+          <i class="fas fa-edit" (click)="updateFlight(flight.idVol, flight)"></i>
+          <i class="fas fa-trash" (click)="deleteFlight(flight.idVol)"></i>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

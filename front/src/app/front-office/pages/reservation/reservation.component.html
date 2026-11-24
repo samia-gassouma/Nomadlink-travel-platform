@@ -1,0 +1,138 @@
+<app-header></app-header>
+
+<section class="section-padding bg-light-white">
+  <div class="container">
+    <div class="steps-wrapper">
+      <div class="step-line"></div>
+      <div class="step-indicator d-flex justify-content-between align-items-center">
+        <div class="step-box">
+          <div class="step-icon">✈️</div>
+          <div class="step-label">Vol</div>
+        </div>
+        <div class="step-box active">
+          <div class="step-icon">📝</div>
+          <div class="step-label">Réservation</div>
+        </div>
+        <div class="step-box">
+          <div class="step-icon">✅</div>
+          <div class="step-label">Confirmation</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <!-- ✅ Informations du vol -->
+      <div class="col-md-6">
+        <div class="card shadow-sm bg-light p-3 rounded">
+          <div class="card-body">
+            <h5 class="card-title">✈️ Informations du vol</h5>
+            <p class="card-text" *ngIf="volDetails">
+              <strong>Compagnie :</strong> {{ volDetails.compagnie }}<br>
+              <strong>Numéro :</strong> {{ volDetails.numeroVol }}<br>
+              <strong>🕒 Départ :</strong> {{ volDetails.dateDepart }}<br>
+              <strong>💰 Prix :</strong> ${{ volDetails.prix }}<br>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ✅ Formulaire de réservation et paiement -->
+      <div class="col-md-6">
+        <div class="card shadow-sm p-4">
+          <h2 class="card-title text-center">Réservation de vol</h2>
+          <form [formGroup]="reservationForm" (ngSubmit)="submitReservation()">
+            
+            <!-- ✅ Informations passager -->
+            <div class="form-group">
+              <label for="nomPassager">Nom du passager :</label>
+              <input id="nomPassager" type="text" formControlName="nomPassager" class="form-control" required>
+              <div *ngIf="reservationForm.controls['nomPassager'].invalid && reservationForm.controls['nomPassager'].touched" class="text-danger">
+                Le nom doit contenir au moins 3 caractères et uniquement des lettres.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Adresse e-mail :</label>
+              <input id="email" type="email" formControlName="email" class="form-control" required>
+              <div *ngIf="reservationForm.controls['email'].invalid && reservationForm.controls['email'].touched" class="text-danger">
+                Veuillez saisir une adresse e-mail valide.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="numeroPasseport">Numéro de passeport :</label>
+              <input id="numeroPasseport" type="text" formControlName="numeroPasseport" class="form-control" required>
+              <div *ngIf="reservationForm.controls['numeroPasseport'].invalid && reservationForm.controls['numeroPasseport'].touched" class="text-danger">
+                Le numéro de passeport doit contenir au moins 6 caractères.
+              </div>
+            </div>
+
+            <!-- ✅ Sélection du moyen de paiement -->
+            <div class="form-group">
+              <label for="modePaiement">Sélectionnez un moyen de paiement :</label>
+              <div class="d-flex justify-content-between">
+                <div class="payment-option" (click)="selectPaymentMethod(ModePaiement.Carte_bancaire)" [ngClass]="{'selected': selectedPayment === ModePaiement.Carte_bancaire}">
+                  <img src="assets/front-office/images/credit-card.png" alt="Carte bancaire">
+                  <p>Carte Bancaire</p>
+                </div>
+                <div class="payment-option" (click)="selectPaymentMethod(ModePaiement.PayPal)" [ngClass]="{'selected': selectedPayment === ModePaiement.PayPal}">
+                  <img src="assets/front-office/images/paypal.png" alt="PayPal">
+                  <p>PayPal</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ✅ Champs dynamiques pour Carte Bancaire -->
+            <div *ngIf="selectedPayment === ModePaiement.Carte_bancaire">
+              <div class="form-group">
+                <label for="cardNumber">Numéro de carte :</label>
+                <input id="cardNumber" type="text" class="form-control" formControlName="cardNumber" required>
+                <div *ngIf="reservationForm.controls['cardNumber'].invalid && reservationForm.controls['cardNumber'].touched" class="text-danger">
+                  Veuillez saisir un numéro de carte valide (16 chiffres).
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="cardExpiry">Date d'expiration :</label>
+                <input id="cardExpiry" type="text" class="form-control" formControlName="cardExpiry" required>
+                <div *ngIf="reservationForm.controls['cardExpiry'].invalid && reservationForm.controls['cardExpiry'].touched" class="text-danger">
+                  Format attendu : MM/YY (ex: 09/25).
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="cardCVC">Code CVC :</label>
+                <input id="cardCVC" type="text" class="form-control" formControlName="cardCVC" required>
+                <div *ngIf="reservationForm.controls['cardCVC'].invalid && reservationForm.controls['cardCVC'].touched" class="text-danger">
+                  Le code CVC doit contenir 3 ou 4 chiffres.
+                </div>
+              </div>
+            </div>
+
+            <!-- ✅ PayPal Payment Integration -->
+            <div *ngIf="selectedPayment === ModePaiement.PayPal">
+              <div class="form-group text-center">
+                <ngx-paypal [config]="payPalConfig"></ngx-paypal>
+              </div>
+            </div>
+            
+            <!-- ✅ Bouton de paiement dynamique -->
+            <div class="d-flex justify-content-between mt-3">
+              <button *ngIf="selectedPayment === ModePaiement.Carte_bancaire" class="btn btn-primary btn-block" (click)="startCardPayment()">Payer par Carte Bancaire</button>
+              <button *ngIf="selectedPayment === ModePaiement.PayPal" class="btn btn-warning btn-block" (click)="startPaypalPayment()">Payer avec PayPal</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ Animation de confirmation après paiement -->
+    <div *ngIf="paymentConfirmed" class="confirmation-modal">
+      <div class="modal-content text-center">
+        <img src="assets/images/confirmation.gif" alt="Confirmation" class="confirmation-logo">
+        <h4 class="text-success fw-bold mt-3">Votre paiement est confirmé ! ✅</h4>
+        <p class="text-secondary">Un e-mail de confirmation a été envoyé à {{ reservationForm.value.email }}.</p>
+        <button class="btn btn-primary mt-3" (click)="goToHome()">Retourner à l’accueil</button>
+      </div>
+    </div>
+  </div>
+</section>
+

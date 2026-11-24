@@ -1,0 +1,58 @@
+<app-header></app-header>
+
+<div class="d-flex flex-column justify-content-center align-items-center min-vh-100 mb-4">
+  <div *ngIf="points" class="card shadow-sm border-0 rounded-3 p-4 bg-light mb-4 w-50">
+    <div class="d-flex align-items-center mb-3">
+      <img src="assets/front-office/images/reward.png" alt="Reward" height="20" width="20" class="me-2">
+      <h5 class="text-primary fw-bold mb-0">Your Points Details</h5>
+    </div>
+    <table class="table table-sm w-auto">
+      <tbody>
+        <tr>
+          <td class="text-nowrap pe-2"><strong class="text-secondary">Points</strong></td>
+          <td class="text-dark">{{ points.points }}</td>
+        </tr>
+        <tr>
+          <td class="text-nowrap pe-2"><strong class="text-secondary">Value</strong></td>
+          <td class="text-success fw-semibold">{{ points.value }}</td>
+        </tr>
+        <tr>
+          <td class="text-nowrap pe-2"><strong class="text-secondary">Last Updated</strong></td>
+          <td class="text-dark">{{ points.updated_at | date: 'dd MMM, yyyy HH:mm' }}</td>
+        </tr>
+        <tr>
+          <td class="text-nowrap pe-2"><strong class="text-secondary">Active</strong></td>
+          <td [ngClass]="points.is_active ? 'text-success' : 'text-danger'">
+            {{ points.is_active ? 'Yes' : 'No' }}
+          </td>
+        </tr>
+        <tr>
+          <td class="text-nowrap pe-2"><strong class="text-secondary">Token</strong></td>
+          <td class="text-info">{{ points.token }}</td>
+        </tr>
+        <tr>
+          <td class="text-nowrap pe-2"><strong class="text-secondary">Applied</strong></td>
+          <td [ngClass]="points.token_applied ? 'text-success' : 'text-warning'">
+            {{ points.token_applied ? 'Yes' : 'No' }}
+          </td>
+        </tr>
+        <tr>
+          <td class="text-nowrap pe-2"><strong class="text-secondary">Valid Until</strong></td>
+          <td class="text-dark">{{ points.valid_until | date: 'dd MMM, yyyy HH:mm' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex align-items-center gap-3 mb-2">
+    <button class="btn btn-outline-primary" (click)="getPromoCode()">Get Promo Code</button>
+    <input type="text" class="form-control" style="width: 200px;" [value]="promoCode ?? ''"
+      placeholder="Promo code will appear here" readonly>
+  </div>
+
+  <div *ngIf="showError" class="text-danger ms-1">
+    You don't have enough points to get a promo code.
+  </div>
+</div>
+
+<!--<app-footer></app-footer>-->

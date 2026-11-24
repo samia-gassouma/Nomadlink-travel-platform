@@ -1,0 +1,96 @@
+<div class="form-wrapper">
+  <h2>{{ activityForm ? 'Create New Activity' : 'Create New Activity' }}</h2>
+
+<form [formGroup]="activityForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+    <input formControlName="activityName" placeholder="Activity Name" />
+    <textarea formControlName="activityDescription" placeholder="Description"></textarea>
+  
+    <div class="form-group">
+      <label for="activityType">Activity Type:</label>
+      <select id="activityType" formControlName="activityType" required>
+        <option value="">-- Select Activity Type --</option>
+        <option *ngFor="let type of activityTypes" [value]="type">{{ type }}</option>
+      </select>
+    </div>
+  
+    <div class="form-group">
+        <label for="destinationId">Destination:</label>
+        <select id="destinationId" formControlName="destinationId" required>
+          <option value="">-- Select Destination --</option>
+          <option *ngFor="let dest of destinations" [value]="dest.id">
+            {{ dest.name }}
+          </option>
+        </select>
+      </div>
+      
+    <input formControlName="activityLocation" placeholder="Location" />
+  
+    <div class="form-group">
+      <label for="priceType">Price Type:</label>
+      <select id="priceType" formControlName="priceType" required>
+        <option value="Free">Free</option>
+        <option value="Paid">Paid</option>
+        <option value="Donation">Donation</option>
+      </select>
+    </div>
+  
+    <input formControlName="priceRange" placeholder="Price Range" />
+  
+    <div class="form-group">
+      <label for="bookingRequired">Booking Required:</label>
+      <select id="bookingRequired" formControlName="bookingRequired" required>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+    </div>
+  
+    <input formControlName="duration" placeholder="Duration" />
+  
+    <div class="form-group">
+      <label for="difficultyLevel">Difficulty Level:</label>
+      <select id="difficultyLevel" formControlName="difficultyLevel" required>
+        <option value="Easy">Easy</option>
+        <option value="Moderate">Moderate</option>
+        <option value="Difficult">Difficult</option>
+        <option value="Expert">Expert</option>
+      </select>
+    </div>
+  
+    <input formControlName="requiredEquipment" placeholder="Required Equipment" />
+    <textarea formControlName="safetyTips" placeholder="Safety Tips"></textarea>
+  
+    <!-- Accessibility checkboxes -->
+    <label>Accessibility:</label>
+    <div class="form-group checkbox-group">
+      <div *ngFor="let option of accessibilityOptions">
+        <input
+          type="checkbox"
+          [id]="option"
+          [value]="option"
+          (change)="onCheckboxChange($event, 'accessibility')"
+          [checked]="activityForm.value.accessibility.includes(option)"
+        />
+        <label [for]="option">{{ option }}</label>
+      </div>
+    </div>
+  
+    <!-- Languages multi-select -->
+    <label>Languages:</label>
+    <select formControlName="languages" multiple>
+      <option *ngFor="let lang of languagesList" [value]="lang">{{ lang }}</option>
+    </select>
+  
+    <!-- Gallery Images -->
+    <input formControlName="galleryImages" placeholder="Gallery Images (comma-separated URLs)" />
+  
+    <!-- Image Upload -->
+    <input type="file" (change)="onImageSelected($event)" />
+  
+    <div *ngIf="selectedImagePreview">
+      <p>Preview:</p>
+      <img [src]="selectedImagePreview" width="200" />
+    </div>
+  
+    <button type="submit">Submit</button>
+  </form>
+  

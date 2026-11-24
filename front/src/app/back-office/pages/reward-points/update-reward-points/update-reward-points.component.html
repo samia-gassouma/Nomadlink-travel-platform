@@ -1,0 +1,48 @@
+<form [formGroup]="updatePoints">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title mb-0">Form Input Spin</h4>
+          </div><!-- end card header -->
+  
+          <div class="card-body">
+            <div class="row gy-4">
+              <div class="col-sm-6">
+                <div>
+                  <h5 class="fs-13 fw-medium">Points</h5>
+                  <div class="input-step">
+                    <button type="button" class="minus shadow" (click)="decrement()">–</button>
+                    <input type="number" class="product-quantity" formControlName="points" min="0" max="100" readonly>
+                    <button type="button" class="plus shadow" (click)="increment()">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="card-body">
+            <div class="live-preview">
+              <div class="row">
+                <div class="col-lg-4 col-md-6">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" formControlName="is_active">
+                    <label class="form-check-label" for="flexSwitchCheckChecked">Active</label>
+                  </div>
+                </div><!-- end col -->
+  
+                <div class="col-xxl-3 col-md-6">
+                  <div>
+                    <label for="placeholderInput" class="form-label">Token</label>
+                    <input type="text" class="form-control" id="placeholderInput" placeholder="Placeholder" formControlName="token">
+                  </div>
+                </div><!-- end col -->
+  
+              </div><!-- end row -->
+            </div><!-- end live-preview -->
+          </div><!-- end card-body -->
+        </div><!-- end card -->
+      </div><!-- end col-lg-12 -->
+    </div><!-- end row -->
+  </form>
+  

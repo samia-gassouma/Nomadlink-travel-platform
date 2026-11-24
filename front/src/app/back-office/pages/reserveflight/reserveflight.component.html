@@ -1,0 +1,55 @@
+
+<div class="reservation-table-container">
+  <h2 class="title">Liste des Réservations</h2>
+
+  <div *ngIf="isLoading">Chargement...</div>
+  <div *ngIf="error">{{ error }}</div>
+
+  <table class="reservation-table" *ngIf="!isLoading && reservations.length">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nom Passager</th>
+        <th>Réservation</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let reservation of reservations">
+        <td>{{ reservation.idReservation }}</td>
+        <td>{{ reservation.nomPassager || 'N/A' }}</td>
+        <td>
+          <!-- Affichage de l'événement -->
+          <span *ngIf="reservation.event">
+            🎫 Événement : {{ reservation.event.title }}<br />
+            📍 {{ reservation.event.location }}<br />
+            📅 {{ reservation.event.startDateTime | date:'medium' }}
+            📅 {{ reservation.event.endDateTime | date:'medium' }}
+          </span>
+          
+
+          <span *ngIf="!reservation.event && reservation.vol">
+            ✈️ Vol : {{ reservation.vol.numeroVol }}<br />
+            🛫 Départ : {{ reservation.vol.aeroportDepart }} ({{ reservation.vol.dateDepart | date:'short' }})<br />
+            🛬 Arrivée : {{ reservation.vol.aeroportArrivee }} ({{ reservation.vol.dateArrivee | date:'short' }})
+          </span>
+
+          <span *ngIf="!reservation.event && !reservation.vol">
+            ✈️ Vol
+          </span>
+        </td>
+        <td>
+          <span class="statut-label">✅ {{ reservation.statut || 'Confirmée' }}</span>
+        </td>
+        <td class="actions">
+          <button *ngIf="reservation.idReservation" class="btn delete-btn" (click)="deleteReservation(reservation.idReservation)">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!isLoading && reservations.length === 0">
+    Aucune réservation trouvée.
+  </div>
+</div>

@@ -1,0 +1,144 @@
+[
+    {
+        "id": 1,
+        "linkText": "Home",
+        "nomPack": "Accueil",
+        "child": true,
+        "submenu": [
+            {
+                "id": 1.2,
+                "link": "/front-office/home-v2",
+                "linkText": "Home"
+            }
+        ]
+    },
+    {
+        "id": 1.5,
+        "linkText": "Services",
+        "nomPack": "Services",
+        "child": true,
+        "submenu": [
+            {
+                "id": 1.51,
+                "link": "/front-office/serviceactivepartner",
+                "linkText": "Services"
+            },
+            {
+                "id": 1.52,
+                "link": "/front-office/activepartners",
+                "linkText": "Our Partners"
+            }
+        ]
+    },
+    {
+        "id": 2.5,
+        "linkText": "Destination",
+        "nomPack": "Destinations",
+        "child": true,
+        "submenu": [
+            {
+                "id": 1.51,
+                "link": "/front-office/destinations",
+                "linkText": "Destinations"
+            },
+            {
+                "id": 1.52,
+                "link": "/front-office/activities",
+                "linkText": "Activities"
+            }
+        ]
+    }, {
+        "id": 3,
+        "linkText": "Flights",
+        "nomPack": "Vols",
+        "child": true,
+        "submenu": [
+            {
+                "id": 3.51,
+                "link": "/front-office/flight-grid-left",
+                "linkText": "Flights"
+            },
+            {
+                "id": 3.52,
+                "link": "/front-office/gemini",
+                "linkText": "Ask Question"
+            }
+        ]
+    },
+
+    {
+        "id": 2.5,
+        "linkText": "Events",
+        "nomPack": "Events",
+        "child": true,
+        "submenu": [
+            {
+                "id": 1.51,
+                "link": "/front-office/events",
+                "linkText": "Events"
+            }
+
+        ]
+    },
+    {
+        "id": 1.5,
+        "linkText": "Boutique",
+        "nomPack": "Boutique",
+        "child": true,
+        "submenu": [
+            {
+                "id": 1.51,
+                "link": "/front-office/shop",
+                "linkText": "Boutique"
+            }
+
+        ]
+    },
+    {
+        "id": 6,
+        "linkText": "Pack",
+        "nomPack": "Offres",
+        "child": true,
+        "submenu": [
+            {
+                "id": 6.1,
+                "link": "/front-office/pack/getAll",
+                "linkText": "Pack "
+            }
+
+        ]
+    },
+    {
+        "id": 7,
+        "linkText": "Claim",
+        "nomPack": "Réclamations",
+        "child": true,
+        "submenu": [
+            {
+                "id": 7.1,
+                "linkText": "Claim",
+                "child": true,
+                "submenu": [
+                    {
+                        "id": 7.11,
+                        "link": "/front-office/Claim",
+                        "linkText": "Full Width"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 8,
+        "linkText": "Community",
+        "nomPack": "Communauté",
+        "child": true,
+        "submenu": [
+            {
+                "id": 8.1,
+                "link": "/front-office/Community",
+                "linkText": "Community"
+            }
+        ]
+    }
+]

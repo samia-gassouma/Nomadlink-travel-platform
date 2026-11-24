@@ -1,0 +1,33 @@
+<div class="container">
+    <header class="my-4">
+      <h1 class="text-center">{{title}}</h1>
+      <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+          <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mx-auto">
+              <li class="nav-item">
+                <a class="nav-link" routerLink="ask" routerLinkActive="active">Ask a Question</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" routerLink="content" routerLinkActive="active">Knowledge Base</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" routerLink="add" routerLinkActive="active">Add Knowledge</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" routerLink="files" routerLinkActive="active">File Operations</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" routerLink="generate" routerLinkActive="active">Generate</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+  

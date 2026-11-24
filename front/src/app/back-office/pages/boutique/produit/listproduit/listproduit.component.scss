@@ -1,0 +1,120 @@
+.card {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: none;
+    margin-bottom: 24px;
+  
+    .card-header {
+      background-color: transparent;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  
+      .card-title {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+    }
+  
+    .card-body {
+      padding: 1.5rem;
+    }
+  }
+  
+  .table {
+    th {
+      font-weight: 600;
+      border-top: none;
+      background-color: #f8f9fa;
+    }
+  
+    td {
+      vertical-align: middle;
+    }
+  
+    .badge {
+      font-size: 0.85rem;
+      padding: 0.5em 0.75em;
+    }
+  
+    .img-thumbnail {
+      border-radius: 4px;
+    }
+  
+    .btn {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      border-radius: 0.2rem;
+    }
+  }
+  
+  /* Styles pour les onglets */
+  .nav-tabs-custom {
+    border-bottom: 2px solid #dee2e6;
+    margin-bottom: 1rem;
+  
+    .nav-item {
+      margin-bottom: -2px;
+    }
+  
+    .nav-link {
+      border: none;
+      color: #6c757d;
+      padding: 0.5rem 1rem;
+      font-weight: 500;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s ease;
+  
+      &:hover {
+        color: #0d6efd;
+        border-bottom-color: #0d6efd;
+      }
+  
+      &.active {
+        color: #0d6efd;
+        border-bottom-color: #0d6efd;
+        background-color: transparent;
+      }
+  
+      i {
+        font-size: 1.1rem;
+      }
+    }
+  }
+  
+  .tab-content {
+    border: 1px solid #dee2e6;
+    border-top: none;
+    border-radius: 0 0 0.25rem 0.25rem;
+    background-color: #fff;
+  }
+  
+  /* Styles pour la modal */
+  .modal-content {
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  }
+  
+  .modal-header {
+    border-bottom: 1px solid #dee2e6;
+    padding: 1rem 1.5rem;
+  
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0;
+    }
+  }
+  
+  .modal-body {
+    padding: 1.5rem;
+  }
+  
+  .modal-footer {
+    border-top: 1px solid #dee2e6;
+    padding: 1rem 1.5rem;
+  } 

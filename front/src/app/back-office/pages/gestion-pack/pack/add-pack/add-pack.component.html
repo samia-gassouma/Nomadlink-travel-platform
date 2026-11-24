@@ -1,0 +1,97 @@
+<form [formGroup]="addPackForm" (ngSubmit)="submitForm()">
+    <div formGroupName="pack">
+        <div class="col-lg-4">
+            <label for="placeholderInput" class="form-label">Pack Name</label>
+            <input formControlName="packName" type="text" class="form-control" id="placeholderInput" placeholder="name">
+        </div>
+
+        <div class="col-lg-4">
+            <label for="placeholderInput" class="form-label">Pack description</label>
+            <textarea formControlName="packDescription" class="form-control" placeholder="description"></textarea>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="mb-3">
+                <label for="choices-single-default" class="form-label">Pack Type</label>
+                <select formControlName="packType" class="form-select mb-3" aria-label="Default select example">
+                    <option *ngFor="let type of packTypes" [value]="type.key">{{ type.value }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div>
+                <label for="formFile" class="form-label">Pack Image</label>
+                <input formControlName="packImage" class="form-control" type="file" id="formFile"
+                    (change)="getImage($event)">
+            </div>
+            <!-- Display the file name -->
+            <div *ngIf="packImage" class="mt-2 text-sm text-gray-700">
+                Selected file: {{ packImage }}
+            </div>
+        </div><!--end col-->
+
+
+
+        <div class="col-lg-4 col-md-6">
+            <div class="mb-3">
+                <label for="choices-single-default" class="form-label">Select Flight</label>
+                <select formControlName="vol" class="form-select mb-3" aria-label="Default select example">
+                    <option *ngFor="let vol of listVol" [ngValue]="vol">
+                        {{ vol.compagnie }}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+
+    </div>
+    <div formArrayName="destinationGroups">
+        <div *ngFor="let group of destinationGroups.controls; let i = index" [formGroupName]="i"
+            style="display: flex; gap: 20px; ">
+            <div class="col-lg-4 col-md-6">
+                <div class="mb-3">
+                    <label for="choices-single-default" class="form-label">Select a Destination</label>
+                    <select formControlName="destinationId" (change)="onDestinationChange($event, i)"
+                        class="form-select mb-3" aria-label="Default select example">
+                        <option *ngFor="let dest of listDestination" [ngValue]="isEditMode ? dest : dest.id">
+                            {{ dest.name }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="mb-3">
+                    <label for="choices-single-default" class="form-label">Select Activities</label>
+                    <div *ngIf="group.get('destinationId')?.value" class="col-lg-6">
+                        <select formControlName="activityIds" class="form-select" multiple
+                            aria-label="multiple select example">
+                            <option *ngFor="let act of group.get('listActivity')?.value"
+                                [ngValue]="isEditMode ? act : act.id">
+                                {{ act.activityName}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="d-flex align-items-end mb-3">
+                <button type="button" class="btn btn-sm btn-primary" style="margin-right: 10px;"
+                    (click)="addDestination()">
+                    <i class="mdi mdi-plus"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-danger" (click)="removeDestinationGroup(i)">
+                    <i class="mdi mdi-minus"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <button *ngIf="showAddButton" type="button" (click)="addDestination()">Add Destination</button>
+    <br /><br />
+    <div class="col-lg-9 mb-3">
+        <div class="text-end">
+            <button [disabled]="addPackForm.invalid" type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+</form>

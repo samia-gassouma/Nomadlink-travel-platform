@@ -1,0 +1,64 @@
+<div class="destination-table-container">
+    <h1>Liste des destinations</h1>
+  
+    <!-- Loading State -->
+    <div class="loading-spinner" *ngIf="loading">
+      <div class="spinner"></div>
+    </div>
+  
+    <!-- Error Message -->
+    <div class="error-message" *ngIf="errorMessage && !loading">
+      {{ errorMessage }}
+    </div>
+  
+    <!-- Table Content -->
+    <div class="table-responsive-wrapper" *ngIf="!loading && destinations && destinations.length > 0">
+      <table class="destination-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Description</th>
+            <th>Pays</th>
+            <th>Langue</th>
+            <th>Monnaie</th>
+            <th>Climat</th>
+            <th>Visa requis</th>
+            <th>Image principale</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let destination of destinations; trackBy: trackById">
+            <td>{{ destination.id }}</td>
+            <td>{{ destination.name }}</td>
+            <td>{{ truncateText(destination.description, 100) }}</td>
+            <td>{{ destination.country }}</td>
+            <td>{{ destination.language }}</td>
+            <td>{{ destination.currency }}</td>
+            <td>{{ destination.climate }}</td>
+            <td>{{ destination.visaRequired ? 'Oui' : 'Non' }}</td>
+            <td>
+                <img [src]="'http://localhost:9000/picloud/api/activities/images/' + destination.mainImageUrl" alt="{{ destination.name }}" width="200" />
+            </td>
+            <td class="actions">
+              <button [routerLink]="['/back-office/destinations/edit', destination.id]">Éditer</button>
+              <button class="btn-delete"
+              (click)="deleteDestination(destination.id)"
+              [disabled]="!destination.id">
+        <i class="fas fa-trash-alt"></i>
+      </button>
+      
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Empty State -->
+    <div class="no-destinations" *ngIf="!loading && (!destinations || destinations.length === 0)">
+      <h3>Aucune destination trouvée</h3>
+      <p>Commencez par ajouter des destinations à votre liste !</p>
+    </div>
+  </div>
+  

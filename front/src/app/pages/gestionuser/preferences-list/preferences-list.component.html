@@ -1,0 +1,182 @@
+<!-- preference-list.component.html -->
+<div class="preference-list-container">
+    <div class="header-container">
+        <h2>Preference Management</h2>
+        <button class="create-btn" (click)="navigateToCreate()">
+            <i class="fas fa-plus"></i> New Preference
+        </button>
+    </div>
+    <!-- Dashboard widgets -->
+    <div class="statistics-dashboard">
+        <div class="stat-widget total-preferences">
+            <div class="stat-icon">
+                <i class="fas fa-list"></i>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-value">{{ statistics.totalPreferences }}</h3>
+                <p class="stat-label">Total Preferences</p>
+            </div>
+        </div>
+
+        <div class="stat-widget popular-preferences">
+            <div class="stat-header">
+                <i class="fas fa-star"></i>
+                <h3>Most Popular Preferences</h3>
+            </div>
+            <div class="stat-chart">
+                <div class="chart-bar" *ngFor="let pref of statistics.mostChosenPreferences.slice(0, 5)">
+                    <div class="bar-label">{{ pref.name }}</div>
+                    <div class="bar-container">
+                        <div class="bar-fill" [style.width.%]="(pref.count / statistics.mostChosenPreferences[0].count) * 100"></div>
+                        <span class="bar-value">{{ pref.count }}</span>
+                    </div>
+                </div>
+                <p *ngIf="statistics.mostChosenPreferences.length === 0" class="no-data-text">No preference data available</p>
+            </div>
+        </div>
+
+        <div class="stat-widget categories-stats">
+            <div class="stat-header">
+                <i class="fas fa-chart-pie"></i>
+                <h3>Most Popular by Category</h3>
+            </div>
+            <div class="categories-grid">
+                <div class="category-stat-card" *ngFor="let category of categories">
+                    <div class="category-label" [ngClass]="getSafeCategoryClass(category)">{{ getCategoryDisplay(category) }}</div>
+                    <div class="popular-item" *ngIf="statistics.mostChosenByCategory[category]">
+                        <div class="item-name">{{ statistics.mostChosenByCategory[category].name }}</div>
+                        <div class="item-count">{{ statistics.mostChosenByCategory[category].count }} users</div>
+                    </div>
+                    <div class="no-data" *ngIf="!statistics.mostChosenByCategory[category]">No data</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search bar and filters -->
+    <div class="filters-container">
+        <div class="search-box">
+            <input
+                    type="text"
+                    placeholder="Search by name..."
+                    [(ngModel)]="searchTerm"
+                    (input)="applyFilters()"
+                    class="search-input"
+            >
+            <i class="fas fa-search search-icon"></i>
+        </div>
+
+        <div class="category-filter">
+            <select
+                    [(ngModel)]="selectedCategory"
+                    (change)="applyFilters()"
+                    class="category-select"
+            >
+                <option value="">All categories</option>
+                <option *ngFor="let category of categories" [value]="category">
+                    {{ getCategoryDisplay(category) }}
+                </option>
+            </select>
+        </div>
+
+        <!-- Sort buttons -->
+        <!-- In the sort-buttons div, add the new button after the existing ones -->
+        <div class="sort-buttons">
+            <button
+                    class="sort-btn"
+                    [ngClass]="{'active': sortOrder === 'newest'}"
+                    (click)="changeSortOrder('newest')"
+            >
+                <i class="fas fa-sort-amount-down"></i> Newest
+            </button>
+            <button
+                    class="sort-btn"
+                    [ngClass]="{'active': sortOrder === 'latest'}"
+                    (click)="changeSortOrder('latest')"
+            >
+                <i class="fas fa-sort-amount-up"></i> Latest
+            </button>
+            <button
+                    class="sort-btn"
+                    [ngClass]="{'active': sortOrder === 'mostUsers'}"
+                    (click)="changeSortOrder('mostUsers')"
+            >
+                <i class="fas fa-users"></i> Most Users
+            </button>
+        </div>
+        <button class="reset-btn" (click)="resetFilters()">
+            <i class="fas fa-undo"></i> Reset
+        </button>
+    </div>
+
+    <div class="results-info">
+        <span>{{ filteredPreferences.length }} preference(s) found</span>
+    </div>
+
+    <div class="loading-container" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Loading preferences...</p>
+    </div>
+
+    <div class="table-responsive" *ngIf="!isLoading">
+        <table class="preference-table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Users</th>  <!-- Nouvelle colonne -->
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let preference of displayedPreferences">
+                <td>{{ preference.name || 'N/A' }}</td>
+                <td>
+                    <span class="category-badge" [ngClass]="getSafeCategoryClass(preference.category)">
+                        {{ getCategoryDisplay(preference.category) }}
+                    </span>
+                </td>
+                <td>{{ getUserCount(preference.id) }}</td>  <!-- Nouvelle cellule -->
+                <td class="actions-column">
+                    <button class="icon-btn view-btn" title="View Details" (click)="onViewDetails(preference.id)">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="icon-btn edit-btn" title="Edit Preference" (click)="onEdit(preference.id)">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="icon-btn delete-btn" title="Delete Preference" (click)="onDelete(preference.id)">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </td>
+            </tr>
+            <tr *ngIf="displayedPreferences.length === 0 && !isLoading">
+                <td colspan="3" class="no-data">No preferences found</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Pagination Component -->
+        <div class="pagination-container" *ngIf="totalPages > 1">
+            <div class="pagination">
+                <button class="pagination-btn" [disabled]="currentPage === 1" (click)="prevPage()">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+
+                <button *ngFor="let page of getPageArray()"
+                        class="pagination-btn"
+                        [class.active]="page === currentPage"
+                        (click)="changePage(page)">
+                    {{ page }}
+                </button>
+
+                <button class="pagination-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <div class="pagination-info">
+                Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ Math.min(currentPage * itemsPerPage, filteredPreferences.length) }} of {{ filteredPreferences.length }} preferences
+            </div>
+        </div>
+    </div>
+</div>

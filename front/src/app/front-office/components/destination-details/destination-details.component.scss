@@ -1,0 +1,376 @@
+/* Travel App Enhanced Color Palette */
+:root {
+  --primary: #3498db;       /* Sky blue */
+  --primary-dark: #2980b9;  /* Darker blue */
+  --secondary: #681fc7;     /* Warm orange */
+  --secondary-dark: #0a588d; /* Darker orange */
+  --accent: #321092;        /* Teal */
+  --accent-light: #5b3b8f;  /* Lighter teal */
+  --light: #ecf0f1;         /* Off-white */
+  --dark: #1f4368;          /* Deep blue-gray */
+  --pink: #150c94;          /* Vibrant pink */
+  --purple: #1a0155;        /* Purple */
+  --red: #1146b8;           /* Red */
+  --green: #0b1c55;         /* Green */
+  --shadow: rgba(138, 142, 209, 0.1);
+}
+
+/* Overall Card Styling */
+.destination-card {
+  max-width: 900px;
+  margin: 2rem auto;
+  background: linear-gradient(to bottom right, var(--light), white);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px var(--shadow);
+  padding-bottom: 2rem;
+  position: relative;
+  font-family: 'Montserrat', sans-serif;
+  color: var(--dark);
+  border-top: 5px solid var(--accent);
+  border-bottom: 5px solid var(--secondary);
+}
+
+/* Header Section - Now Blue */
+.destination-card h2 {
+  margin: 0;
+  padding: 1.8rem 1.5rem;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: rgb(65, 62, 199);
+  font-size: 2.4rem;
+  text-align: center;
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+.destination-card h2::after {
+  content: "✈";
+  position: absolute;
+  right: 20px;
+  font-size: 1.8rem;
+  opacity: 0.4;
+  transform: rotate(45deg);
+}
+
+/* Main Image */
+/* Main Image */
+
+
+/* Conteneur de l'image principale - Taille réduite */
+.main-image-container {
+  width: 100%;
+  height: 300px; /* Réduit de 400px à 300px */
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin: 20px 0;
+  position: relative;
+}
+
+.main-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.main-image-container:hover img {
+  transform: scale(1.02);
+}
+.main-image-container {
+  width: 400px;
+  height: 400px;
+  margin: 20px auto;
+  border-radius: 4px;
+}
+
+
+/* Description */
+.destination-card .description {
+  padding: 1.5rem 2rem;
+  line-height: 1.6;
+  border-bottom: 2px solid var(--secondary);
+  position: relative;
+  font-size: 1.1rem;
+  background: linear-gradient(to right, rgba(40, 159, 189, 0.5), rgba(13, 70, 145, 0.8), rgba(49, 206, 245, 0.5));
+}
+
+.destination-card .description::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 4px;
+  background: var(--secondary);
+  border-radius: 2px;
+}
+
+/* Info Grid */
+.destination-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+.info-item {
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Add different colors to each info item */
+.info-item:nth-child(1) {
+  background: linear-gradient(to bottom right, rgb(255, 255, 255), #e3f2fd);
+  border-top: 3px solid var(--primary);
+}
+
+.info-item:nth-child(2) {
+  background: linear-gradient(to bottom right, white, #fff8e1);
+  border-top: 3px solid var(--secondary);
+}
+
+.info-item:nth-child(3) {
+  background: linear-gradient(to bottom right, white, #e8f5e9);
+  border-top: 3px solid var(--green);
+}
+
+.info-item:nth-child(4) {
+  background: linear-gradient(to bottom right, white, #f3e5f5);
+  border-top: 3px solid var(--purple);
+}
+
+.info-item:nth-child(5) {
+  background: linear-gradient(to bottom right, white, #ffebee);
+  border-top: 3px solid var(--red);
+}
+
+.info-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px var(--shadow);
+}
+
+.info-item strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Color for each info label */
+.info-item:nth-child(1) strong { color: var(--primary); }
+.info-item:nth-child(2) strong { color: var(--secondary); }
+.info-item:nth-child(3) strong { color: var(--green); }
+.info-item:nth-child(4) strong { color: var(--purple); }
+.info-item:nth-child(5) strong { color: var(--red); }
+
+/* Gallery Section - Museum Style */
+.gallery-section {
+  padding: 2rem;
+  background: linear-gradient(to bottom, transparent, rgba(236, 240, 241, 0.5));
+  border-radius: 0 0 12px 12px;
+}
+
+.gallery-section h3 {
+  text-align: center;
+  color: var(--accent);
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.gallery-section h3::after {
+  content: "🖼️";
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.2rem;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  box-shadow: 0 6px 20px var(--shadow);
+  transition: all 0.4s ease;
+  height: 200px;
+  background: white;
+  padding: 10px;
+}
+
+/* Alternate gallery item colors */
+.gallery-item:nth-child(3n+1)::before {
+  border-color: var(--primary) !important;
+}
+
+.gallery-item:nth-child(3n+2)::before {
+  border-color: var(--secondary) !important;
+}
+
+.gallery-item:nth-child(3n+3)::before {
+  border-color: var(--accent) !important;
+}
+
+.gallery-item::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border: 1px solid var(--secondary);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.gallery-item:hover {
+  transform: translateY(-8px) rotate(1deg);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.gallery-item:hover::before {
+  opacity: 1;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.05);
+}
+
+/* Map Section */
+.map-section {
+  padding: 0 2rem 2rem;
+}
+
+.map-section h3 {
+  text-align: center;
+  color: var(--primary);
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.map-container {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px var(--shadow);
+  position: relative;
+  border: 4px solid var(--light);
+}
+
+.map-container::after {
+  content: "📍";
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-size: 1.8rem;
+  background: rgba(255, 255, 255, 0.8);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.map-container iframe {
+  width: 100%;
+  border: none;
+}
+
+/* Safety Tips Special Styling */
+.safety-tips {
+  background: linear-gradient(to right, #e8f5e9, white, #e8f5e9);
+  padding: 1.5rem;
+  margin: 2rem;
+  border-radius: 10px;
+  border-left: 4px solid var(--green);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.safety-tips strong {
+  color: var(--green);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+}
+
+.safety-tips strong::before {
+  content: "🛡️";
+  margin-right: 8px;
+}
+
+/* Best Time Badge */
+.best-time {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(to right, var(--secondary), var(--secondary-dark));
+  color: rgb(30, 4, 78);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  transform: rotate(5deg);
+}
+
+/* Section Headers */
+h3 {
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+h3::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: currentColor;
+  border-radius: 3px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .destination-info {
+    grid-template-columns: 1fr;
+  }
+  
+  .gallery {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  
+  .best-time {
+    position: relative;
+    top: auto;
+    right: auto;
+    display: inline-block;
+    margin: 1rem 2rem;
+    transform: none;
+  }
+}

@@ -1,0 +1,130 @@
+<app-header></app-header>
+<section class="section-padding bg-light-white">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="listing-top-heading mb-xl-20">
+                    <h2 class="text-custom-black">My Clients</h2>
+                    <h6 class="no-margin text-custom-black">Showing {{ filteredClients.length }} Results</h6>
+                    <div class="sort-by">
+                        <span class="text-custom-black fs-14 fw-600">Sort by</span>
+                        <div class="group-form">
+                            <select [(ngModel)]="sortBy" (change)="changeSortBy(sortBy)" class="form-control custom-select">
+                                <option *ngFor="let option of sortOptions" [value]="option.value">
+                                    {{option.label}}
+                                </option>
+                            </select>
+                            <button *ngIf="sortBy !== 'none'" class="btn btn-sm btn-outline-secondary sort-dir-btn"
+                                    (click)="toggleSortOrder()">
+                                <i class="fas" [ngClass]="sortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters and Sorting -->
+                <div class="filters-section mb-xl-20">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="search-bar">
+                                <input
+                                        type="text"
+                                        [(ngModel)]="searchTerm"
+                                        (ngModelChange)="updateDisplayedClients()"
+                                        placeholder="Search clients by name, email or phone..."
+                                        class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-outline-secondary w-100" (click)="resetFilters()">
+                                Reset Filters
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading spinner or error message -->
+            <div *ngIf="isLoading" class="col-12 text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+
+            <div *ngIf="errorMessage" class="col-12">
+                <div class="alert alert-danger">
+                    {{errorMessage}}
+                </div>
+            </div>
+
+            <!-- No clients message -->
+            <div *ngIf="!isLoading && displayedClients.length === 0" class="col-12 py-5 text-center">
+                <div class="no-clients">
+                    <p *ngIf="searchTerm">No clients match your search criteria.</p>
+                    <p *ngIf="!searchTerm">You don't have any clients yet. Users who select your services will appear here.</p>
+                </div>
+            </div>
+
+            <!-- Clients table -->
+            <div class="col-12" *ngIf="!isLoading && displayedClients.length > 0">
+                <div class="table-responsive">
+                    <table class="table table-striped bg-white">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Profile</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let client of displayedClients; let i = index">
+                            <th scope="row">{{ (currentPage - 1) * itemsPerPage + i + 1 }}</th>
+                            <td>
+                                <div class="user-profile-pic" [attr.data-user-id]="client.id">
+                                    <img *ngIf="getUserImageUrl(client)"
+                                         [src]="getUserImageUrl(client)"
+                                         class="rounded-circle profile-img"
+                                         alt="User Profile"
+                                         (error)="handleImageError($event)">
+                                    <div *ngIf="!getUserImageUrl(client)" class="avatar-placeholder">
+                                        {{ getUserInitials(client) }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ client.firstname }} {{ client.lastname }}</td>
+                            <td>{{ client.email }}</td>
+                            <td>{{ client.phoneNumber || 'N/A' }}</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" (click)="viewClientServices(client.id)">View Services</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="row" *ngIf="filteredClients.length > itemsPerPage">
+            <div class="col-12">
+                <nav class="pagination_layout section-padding-top">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" [class.disabled]="currentPage === 1">
+                            <a class="page-link" (click)="pageChanged(currentPage - 1)" style="cursor: pointer;">Prev</a>
+                        </li>
+                        <li class="page-item" *ngFor="let page of [].constructor(Math.ceil(filteredClients.length / itemsPerPage)); let i = index"
+                            [class.active]="currentPage === i + 1">
+                            <a class="page-link" (click)="pageChanged(i + 1)" style="cursor: pointer;">{{ i + 1 }}</a>
+                        </li>
+                        <li class="page-item" [class.disabled]="currentPage === Math.ceil(filteredClients.length / itemsPerPage)">
+                            <a class="page-link" (click)="pageChanged(currentPage + 1)" style="cursor: pointer;">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>

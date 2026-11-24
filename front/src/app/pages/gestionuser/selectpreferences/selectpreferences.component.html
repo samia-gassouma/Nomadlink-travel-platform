@@ -1,0 +1,88 @@
+
+<div class="preference-page-wrapper">
+<div class="preference-selection-container">
+  <div class="progress-container">
+    <div class="progress">
+      <div class="progress-bar" [style.width.%]="progressPercentage"></div>
+    </div>
+    <div class="progress-text">{{progressPercentage}}% Complete</div>
+  </div>
+
+  <!-- Guidance message moved to top as requested -->
+  <div *ngIf="!canMoveNext() && !isLastCategory()" class="selection-guidance">
+    <p><i class="fas fa-info-circle"></i> Please select at least one preference from each category to continue.</p>
+  </div>
+
+  <div *ngIf="isLastCategory() && !canSavePreferences()" class="selection-guidance">
+    <p><i class="fas fa-info-circle"></i> Please select at least one preference from each category to save your preferences.</p>
+  </div>
+
+  <div *ngIf="saveSuccess" class="success-message">
+    <i class="fas fa-check-circle"></i>
+    <p>Your preferences have been saved successfully! Redirecting to your dashboard...</p>
+  </div>
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading your preference options...</p>
+  </div>
+
+  <div *ngIf="!loading && preferences.length > 0" class="preferences-content">
+    <div *ngFor="let categoryGroup of selectedCategoryPreferences" class="category-section">
+      <div class="category-header">
+        <i class="fas {{getCategoryIcon(categoryGroup.category)}}"></i>
+        <h2>{{getFormattedCategoryName(categoryGroup.category)}}</h2>
+      </div>
+
+      <div class="category-question">
+        <p>{{categoryQuestions[categoryGroup.category]}}</p>
+      </div>
+
+      <div class="preferences-grid">
+        <button
+                *ngFor="let preference of categoryGroup.preferences"
+                (click)="toggleSelection(preference.id, categoryGroup.category)"
+                [ngClass]="{
+            'preference-btn': true,
+            'selected': isSelected(preference.id)
+          }">
+          <span class="preference-name">{{preference.name}}</span>
+          <span *ngIf="isSelected(preference.id)" class="check-icon">✓</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="navigation-section">
+      <button
+              *ngIf="currentCategoryIndex > 0"
+              (click)="previousCategory()"
+              class="nav-btn prev-btn">
+        <i class="fas fa-arrow-left"></i> Previous
+      </button>
+
+      <button
+              *ngIf="!isLastCategory()"
+              (click)="nextCategory()"
+              [disabled]="!canMoveNext()"
+              [ngClass]="{'nav-btn next-btn': true, 'disabled': !canMoveNext()}">
+        Next <i class="fas fa-arrow-right"></i>
+      </button>
+
+      <button
+              *ngIf="isLastCategory()"
+              (click)="onAddPreferencesToUser()"
+              [disabled]="!canSavePreferences() || savingPreferences"
+              [ngClass]="{'save-btn': true, 'disabled': !canSavePreferences() || savingPreferences}">
+        <span *ngIf="!savingPreferences">Save My Preferences</span>
+        <span *ngIf="savingPreferences">Saving...</span>
+      </button>
+    </div>
+
+
+  </div>
+
+  <div *ngIf="!loading && preferences.length === 0" class="empty-state">
+    <i class="fas fa-exclamation-circle"></i>
+    <p>No preferences found. Please try again later.</p>
+  </div>
+</div>
+</div>

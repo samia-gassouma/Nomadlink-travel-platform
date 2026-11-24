@@ -1,0 +1,223 @@
+/* Style pour le formulaire d'événements */
+.form-container {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    margin: 20px auto;
+    max-width: 800px;
+  }
+  
+  .form-header {
+    margin-bottom: 25px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 15px;
+  }
+  
+  .form-header h2 {
+    color: #343a40;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .form-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 5px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #495057;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+  
+  .form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+    transform: translateY(-1px);
+  }
+  
+  textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+  }
+  
+  /* Style pour le bouton */
+  .btn {
+    padding: 12px 25px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    border: none;
+    font-size: 14px;
+    align-self: flex-start;
+    margin-top: 10px;
+  }
+  
+  .btn-primary {
+    background-color: #3051d3;
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: #2541b2;
+  }
+  
+  .btn:disabled {
+    background-color: #a9b7e0;
+    cursor: not-allowed;
+  }
+  
+  /* Style pour l'état de chargement */
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: #6c757d;
+    font-weight: 500;
+  }
+  
+  /* Style pour les messages d'erreur */
+  .error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    border: 1px solid #f5c6cb;
+  }
+  
+  /* Style pour l'input de type datetime-local */
+  input[type="datetime-local"] {
+    padding: 11px 15px;
+  }
+  
+  /* Style pour l'upload de fichier */
+  input[type="file"] {
+    padding: 8px;
+    background-color: #f8f9fa;
+  }
+  
+  input[type="file"]::-webkit-file-upload-button {
+    background-color: #6c757d;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.2s;
+  }
+  
+  input[type="file"]::-webkit-file-upload-button:hover {
+    background-color: #5a6268;
+  }
+  
+  /* Style pour la carte iframe */
+  iframe {
+    border-radius: 8px;
+    margin: 15px 0;
+    max-width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .form-container {
+      padding: 15px;
+      margin: 10px;
+    }
+    
+    iframe {
+      height: 300px;
+    }
+    
+    .btn {
+      width: 100%;
+    }
+  }
+  
+  /* S'assurer que le formulaire s'intègre bien avec la sidebar */
+  @media (min-width: 992px) {
+    .form-container {
+      margin-left: 250px; /* Ajuster selon la largeur de votre sidebar */
+      width: calc(100% - 280px);
+      transition: margin-left 0.3s, width 0.3s;
+    }
+    
+    body[data-sidebar="collapsed"] .form-container {
+      margin-left: 70px; /* Ajuster selon votre sidebar en état réduit */
+      width: calc(100% - 100px);
+    }
+  }
+  
+  /* Validation styles */
+  .ng-invalid.ng-touched:not(form) {
+    border-color: #dc3545;
+  }
+  
+  .validation-error {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+  
+  /* Animation subtile pour les transitions */
+  .form-container {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Style pour les champs requis */
+  .form-control:required {
+    border-left: 3px solid #3051d3;
+  }
+  
+  /* Style pour select */
+  select.form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23343a40' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 30px;
+  }
+  
+  /* Styles pour les placeholders */
+  .form-control::placeholder {
+    color: #adb5bd;
+    opacity: 0.8;
+  }

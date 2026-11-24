@@ -1,0 +1,55 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="d-flex align-items-center flex-wrap gap-2">
+          <div class="col-sm-6 col-xl-3 d-flex">
+            <button [routerLink]="['/back-office/packs/pack', 'add']" class="btn btn-success">
+              <i class="mdi mdi-plus-circle-outline me-1"></i> Add New Pack
+            </button>
+          </div>
+          <div class="col-sm-6 col-xl-3 d-flex">
+            <button [routerLink]="['/back-office/travelqa']"
+              class="btn btn-primary d-flex align-items-center gap-2 shadow-sm px-4 py-2">
+              <i class="mdi mdi-robot text-white"></i>
+              <span class="">Ask AI</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3" *ngFor="let pack of listPacks; let i = index">
+    <div class="card ribbon-box border ribbon-fill mb-4">
+      <img class="card-img-top img-fluid" [src]="imageBaseUrl + pack.packImage" [alt]="pack.packName"
+        style="height: 180px; object-fit: cover;">
+
+      <div class="card-body">
+        <div class="ribbon ribbon-success" *ngIf="pack.discount">
+          {{ pack.discount.reduction_percent }}% Off
+        </div>
+
+        <h5 class="fs-14 text-end">{{ i + 1 }}. {{ pack.packName }}</h5>
+        <h5 class="fs-14 text-end"> {{ pack.packType }}</h5>
+
+        <div class="ribbon-content mt-3 text-muted">
+          <p class="mb-2">{{ pack.packDescription }}</p>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <a [routerLink]="['/back-office/packs/pack', 'get', pack.id]" class="btn btn-sm btn-outline-primary">
+              View
+            </a>
+            <button [routerLink]="['/back-office/packs/pack', 'update', pack.id]" class="btn btn-sm btn-warning">
+              Update
+            </button>
+            <button (click)="removePack(pack.id, i)" class="btn btn-sm btn-danger">
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add New Pack Button -->
+</div>

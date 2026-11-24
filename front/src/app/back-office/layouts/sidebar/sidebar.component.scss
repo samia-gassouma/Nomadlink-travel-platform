@@ -1,0 +1,15 @@
+
+// Pour un fond clair
+.vertical-menu {
+    background-color: #fff !important; // blanc ou couleur claire
+    color: #333; // texte sombre pour contraste
+  
+    .menu-title, .nav-link {
+      color: #333 !important;
+    }
+  
+    .active, .mm-active {
+      background-color: #f5f5f5 !important; // survol ou élément actif
+    }
+  }
+  

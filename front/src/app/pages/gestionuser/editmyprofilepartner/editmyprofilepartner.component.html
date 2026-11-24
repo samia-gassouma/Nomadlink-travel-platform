@@ -1,0 +1,378 @@
+<app-header></app-header>
+<div class="container mt-5">
+    <!-- Profile header with cover color and profile image -->
+    <div class="position-relative mx-n4 mt-n4">
+        <div class="profile-wid-bg">
+            <!-- Cover color with gradient instead of solid color -->
+            <div class="bg-blue-gradient" style="height: 240px; width: 100%;">
+                <!-- You can add overlay content here if needed -->
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Profile photo section -->
+        <div class="col-xxl-3">
+            <div class="card mt-n5">
+                <div class="card-body p-4">
+                    <div class="text-center">
+                        <div class="profile-user position-relative d-inline-block mx-auto mb-4">
+                            <img *ngIf="imageUrl; else defaultImage"
+                                 [src]="imageUrl"
+                                 class="rounded-circle avatar-xl img-thumbnail user-profile-image shadow"
+                                 alt="user-profile-image"
+                                 (error)="handleImageError()">
+                            <ng-template #defaultImage>
+                                <img src="assets/gestionuser/profile.jpg"
+                                     class="rounded-circle avatar-xl img-thumbnail user-profile-image shadow"
+                                     alt="user-profile-image">
+                            </ng-template>
+                            <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
+                                <input id="profile-img-file-input" type="file" class="profile-img-file-input"
+                                       accept="image/*" (change)="onFileSelected($event)">
+                                <label for="profile-img-file-input" class="profile-photo-edit avatar-xs">
+                <span class="avatar-title rounded-circle bg-light text-body shadow">
+                    <i class="ri-camera-fill"></i>
+                </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- You may add a loading indicator during upload -->
+                        <div *ngIf="isLoading" class="mt-2">
+                            <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <small class="text-muted ms-1">Uploading image...</small>
+                        </div>
+
+                        <!-- Error message if the upload fails -->
+                        <div *ngIf="submitError" class="text-danger small mt-2">
+                            {{ submitError }}
+                        </div>
+
+                        <h5 class="fs-16 mb-1" *ngIf="partnerDetails">{{partnerDetails.firstname}} {{partnerDetails.lastname}}</h5>
+                        <p class="text-muted mb-0" *ngIf="partnerDetails">{{partnerDetails.email}}</p>
+
+                        <!-- Partnership Status -->
+                        <div class="mt-3" *ngIf="partnerDetails && partnerDetails.partnershipStatus">
+        <span class="badge rounded-pill fs-12 py-1 px-2"
+              [style.background-color]="getPartnershipStatusColor(partnerDetails.partnershipStatus || '')">
+              {{getPartnershipStatusLabel(partnerDetails.partnershipStatus || '')}}
+        </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content area -->
+        <div class="col-xxl-9">
+            <div class="card mt-xxl-n5">
+                <div class="card-header">
+                    <ul ngbNav #customNav="ngbNav" [(activeId)]="activeTab"
+                        class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" [class.active]="activeTab === 1" (click)="changeTab(1)" role="tab">
+                                <i class="fas fa-home"></i>
+                                Partner Details
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [class.active]="activeTab === 2" (click)="changeTab(2)" role="tab">
+                                <i class="far fa-user"></i>
+                                Change Password
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <!-- Loading spinner -->
+                    <div *ngIf="isLoading" class="text-center p-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Loading your profile data...</p>
+                    </div>
+
+                    <!-- Error message -->
+                    <div *ngIf="submitError" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        {{ submitError }}
+                        <button type="button" class="btn-close" (click)="submitError = null" aria-label="Close"></button>
+                    </div>
+
+                    <!-- Partner Details Tab -->
+                    <div *ngIf="activeTab === 1 && !isLoading && partnerDetails">
+                        <form [formGroup]="partnerForm" (ngSubmit)="onUpdate()">
+                            <div class="row">
+                                <!-- Basic Information Section -->
+                                <div class="col-lg-12 mb-3">
+                                    <h5 class="mb-3">Basic Information</h5>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="nameInput" class="form-label">Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="nameInput"
+                                               formControlName="name" placeholder="Enter your name">
+                                        <div *ngIf="hasError('name', 'required')" class="text-danger small mt-1">
+                                            Name is required.
+                                        </div>
+                                        <div *ngIf="hasError('name', 'minlength')" class="text-danger small mt-1">
+                                            Name must be at least 3 characters.
+                                        </div>
+                                        <div *ngIf="hasError('name', 'maxlength')" class="text-danger small mt-1">
+                                            Name cannot exceed 15 characters.
+                                        </div>
+                                        <div *ngIf="hasError('name', 'pattern')" class="text-danger small mt-1">
+                                            Name must contain only letters.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="otherNameInput" class="form-label">Other Name</label>
+                                        <input type="text" class="form-control" id="otherNameInput"
+                                               formControlName="otherName" placeholder="Enter your other name">
+                                        <div *ngIf="hasError('otherName', 'minlength')" class="text-danger small mt-1">
+                                            Other name must be at least 3 characters.
+                                        </div>
+                                        <div *ngIf="hasError('otherName', 'maxlength')" class="text-danger small mt-1">
+                                            Other name cannot exceed 15 characters.
+                                        </div>
+                                        <div *ngIf="hasError('otherName', 'pattern')" class="text-danger small mt-1">
+                                            Other name must contain only letters.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="emailInput" class="form-label">Email Address <span class="text-danger">*</span></label>
+                                        <input type="email" class="form-control" id="emailInput"
+                                               formControlName="email" placeholder="Enter your email">
+                                        <div *ngIf="hasError('email', 'required')" class="text-danger small mt-1">
+                                            Email is required.
+                                        </div>
+                                        <div *ngIf="hasError('email', 'email') || hasError('email', 'pattern')" class="text-danger small mt-1">
+                                            Please enter a valid email address.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="phoneNumberInput" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="phoneNumberInput"
+                                               formControlName="phoneNumber" placeholder="Enter your phone number">
+                                        <div *ngIf="hasError('phoneNumber', 'required')" class="text-danger small mt-1">
+                                            Phone number is required.
+                                        </div>
+                                        <div *ngIf="hasError('phoneNumber', 'pattern')" class="text-danger small mt-1">
+                                            Phone number must contain only digits.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Business Information Section -->
+                                <div class="col-lg-12 mb-3 mt-4">
+                                    <h5 class="mb-3">Business Information</h5>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="businessCategoryInput" class="form-label">Business Category <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="businessCategoryInput" formControlName="businessCategory">
+                                            <option value="">Select business category</option>
+                                            <option *ngFor="let category of businessCategories" [value]="category.value">
+                                                {{ category.label }}
+                                            </option>
+                                        </select>
+                                        <div *ngIf="hasError('businessCategory', 'required')" class="text-danger small mt-1">
+                                            Business category is required.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="websiteURLInput" class="form-label">Website URL</label>
+                                        <input type="text" class="form-control" id="websiteURLInput"
+                                               formControlName="websiteURL" placeholder="Enter your website URL">
+                                        <div *ngIf="hasError('websiteURL', 'pattern')" class="text-danger small mt-1">
+                                            Please enter a valid URL.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12">
+                                    <div class="mb-3">
+                                        <label for="partnerDescriptionInput" class="form-label">Partner Description <span class="text-danger">*</span></label>
+                                        <textarea class="form-control" id="partnerDescriptionInput"
+                                                  formControlName="partnerDescription" placeholder="Enter your description" rows="3"></textarea>
+                                        <div *ngIf="hasError('partnerDescription', 'required')" class="text-danger small mt-1">
+                                            Partner description is required.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Contact Information Section -->
+                                <div class="col-lg-12 mb-3 mt-4">
+                                    <h5 class="mb-3">Contact Information</h5>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="addressInput" class="form-label">Address <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="addressInput"
+                                               formControlName="address" placeholder="Enter your address">
+                                        <div *ngIf="hasError('address', 'required')" class="text-danger small mt-1">
+                                            Address is required.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="countryInput" class="form-label">Country <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="countryInput" formControlName="country">
+                                            <option value="">Select country</option>
+                                            <option *ngFor="let country of countries" [value]="country.code">
+                                                {{ country.name }}
+                                            </option>
+                                        </select>
+                                        <div *ngIf="hasError('country', 'required')" class="text-danger small mt-1">
+                                            Country is required.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Contract Information Section -->
+                                <div class="col-lg-12 mb-3 mt-4">
+                                    <h5 class="mb-3">Contract Information</h5>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="contractStartDateInput" class="form-label">Contract Start Date <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" id="contractStartDateInput"
+                                               formControlName="contractStartDate">
+                                        <div *ngIf="hasError('contractStartDate', 'required')" class="text-danger small mt-1">
+                                            Contract start date is required.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="contractEndDateInput" class="form-label">Contract End Date</label>
+                                        <input type="date" class="form-control" id="contractEndDateInput"
+                                               formControlName="contractEndDate">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12">
+                                    <div class="hstack gap-2 justify-content-end">
+                                        <button type="button" class="btn btn-soft-secondary" (click)="onCancel()">
+                                            <i class="ri-close-line align-bottom me-1"></i> Cancel
+                                        </button>
+                                        <button type="submit" class="btn btn-primary" [disabled]="partnerForm.invalid || isLoading">
+                                            <i class="ri-save-line align-bottom me-1"></i> Update Profile
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Change Password Tab -->
+                    <div *ngIf="activeTab === 2 && !isLoading">
+                        <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
+                            <!-- Success message -->
+                            <div *ngIf="passwordChangeSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
+                                <i class="fas fa-check-circle me-2"></i>
+                                {{ passwordChangeSuccess }}
+                                <button type="button" class="btn-close" (click)="passwordChangeSuccess = null" aria-label="Close"></button>
+                            </div>
+
+                            <!-- Error message -->
+                            <div *ngIf="passwordChangeError" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                {{ passwordChangeError }}
+                                <button type="button" class="btn-close" (click)="passwordChangeError = null" aria-label="Close"></button>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-lg-6">
+                                    <div class="form-group password-field">
+                                        <label for="newPasswordInput" class="form-label">New Password <span class="text-danger">*</span></label>
+                                        <div class="password-input-container">
+                                            <input [type]="passwordVisible ? 'text' : 'password'" class="form-control" id="newPasswordInput"
+                                                   formControlName="newPassword" placeholder="Enter new password">
+                                            <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+                                                <i [class]="passwordVisible ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                                            </button>
+                                        </div>
+                                        <div *ngIf="hasPasswordError('newPassword', 'required')" class="text-danger small mt-1">
+                                            New password is required.
+                                        </div>
+                                        <div *ngIf="hasPasswordError('newPassword', 'minlength')" class="text-danger small mt-1">
+                                            Password must be at least 8 characters.
+                                        </div>
+
+                                        <!-- Password strength indicators -->
+                                        <div class="password-strength" *ngIf="passwordForm.get('newPassword')?.value &&
+                                          (checkPasswordError('upperCase') || checkPasswordError('lowerCase') ||
+                                           checkPasswordError('numeric') || checkPasswordError('specialChar'))">
+                                            <div class="strength-check" [class.valid]="!checkPasswordError('upperCase')">
+                                                <i [class]="!checkPasswordError('upperCase') ? 'fas fa-check' : 'fas fa-times'"></i>
+                                                At least one uppercase letter
+                                            </div>
+                                            <div class="strength-check" [class.valid]="!checkPasswordError('lowerCase')">
+                                                <i [class]="!checkPasswordError('lowerCase') ? 'fas fa-check' : 'fas fa-times'"></i>
+                                                At least one lowercase letter
+                                            </div>
+                                            <div class="strength-check" [class.valid]="!checkPasswordError('numeric')">
+                                                <i [class]="!checkPasswordError('numeric') ? 'fas fa-check' : 'fas fa-times'"></i>
+                                                At least one number
+                                            </div>
+                                            <div class="strength-check" [class.valid]="!checkPasswordError('specialChar')">
+                                                <i [class]="!checkPasswordError('specialChar') ? 'fas fa-check' : 'fas fa-times'"></i>
+                                                At least one special character
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div>
+                                        <label for="confirmPasswordInput" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                                        <input type="password" class="form-control" id="confirmPasswordInput"
+                                               formControlName="confirmPassword" placeholder="Confirm password">
+                                        <div *ngIf="hasPasswordError('confirmPassword', 'required')" class="text-danger small mt-1">
+                                            Please confirm your password.
+                                        </div>
+                                        <div *ngIf="hasPasswordMismatchError()" class="text-danger small mt-1">
+                                            Passwords do not match.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12">
+                                    <div class="text-end">
+                                        <button type="submit" class="btn btn-primary" [disabled]="passwordForm.invalid || isLoading">
+                                            <i class="ri-lock-password-line align-bottom me-1"></i> Change Password
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,249 @@
+<app-header></app-header>
+
+<div class="partner-details-with-services">
+    <div class="container">
+        <!-- Loader -->
+        <div *ngIf="isLoading" class="loading-container">
+            <div class="spinner"></div>
+            <p>Loading partner information...</p>
+        </div>
+
+        <!-- Error message -->
+        <div *ngIf="error" class="error-container">
+            <div class="error-icon">
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <div class="error-content">
+                <h3>Unable to load partner</h3>
+                <p>{{ error }}</p>
+                <div class="error-actions">
+                    <button class="btn btn-retry" (click)="loadPartnerDetails()">
+                        <i class="fas fa-sync-alt"></i> Try Again
+                    </button>
+<!--                    <button class="btn btn-back" (click)="navigateBack()">-->
+<!--                        <i class="fas fa-arrow-left"></i> Back to Partners-->
+<!--                    </button>-->
+                </div>
+            </div>
+        </div>
+
+        <!-- Partner Details Section -->
+        <div *ngIf="!isLoading && !error && partner" class="partner-profile">
+            <div class="profile-header">
+<!--                <div class="back-button" (click)="navigateBack()">-->
+<!--                    <i class="fas fa-arrow-left"></i> Back to Partners-->
+<!--                </div>-->
+
+                <div class="partner-banner">
+                    <div class="partner-image-container">
+                        <div class="partner-image" *ngIf="imageUrl">
+                            <img [src]="imageUrl" alt="Partner Profile" (error)="handleImageError($event)">
+                        </div>
+                        <div class="partner-image partner-initials" *ngIf="!imageUrl">
+                            {{ getPartnerInitials() }}
+                        </div>
+                    </div>
+
+                    <div class="partner-title">
+                        <h1>{{ partner.firstname }} {{ partner.lastname }}</h1>
+                        <span class="partner-category">{{ partner.businessCategory }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-content">
+                <div class="profile-section">
+                    <h2>About {{ partner.firstname }}</h2>
+                    <div class="profile-description">
+                        <p *ngIf="partner.partnerDescription">{{ partner.partnerDescription }}</p>
+                        <p *ngIf="!partner.partnerDescription" class="no-data">No description provided.</p>
+                    </div>
+                </div>
+
+                <div class="profile-section contact-info">
+                    <h2>Contact Information</h2>
+                    <div class="info-grid">
+                        <div class="info-item" *ngIf="partner.email">
+                            <div class="info-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="info-content">
+                                <h3>Email</h3>
+                                <p><a [href]="'mailto:' + partner.email">{{ partner.email }}</a></p>
+                            </div>
+                        </div>
+
+                        <div class="info-item" *ngIf="partner.phoneNumber">
+                            <div class="info-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="info-content">
+                                <h3>Phone</h3>
+                                <p><a [href]="'tel:' + partner.phoneNumber">{{ partner.phoneNumber }}</a></p>
+                            </div>
+                        </div>
+
+                        <div class="info-item" *ngIf="partner.websiteURL">
+                            <div class="info-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div class="info-content">
+                                <h3>Website</h3>
+                                <p><a [href]="formatWebsiteUrl(partner.websiteURL)" target="_blank" rel="noopener noreferrer">{{ partner.websiteURL }}</a></p>
+                            </div>
+                        </div>
+
+                        <div class="info-item location" *ngIf="partner.address || partner.country">
+                            <div class="info-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="info-content">
+                                <h3>Address</h3>
+                                <p>
+                                    <span *ngIf="partner.address">{{ partner.address }}<br></span>
+                                    <span *ngIf="partner.country">{{ partner.country }}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="!partner.email && !partner.phoneNumber && !partner.websiteURL && !partner.address && !partner.country" class="no-data-message">
+                        <p>No contact information provided.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- No partner found message -->
+        <div *ngIf="!isLoading && !error && !partner" class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-user-slash"></i>
+            </div>
+            <h2>Partner Not Found</h2>
+            <p>The partner you are looking for does not exist or is not currently active.</p>
+<!--            <button class="btn btn-primary" (click)="navigateBack()">View All Partners</button>-->
+        </div>
+
+        <!-- Services Section -->
+        <div *ngIf="!isLoading && !error && partner" class="partner-services-section">
+            <div class="section-divider"></div>
+
+            <div class="header-section">
+                <h2>Services by {{ partner.firstname }} {{ partner.lastname }}</h2>
+            </div>
+
+            <!-- Filters and Sorting -->
+            <div class="filters-section">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="search-bar">
+                            <input
+                                    type="text"
+                                    [(ngModel)]="searchTerm"
+                                    placeholder="Search services..."
+                                    class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="category-filter">
+                            <select [(ngModel)]="selectedCategory" class="form-control">
+                                <option value="">All Categories</option>
+                                <option *ngFor="let category of serviceCategories" [value]="category">
+                                    {{category}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="status-filter">
+                            <select [(ngModel)]="selectedStatus" class="form-control">
+                                <option value="">All Statuses</option>
+                                <option *ngFor="let status of statusOptions" [value]="status">
+                                    {{status === 'DISPONIBLE' ? 'Available' : 'Unavailable'}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="sort-options">
+                            <select [(ngModel)]="sortBy" (change)="sortOrder='asc'" class="form-control">
+                                <option *ngFor="let option of sortOptions" [value]="option.value">
+                                    {{option.label}}
+                                </option>
+                            </select>
+                            <button *ngIf="sortBy !== 'none'" class="btn btn-sm btn-outline-secondary sort-dir-btn"
+                                    (click)="toggleSortOrder()">
+                                <i class="fas" [ngClass]="sortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-outline-secondary w-100" (click)="resetFilters()">
+                            Reset Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading spinner or error message for services -->
+            <div *ngIf="isLoadingServices" class="loading-spinner">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading services...</span>
+                </div>
+            </div>
+
+            <div *ngIf="errorServices" class="alert alert-danger">
+                {{errorServices}}
+            </div>
+
+            <!-- No services message -->
+            <div *ngIf="!isLoadingServices && filteredServices.length === 0" class="no-services">
+                <p *ngIf="searchTerm || selectedCategory || selectedStatus">No services match your search criteria.</p>
+                <p *ngIf="!searchTerm && !selectedCategory && !selectedStatus">This partner has no available services yet.</p>
+            </div>
+
+            <!-- Services list -->
+            <div class="services-grid">
+                <div *ngFor="let service of filteredServices" class="service-card">
+                    <div class="card">
+                        <div class="card-status" [ngClass]="service.status === 'DISPONIBLE' ? 'status-available' : 'status-unavailable'">
+                            {{service.status === 'DISPONIBLE' ? 'Available' : 'Unavailable'}}
+                        </div>
+
+                        <!-- Image handling with error fallback -->
+                        <div class="card-img-container" (click)="viewServiceDetails(service.id)" style="cursor: pointer;">
+                            <img *ngIf="service.imageUrl"
+                                 [src]="getServiceImageUrl(service.imageUrl)"
+                                 class="card-img-top"
+                                 alt="{{service.name}}"
+                                 (error)="handleImageError($event)">
+                            <div class="card-img-placeholder" [style.display]="service.imageUrl ? 'none' : 'flex'">
+                                <i class="fas" [ngClass]="getIconForCategory(service.category)"></i>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title" (click)="viewServiceDetails(service.id)" style="cursor: pointer;">{{service.name}}</h5>
+                            <div class="card-category">{{service.category}}</div>
+                            <p class="card-price">{{service.price | currency:'EUR'}}</p>
+                            <p class="card-text">{{service.description ? (service.description | slice:0:100) : ''}}{{service.description && service.description.length > 100 ? '...' : ''}}</p>
+                            <!-- Find the card-actions div in the services grid section and modify it: -->
+                            <div class="card-actions">
+                                <button class="btn btn-sm btn-outline-secondary" (click)="viewServiceDetails(service.id)">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button class="btn btn-sm"
+                                        [ngClass]="isServiceSelected(service.id) ? 'btn-danger' : 'btn-success'"
+                                        [disabled]="!currentUserId || service.status !== 'DISPONIBLE'"
+                                        (click)="isServiceSelected(service.id) ? deselectService(service.id) : selectService(service.id)">
+                                    <i class="fas" [ngClass]="isServiceSelected(service.id) ? 'fa-times' : 'fa-check'"></i>
+                                    {{isServiceSelected(service.id) ? 'Deselect' : 'Select'}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+<!--<section class="section-padding bg-light-white">-->
+<!--    <div class="container">-->
+<!--        <div class="row">-->
+<!--            <div class="col-12">-->
+<!--                <div class="listing-top-heading mb-xl-20">-->
+<!--                    <h6 class="no-margin text-custom-black">-->
+<!--                        {{ events.length > 0 ? 'Showing ' + events.length + ' Events' : 'No Events Available' }}-->
+<!--                    </h6>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Affichage des événements &ndash;&gt;-->
+<!--            <div class="col-xl-3 col-lg-4 col-md-6" *ngFor="let event of events | paginate: { itemsPerPage: 8, currentPage: page }">-->
+<!--                <div class="event-grid mb-xl-30">-->
+<!--                    <div class="event-grid-wrapper bx-wrapper">-->
+<!--                        <div class="event-grid-caption padding-20 bg-custom-white p-relative">-->
+<!--                            <h4 class="title fs-16 no-margin">-->
+<!--                                <a routerLink="/event-details/{{event.idEvent}}" class="text-custom-black">-->
+<!--                                    {{ event.nom }}-->
+<!--                                    <small class="text-light-dark">{{ event.date | date:'longDate' }}</small>-->
+<!--                                </a>-->
+<!--                            </h4>-->
+<!--                            <span class="location"><small>Lieu:</small> {{ event.emplacement }}</span>-->
+<!--                            <span class="price"><small>Prix:</small> ${{ event.prix | number:'1.0-0' }}</span>-->
+<!--                            <div class="action">-->
+<!--                                <a routerLink="/event-details/{{event.idEvent}}" class="btn-second btn-small">Voir</a>-->
+<!--                                <a [routerLink]="['/front-office', 'reservation', 'event', event.idEvent]" class="btn-first btn-submit">Réserver</a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Pagination &ndash;&gt;-->
+<!--            <div *ngIf="events.length > 8" class="col-12">-->
+<!--                <nav class="pagination_layout section-padding-top">-->
+<!--                    <ul class="pagination justify-content-center">-->
+<!--                        <pagination-controls (pageChange)="page = $event"></pagination-controls>-->
+<!--                    </ul>-->
+<!--                </nav>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</section>-->

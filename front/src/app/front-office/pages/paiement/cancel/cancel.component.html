@@ -1,0 +1,12 @@
+<div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-red-100 to-red-50 text-center p-6">
+    <h1 class="text-4xl font-bold text-danger mb-2">❌ Payment Cancelled</h1>
+    <p class="text-lg text-gray-600 mb-6">Oops! It looks like your payment didn’t go through. Don’t worry — you can try again!</p>
+    <a routerLink="/checkout"
+       class="inline-block bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300">
+        Try Again
+    </a>
+    <button [routerLink]="['/front-office/home-v1']" class="btn btn-success waves-effect waves-light">
+        Go to Homepage
+    </button>
+
+</div>

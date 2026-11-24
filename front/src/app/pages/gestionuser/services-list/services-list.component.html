@@ -1,0 +1,289 @@
+<div class="services-container">
+
+    <div class="header-container">
+        <div class="title-section">
+            <h2>All Services</h2>
+            <p class="results-count">Showing {{ filteredServices.length }} services</p>
+        </div>
+    </div>
+    <!-- Dashboard widgets -->
+    <div class="statistics-dashboard">
+        <!-- Première ligne: Total, Disponible, Indisponible -->
+        <div class="stat-widget total-services">
+            <div class="stat-icon">
+                <i class="fas fa-list"></i>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-value">{{ statistics.totalServices }}</h3>
+                <p class="stat-label">Total Services</p>
+            </div>
+        </div>
+
+        <div class="stat-widget available-services">
+            <div class="stat-icon available-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-value">{{ statistics.availableServices }}</h3>
+                <p class="stat-label">Available Services</p>
+            </div>
+        </div>
+
+        <div class="stat-widget unavailable-services">
+            <div class="stat-icon unavailable-icon">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-value">{{ statistics.unavailableServices }}</h3>
+                <p class="stat-label">Unavailable Services</p>
+            </div>
+        </div>
+
+        <!-- Services by Category Widget -->
+        <div class="stat-widget category-distribution">
+            <div class="stat-header">
+                <i class="fas fa-chart-pie"></i>
+                <h3>Services by Category</h3>
+            </div>
+            <div class="categories-grid">
+                <div class="category-stat-card" *ngFor="let category of serviceCategories">
+                    <div class="category-label" [ngClass]="'category-' + category.toLowerCase()">
+                        {{ category.replace('_', ' ') }}
+                    </div>
+                    <div class="category-count">
+                        {{ statistics.servicesByCategory[category] || 0 }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Most Popular Services -->
+        <div class="stat-widget popular-services">
+            <div class="stat-header">
+                <i class="fas fa-star"></i>
+                <h3>Most Popular Services</h3>
+            </div>
+            <div class="stat-chart">
+                <div class="chart-bar" *ngFor="let service of statistics.mostChosenServices.slice(0, 5)">
+                    <div class="bar-label">{{ service.name }}</div>
+                    <div class="bar-container">
+                        <div class="bar-fill" [style.width.%]="(service.count / (statistics.mostChosenServices[0].count || 1)) * 100"></div>
+                        <span class="bar-value">{{ service.count }} users</span>
+                    </div>
+                </div>
+                <p *ngIf="statistics.mostChosenServices.length === 0" class="no-data-text">No service usage data available</p>
+            </div>
+        </div>
+
+        <!-- Most Popular by Category -->
+        <div class="stat-widget categories-stats">
+            <div class="stat-header">
+                <i class="fas fa-chart-pie"></i>
+                <h3>Most Popular by Category</h3>
+            </div>
+            <div class="categories-grid">
+                <div class="category-stat-card" *ngFor="let category of serviceCategories">
+                    <div class="category-label" [ngClass]="'category-' + category.toLowerCase()">
+                        {{ category.replace('_', ' ') }}
+                    </div>
+                    <div class="popular-item" *ngIf="statistics.mostChosenByCategory[category]">
+                        <div class="item-name">{{ statistics.mostChosenByCategory[category].name }}</div>
+                        <div class="item-count">{{ statistics.mostChosenByCategory[category].count }} users</div>
+                    </div>
+                    <div class="no-data" *ngIf="!statistics.mostChosenByCategory[category]">No data</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filter Controls -->
+    <div class="filter-controls">
+        <div class="search-container">
+            <input
+                    type="text"
+                    [(ngModel)]="searchTerm"
+                    (ngModelChange)="applyFilters()"
+                    placeholder="Search services or partners..."
+                    class="search-input">
+        </div>
+
+        <div class="filter-options">
+            <div class="filter-group">
+                <label>Sort by:</label>
+                <select [(ngModel)]="sortBy" (change)="changeSortBy(sortBy)" class="filter-select">
+                    <option *ngFor="let option of sortOptions" [value]="option.value">
+                        {{option.label}}
+                    </option>
+                </select>
+                <button *ngIf="sortBy !== 'none'" class="sort-order-btn" (click)="toggleSortOrder()">
+                    <i class="fas" [ngClass]="sortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'"></i>
+                </button>
+            </div>
+
+            <div class="filter-group">
+                <label>Category:</label>
+                <select [(ngModel)]="selectedCategory" (change)="applyFilters()" class="filter-select">
+                    <option value="">All Categories</option>
+                    <option *ngFor="let category of serviceCategories" [value]="category">
+                        {{category}}
+                    </option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Service Status:</label>
+                <select [(ngModel)]="selectedStatus" (change)="applyFilters()" class="filter-select">
+                    <option value="">All Statuses</option>
+                    <option *ngFor="let status of statusOptions" [value]="status">
+                        {{status === 'DISPONIBLE' ? 'Available' : 'Unavailable'}}
+                    </option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Partnership Status:</label>
+                <select [(ngModel)]="selectedPartnershipStatus" (change)="applyFilters()" class="filter-select">
+                    <option value="">All Partnership Statuses</option>
+                    <option *ngFor="let status of partnershipStatusOptions" [value]="status">
+                        {{status}}
+                    </option>
+                </select>
+            </div>
+
+            <button class="btn btn-reset" (click)="resetFilters()">
+                <i class="fas fa-undo"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div class="loading-container" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Loading services...</p>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error-message">
+        <i class="fas fa-exclamation-circle"></i> {{errorMessage}}
+    </div>
+
+    <!-- Services Table -->
+    <div class="table-responsive" *ngIf="!isLoading && !errorMessage">
+        <table class="services-table">
+            <thead>
+            <tr>
+                <th class="th-image">Image</th>
+                <th class="th-name">Service Name</th>
+                <th class="th-partner">Partner</th>
+                <th class="th-category">Category</th>
+                <th class="th-price">Price</th>
+                <th class="th-users">Users</th>
+                <th class="th-status">Service Status</th>
+                <th class="th-partnership">Partnership Status</th>
+                <th class="th-actions">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let service of displayedServices">
+                <!-- Service image -->
+                <td class="td-image">
+                    <div class="service-image">
+                        <img *ngIf="getServiceImageUrl(service.imageUrl)"
+                             [src]="getServiceImageUrl(service.imageUrl)"
+                             alt="Service image"
+                             (error)="handleImageError($event)">
+                        <div class="image-placeholder" *ngIf="!getServiceImageUrl(service.imageUrl)">
+                            <i class="fas" [ngClass]="getIconForCategory(service.category)"></i>
+                        </div>
+                    </div>
+                </td>
+
+                <!-- Service name -->
+                <td class="td-text-truncate" [title]="service.name">{{ service.name }}</td>
+
+                <!-- Partner name -->
+                <td class="td-partner">
+                    <a class="partner-link" [title]="service.partner?.firstname + ' ' + service.partner?.lastname"
+                       (click)="viewPartnerDetails(service.partner?.id)">
+                        {{ service.partner?.firstname }} {{ service.partner?.lastname }}
+                    </a>
+                </td>
+
+                <!-- Service category -->
+                <td class="td-category">
+                    <span class="category-badge">{{ service.category }}</span>
+                </td>
+
+                <!-- Service price -->
+                <td class="td-price">{{ service.price | currency:'EUR' }}</td>
+                <!-- User count -->
+                <td class="td-users">
+  <span class="user-count">
+{{ userCounts[service.id!] || 0 }}
+  </span>
+                </td>
+
+                <!-- Service status -->
+                <td class="td-status">
+                        <span class="status-badge" [ngClass]="service.status === 'DISPONIBLE' ? 'status-available' : 'status-unavailable'">
+                          {{ service.status === 'DISPONIBLE' ? 'Available' : 'Unavailable' }}
+                        </span>
+                </td>
+
+                <!-- Partnership status -->
+                <td class="td-partnership">
+                        <span class="partnership-badge" [ngClass]="getPartnershipStatusClass(service.partner?.partnershipStatus)">
+                            {{ service.partner?.partnershipStatus || 'Unknown' }}
+                        </span>
+                </td>
+
+                <!-- Action buttons -->
+                <td class="td-actions">
+                    <button class="icon-btn view-btn" title="View Details" (click)="viewServiceDetails(service.id)">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="icon-btn delete-btn" title="Delete Service" (click)="deleteService(service.id)">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </td>
+            </tr>
+
+            <!-- No services found message -->
+            <tr *ngIf="displayedServices.length === 0">
+                <td colspan="8" class="no-data">
+                    <div class="no-data-message">
+                        <i class="fas fa-info-circle"></i>
+                        <p *ngIf="searchTerm || selectedCategory || selectedStatus || selectedPartnershipStatus">No services match your search criteria.</p>
+                        <p *ngIf="!searchTerm && !selectedCategory && !selectedStatus && !selectedPartnershipStatus">There are no services available.</p>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-container" *ngIf="totalPages > 1 && !isLoading">
+        <div class="pagination">
+            <button class="pagination-btn" [disabled]="currentPage === 1" (click)="prevPage()">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <button *ngFor="let page of getPageArray()"
+                    class="pagination-btn"
+                    [class.active]="page === currentPage"
+                    (click)="changePage(page)">
+                {{ page }}
+            </button>
+
+            <button class="pagination-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <div class="pagination-info">
+            Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ Math.min(currentPage * itemsPerPage, filteredServices.length) }}
+            of {{ filteredServices.length }} services
+        </div>
+    </div>
+</div>

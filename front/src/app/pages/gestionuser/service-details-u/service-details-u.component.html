@@ -1,0 +1,100 @@
+<app-header></app-header>
+<div class="service-details-container container my-5">
+    <!-- Loading spinner or error message -->
+    <div *ngIf="isLoading" class="loading-spinner">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-danger">
+        {{errorMessage}}
+    </div>
+
+    <div *ngIf="!isLoading && service" class="service-details">
+        <!-- Back button and actions -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <button class="btn btn-outline-secondary" (click)="goBackToList()">
+                <i class="fas fa-arrow-left me-2"></i>Back to Services
+            </button>
+<!--            <div class="actions">-->
+<!--                <button class="btn btn-primary me-2" (click)="editService()">-->
+<!--                    <i class="fas fa-edit me-1"></i>Edit-->
+<!--                </button>-->
+<!--                <button class="btn btn-danger" (click)="deleteService()">-->
+<!--                    <i class="fas fa-trash-alt me-1"></i>Delete-->
+<!--                </button>-->
+<!--            </div>-->
+        </div>
+
+        <!-- Service detail card -->
+        <div class="card shadow border-0">
+            <!-- Service image header -->
+            <div class="card-img-top-container">
+                <img *ngIf="getServiceImageUrl(service.imageUrl)"
+                     [src]="getServiceImageUrl(service.imageUrl)"
+                     class="card-img-top"
+                     alt="{{service.name}}"
+                     (error)="handleImageError($event)">
+                <div *ngIf="!getServiceImageUrl(service.imageUrl)" class="img-placeholder">
+                    <i class="fas fa-4x" [ngClass]="getIconForCategory(service.category)"></i>
+                </div>
+                <div class="service-status" [ngClass]="service.status === 'DISPONIBLE' ? 'status-available' : 'status-unavailable'">
+                    {{service.status === 'DISPONIBLE' ? 'Available' : 'Unavailable'}}
+                </div>
+                <div class="service-category">
+                    <i class="fas" [ngClass]="getIconForCategory(service.category)"></i>
+                    {{service.category}}
+                </div>
+            </div>
+
+            <!-- Service details content -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h1 class="service-title">{{service.name}}</h1>
+                        <div class="service-description mt-4">
+                            <h4 class="section-title">Description</h4>
+                            <p>{{service.description}}</p>
+                        </div>
+
+                        <!-- Additional service details can be added here -->
+                        <div class="additional-details mt-4" *ngIf="service.partner">
+                            <h4 class="section-title">Service Provider</h4>
+                            <div class="partner-card">
+                                <div class="partner-info">
+                                    <div class="partner-avatar">
+                                        <img *ngIf="service.partner.profilePicture"
+                                             [src]="getServiceImageUrl(service.partner.profilePicture)"
+                                             alt="Partner profile"
+                                             (error)="handleImageError($event)">
+                                        <div *ngIf="!service.partner.profilePicture" class="avatar-placeholder">
+                                            {{service.partner.firstname?.charAt(0) || ''}}{{service.partner.lastname?.charAt(0) || ''}}
+                                        </div>
+                                    </div>
+                                    <div class="partner-details">
+                                        <p class="partner-name">{{service.partner.firstname}} {{service.partner.lastname}}</p>
+                                        <p class="partner-email" *ngIf="service.partner.email">{{service.partner.email}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="price-card">
+                            <div class="price-header">Price</div>
+                            <div class="price-amount">{{service.price | currency:'EUR'}}</div>
+                            <div class="price-note" *ngIf="service.status === 'DISPONIBLE'">
+                                This service is currently available for booking
+                            </div>
+                            <div class="price-note text-danger" *ngIf="service.status !== 'DISPONIBLE'">
+                                This service is currently unavailable
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

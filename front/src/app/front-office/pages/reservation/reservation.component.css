@@ -1,0 +1,143 @@
+.step-indicator {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-bottom: 25px;
+  }
+  
+  /* ✅ Taille ajustée pour une meilleure intégration */
+  .step {
+    width: 50px;
+    height: 50px;
+    font-size: 12px;
+    font-weight: bold;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #777;
+    transition: all 0.5s ease-in-out;
+  }
+  
+  .step.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+    transform: scale(1.1);
+  }
+  
+  /* ✅ Barre reliant les cercles */
+  .step-line {
+    position: absolute;
+    width: 85%;
+    height: 3px;
+    background-color: #ccc;
+    top: 50%;
+    left: 7%;
+    z-index: -1;
+    transition: width 0.5s ease-in-out;
+  }
+  
+  .step-indicator .step.active ~ .step-line {
+    background-color: #007bff;
+  }
+  
+  /* 🔥 Animation fluide entre les sections */
+  .container {
+    animation: fadeIn 0.7s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-15px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .payment-option {
+    text-align: center;
+    padding: 15px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    width: 48%;
+  }
+  
+  .payment-option img {
+    width: 60px;
+    height: 40px;
+  }
+  
+  .payment-option p {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .payment-option:hover {
+    border-color: #007bff;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+  }
+  
+ 
+  .steps-wrapper {
+    position: relative;
+    margin-top: 2rem;
+    padding: 1rem 0;
+  }
+  
+  .step-line {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    right: 10%;
+    height: 4px;
+    background-color: #dee2e6;
+    z-index: 1;
+    transform: translateY(-50%);
+  }
+  
+  .step-indicator {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .step-box {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 12px;
+    text-align: center;
+    width: 100px;
+    transition: 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    cursor: pointer;
+  }
+  
+  .step-box:hover {
+    transform: scale(1.05);
+  }
+  
+  .step-icon {
+    font-size: 1.5rem;
+  }
+  
+  .step-label {
+    margin-top: 0.5rem;
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+  
+  .step-box.active {
+    background: #007bff;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+  }
+  

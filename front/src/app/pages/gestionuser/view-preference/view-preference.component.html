@@ -1,0 +1,43 @@
+<div class="view-preference-container">
+    <h2>Preference Details</h2>
+
+    <div class="loading-container" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Loading preference details...</p>
+    </div>
+
+    <div class="alert alert-danger" *ngIf="errorMessage">
+        {{ errorMessage }}
+    </div>
+
+    <div class="preference-details" *ngIf="preference && !isLoading">
+        <div class="detail-card">
+            <div class="detail-header">
+                <h3>{{ preference.name || 'N/A' }}</h3>
+                <span class="category-badge" [ngClass]="getSafeCategoryClass(preference.category)">
+          {{ getCategoryDisplay(preference.category) }}
+        </span>
+            </div>
+
+            <div class="detail-content">
+                <div class="detail-item">
+                    <span class="label">ID:</span>
+                    <span class="value">{{ preference.id }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn back-btn" (click)="onBack()">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </button>
+            <button class="btn edit-btn" (click)="onEdit()">
+                <i class="fas fa-edit"></i> Edit Preference
+            </button>
+        </div>
+    </div>
+
+    <div class="no-data" *ngIf="!preference && !isLoading && !errorMessage">
+        Preference not found.
+    </div>
+</div>

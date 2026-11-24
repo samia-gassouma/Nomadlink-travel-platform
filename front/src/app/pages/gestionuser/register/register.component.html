@@ -1,0 +1,300 @@
+<!-- auth-page wrapper -->
+<div class="auth-page-wrapper auth-bg-cover py-5 d-flex justify-content-center align-items-center min-vh-100">
+  <div class="bg-overlay"></div>
+  <!-- auth-page content -->
+  <div class="auth-page-content overflow-hidden pt-lg-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card overflow-hidden m-0">
+            <div class="row justify-content-center g-0">
+              <!-- Left panel with branding and travel quote -->
+              <div class="col-lg-6">
+                <div class="p-lg-5 p-4 auth-one-bg h-100">
+                  <div class="bg-overlay"></div>
+                  <div class="position-relative h-100 d-flex flex-column">
+                    <div class="mb-4">
+                      <a routerLink="/" class="d-block">
+                        <h2 class="text-white">NomadLink</h2>
+                      </a>
+                    </div>
+
+                    <!-- Featured image from assets -->
+                    <div class="text-center my-5">
+                      <img src="../../../../assets/gestionuser/u14.png" alt="Travel" class="img-fluid">
+                    </div>
+
+                    <div class="mt-auto text-center">
+                      <div class="mb-3">
+                        <i class="ri-double-quotes-l display-4 text-white"></i>
+                      </div>
+                      <p class="fs-15 text-white">"In attractive way to travel"</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right panel with registration form -->
+              <div class="col-lg-6">
+                <div class="p-lg-5 p-4">
+                  <div>
+                    <h5 class="text-primary">Register Account</h5>
+                    <p class="text-muted">Create your account to start your journey.</p>
+                  </div>
+
+                  <!-- Alert messages -->
+                  <div *ngIf="successMessage" class="alert alert-success mt-4">
+                    <i class="fas fa-check-circle me-2"></i> {{ successMessage }}
+                  </div>
+                  <div *ngIf="errorMessage" class="alert alert-danger mt-4">
+                    <i class="fas fa-exclamation-circle me-2"></i> {{ errorMessage }}
+                  </div>
+
+
+
+                  <div class="mt-4">
+                    <form [formGroup]="createUserForm" (ngSubmit)="onSubmit()">
+                      <!-- First name and last name -->
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="firstName" class="form-label">First Name <span class="text-danger">*</span></label>
+                          <input type="text" class="form-control" id="firstName" formControlName="firstName"
+                                 [ngClass]="{ 'is-invalid': hasError('firstName', 'required') || hasError('firstName', 'minlength') || hasError('firstName', 'maxlength') || hasError('firstName', 'pattern') }">
+                          <div class="invalid-feedback" *ngIf="hasError('firstName', 'required')">
+                            First name is required.
+                          </div>
+                          <div class="invalid-feedback" *ngIf="hasError('firstName', 'minlength')">
+                            First name must be at least 3 characters.
+                          </div>
+                          <div class="invalid-feedback" *ngIf="hasError('firstName', 'maxlength')">
+                            First name cannot exceed 15 characters.
+                          </div>
+                          <div class="invalid-feedback" *ngIf="hasError('firstName', 'pattern')">
+                            First name must contain only letters.
+                          </div>
+                        </div>
+
+                        <div class="col-md-6">
+                          <label for="lastName" class="form-label">Last Name <span class="text-danger">*</span></label>
+                          <input type="text" class="form-control" id="lastName" formControlName="lastName"
+                                 [ngClass]="{ 'is-invalid': hasError('lastName', 'required') || hasError('lastName', 'minlength') || hasError('lastName', 'maxlength') || hasError('lastName', 'pattern') }">
+                          <div class="invalid-feedback" *ngIf="hasError('lastName', 'required')">
+                            Last name is required.
+                          </div>
+                          <div class="invalid-feedback" *ngIf="hasError('lastName', 'minlength')">
+                            Last name must be at least 3 characters.
+                          </div>
+                          <div class="invalid-feedback" *ngIf="hasError('lastName', 'maxlength')">
+                            Last name cannot exceed 15 characters.
+                          </div>
+                          <div class="invalid-feedback" *ngIf="hasError('lastName', 'pattern')">
+                            Last name must contain only letters.
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Email -->
+                      <div class="mb-3">
+                        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="email" formControlName="email"
+                               [ngClass]="{ 'is-invalid': hasError('email', 'required') || hasError('email', 'email') || hasError('email', 'pattern') || hasEmailExistsError() }">
+                        <div class="invalid-feedback" *ngIf="hasError('email', 'required')">
+                          Email is required.
+                        </div>
+                        <div class="invalid-feedback" *ngIf="hasError('email', 'email') || hasError('email', 'pattern')">
+                          Please enter a valid email address.
+                        </div>
+                        <div class="invalid-feedback" *ngIf="hasEmailExistsError()">
+                          This email is already registered.
+                        </div>
+                      </div>
+
+                      <!-- Password -->
+                      <div class="mb-3">
+                        <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+                        <div class="position-relative auth-pass-inputgroup">
+                          <input [type]="passwordVisible ? 'text' : 'password'" class="form-control pe-5" id="password"
+                                 formControlName="password"
+                                 [ngClass]="{ 'is-invalid': submitted && (createUserForm.get('password')?.errors || !isPasswordStrengthValid()) }">
+                          <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none shadow-none text-muted password-addon"
+                                  type="button" (click)="togglePasswordVisibility()">
+                            <i class="ri-eye-fill align-middle" [ngClass]="{'ri-eye-off-fill': !passwordVisible, 'ri-eye-fill': passwordVisible}"></i>
+                          </button>
+                        </div>
+
+                        <div class="invalid-feedback" *ngIf="submitted && createUserForm.get('password')?.hasError('required')">
+                          Password is required.
+                        </div>
+
+                        <!-- Password strength indicators - always show when typing -->
+                        <div class="p-3 bg-light mb-2 rounded mt-2" *ngIf="createUserForm.get('password')?.value && !isPasswordStrengthValid()">
+                          <h5 class="fs-13">Password must contain:</h5>
+                          <p class="fs-12 mb-2" [ngClass]="{'text-success': !hasPasswordStrengthError('upperCase'), 'text-danger': hasPasswordStrengthError('upperCase')}">
+                            <i [class]="!hasPasswordStrengthError('upperCase') ? 'ri-check-line' : 'ri-close-line'"></i>
+                            At least one uppercase letter
+                          </p>
+                          <p class="fs-12 mb-2" [ngClass]="{'text-success': !hasPasswordStrengthError('lowerCase'), 'text-danger': hasPasswordStrengthError('lowerCase')}">
+                            <i [class]="!hasPasswordStrengthError('lowerCase') ? 'ri-check-line' : 'ri-close-line'"></i>
+                            At least one lowercase letter
+                          </p>
+                          <p class="fs-12 mb-2" [ngClass]="{'text-success': !hasPasswordStrengthError('numeric'), 'text-danger': hasPasswordStrengthError('numeric')}">
+                            <i [class]="!hasPasswordStrengthError('numeric') ? 'ri-check-line' : 'ri-close-line'"></i>
+                            At least one number
+                          </p>
+                          <p class="fs-12 mb-2" [ngClass]="{'text-success': !hasPasswordStrengthError('specialChar'), 'text-danger': hasPasswordStrengthError('specialChar')}">
+                            <i [class]="!hasPasswordStrengthError('specialChar') ? 'ri-check-line' : 'ri-close-line'"></i>
+                            At least one special character
+                          </p>
+                          <p class="fs-12 mb-0" [ngClass]="{'text-success': !hasPasswordStrengthError('minLength'), 'text-danger': hasPasswordStrengthError('minLength')}">
+                            <i [class]="!hasPasswordStrengthError('minLength') ? 'ri-check-line' : 'ri-close-line'"></i>
+                            At least 8 characters
+                          </p>
+                        </div>
+                      </div>
+
+                      <!-- Phone Number -->
+                      <div class="mb-3">
+                        <label for="phoneNumber" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="phoneNumber" formControlName="phoneNumber"
+                               [ngClass]="{ 'is-invalid': hasError('phoneNumber', 'required') || hasError('phoneNumber', 'pattern') }">
+                        <div class="invalid-feedback" *ngIf="hasError('phoneNumber', 'required')">
+                          Phone number is required.
+                        </div>
+                        <div class="invalid-feedback" *ngIf="hasError('phoneNumber', 'pattern')">
+                          Phone number must be digits.
+                        </div>
+                      </div>
+
+                      <!-- Address -->
+                      <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="address" formControlName="address">
+                      </div>
+
+                      <!-- Country and Date of Birth -->
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="country" class="form-label">Country <span class="text-danger">*</span></label>
+                          <select class="form-select" id="country" formControlName="country"
+                                  [ngClass]="{ 'is-invalid': hasError('country', 'required') }">
+                            <option value="" disabled selected>Select a country</option>
+                            <option *ngFor="let country of countries" [value]="country.code">
+                              {{ country.name }}
+                            </option>
+                          </select>
+                          <div class="invalid-feedback" *ngIf="hasError('country', 'required')">
+                            Country is required.
+                          </div>
+                        </div>
+
+                        <div class="col-md-6">
+                          <label for="dateOfBirth" class="form-label">Date of Birth</label>
+                          <input type="date" class="form-control" id="dateOfBirth" formControlName="dateOfBirth">
+                        </div>
+                      </div>
+
+                      <!-- Gender -->
+                      <div class="mb-3">
+                        <label for="genre" class="form-label">Gender</label>
+                        <select class="form-select" id="genre" formControlName="genre">
+                          <option *ngFor="let option of genres" [value]="option.value">{{ option.label }}</option>
+                        </select>
+                      </div>
+
+                      <!-- Profile Picture Upload Section - Inline Version -->
+                      <div class="mb-4 mt-3">
+                        <div class="d-flex align-items-center justify-content-between">
+                          <!-- Left side: Image preview (only shown when available) -->
+                          <div *ngIf="imageUrl" class="profile-image-preview">
+                            <img [src]="imageUrl"
+                                 class="rounded-circle user-profile-image"
+                                 alt="Profile Picture"
+                                 (error)="handleImageError()">
+                          </div>
+
+                          <!-- If no image, show empty space or placeholder -->
+                          <div *ngIf="!imageUrl" class="profile-image-placeholder">
+                            <i class="ri-user-line text-muted"></i>
+                          </div>
+
+                          <!-- Right side: Upload button -->
+                          <div class="upload-button-container">
+                            <input id="profile-img-file-input" type="file" class="profile-img-file-input"
+                                   accept="image/*" (change)="onFileSelected($event)">
+                            <label for="profile-img-file-input" class="btn btn-sm btn-secondary">
+                              <i class="ri-camera-fill me-1"></i>
+                              {{ imageUrl ? 'Change Picture' : 'Upload Picture' }}
+                            </label>
+                          </div>
+                        </div>
+
+                        <!-- Show selected file name if needed -->
+                        <div *ngIf="selectedFile" class="text-muted small mt-2 text-end">
+                          <i class="fas fa-info-circle me-1"></i>
+                          Selected: {{ selectedFile.name }}
+                        </div>
+                        <div *ngIf="isCheckingImage" class="mt-2 text-info">
+                          <i class="spinner-border spinner-border-sm me-1" role="status"></i> Checking image safety...
+                        </div>
+
+                        <div *ngIf="imageCheckError" class="mt-2 text-danger">
+                          <i class="ri-error-warning-fill me-1"></i> {{ imageCheckError }}
+                        </div>
+                      </div>
+                      <!-- Terms & Conditions -->
+                      <div class="mb-4">
+                        <p class="mb-0 fs-12 text-muted fst-italic">By registering you agree to the <a href="javascript:void(0);"
+                                                                                                       class="text-primary text-decoration-underline fst-normal fw-medium">Terms of Use</a></p>
+                      </div>
+
+                      <!-- Buttons -->
+                      <div class="mt-4">
+                        <button class="btn btn-primary w-100" type="submit" [disabled]="loading">
+                          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                          {{ loading ? 'Creating account...' : 'Create Account' }}
+                        </button>
+                      </div>
+
+                      <!-- Alternative registration options -->
+                      <div class="mt-4 text-center">
+                        <div class="signin-other-title">
+                          <h5 class="fs-13 mb-4 title text-muted">Create account with</h5>
+                        </div>
+
+                        <div class="d-flex gap-2 justify-content-center">
+                          <button type="button" class="btn btn-primary btn-icon waves-effect waves-light"><i class="ri-facebook-fill fs-16"></i></button>
+                          <button type="button" class="btn btn-danger btn-icon waves-effect waves-light"><i class="ri-google-fill fs-16"></i></button>
+                          <button type="button" class="btn btn-dark btn-icon waves-effect waves-light"><i class="ri-github-fill fs-16"></i></button>
+                          <button type="button" class="btn btn-info btn-icon waves-effect waves-light"><i class="ri-twitter-fill fs-16"></i></button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+
+                  <!-- Login link -->
+                  <div class="mt-5 text-center">
+                    <p class="mb-0">Already have an account? <a (click)="login()" class="fw-semibold text-primary text-decoration-underline cursor-pointer"> Sign In</a></p>
+                    <p class="mb-0 mt-3">Are you a partner? <a (click)="registerAsPartner()" class="fw-semibold text-primary text-decoration-underline cursor-pointer">Register as partner</a></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="text-center">
+            <p class="mb-0">&copy; {{2025}} All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>

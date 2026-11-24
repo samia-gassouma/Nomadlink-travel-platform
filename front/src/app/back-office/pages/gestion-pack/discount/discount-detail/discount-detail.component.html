@@ -1,0 +1,57 @@
+<div *ngIf="discount" class="col-xxl-4">
+  <div class="card border border-success shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h6 class="card-title mb-0">
+        Discount
+        <span *ngIf="discount.reduction_percent  > 70" class="badge bg-success ms-2 align-middle fs-10">High</span>
+        <span *ngIf="discount.reduction_percent  <= 70 &&  discount.reduction_percent  > 40"
+          class="badge bg-info ms-2 align-middle fs-10">Medium</span>
+        <span *ngIf=" discount.reduction_percent  < 40" class="badge bg-warning ms-2 align-middle fs-10">Low</span>
+        <li class="list-inline-item" style="margin-left: 4px;" ngbTooltip="Edit" placement="top">
+          <a [routerLink]="['/back-office/packs/discount/update', discount.id]" class="edit-item-btn"
+            data-bs-toggle="modal"><i class="ri-pencil-fill align-bottom text-muted"></i></a>
+        </li>
+
+      </h6>
+      <span class="text-success fw-semibold">{{ discount.reduction_percent }}%</span>
+    </div>
+
+    <div class="card-body">
+      <div class="mb-3">
+        <h6 class="mb-1 text-muted fw-semibold">Start:</h6>
+        <p class="mb-0">
+          {{ discount.date_debut | date: "yyyy-MM-dd" }} –
+          {{ discount.date_debut | date: "shortTime" }}
+        </p>
+      </div>
+
+      <div class="mb-3">
+        <h6 class="mb-1 text-muted fw-semibold">End:</h6>
+        <p class="mb-0">
+          {{ discount.date_fin | date: "yyyy-MM-dd" }} –
+          {{ discount.date_fin | date: "shortTime" }}
+        </p>
+      </div>
+
+      <div class="mt-4">
+        <h6 class="text-muted fw-semibold mb-2">Associated Packs:</h6>
+
+        <ng-container *ngIf="discount.packs?.length; else noPacks">
+          <ul class="list-unstyled">
+            <li *ngFor="let pack of discount.packs; let i = index" class="mb-2">
+              <strong>Pack {{ i + 1 }}:</strong>
+              <a [routerLink]="['/back-office/packs/pack/get', pack.id]" class="link-success fw-medium ms-1">
+                {{ pack.packName }}
+                <i class="ri-arrow-right-line align-middle"></i>
+              </a>
+            </li>
+          </ul>
+        </ng-container>
+
+        <ng-template #noPacks>
+          <p class="text-muted">No packs associated with this discount.</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

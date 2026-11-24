@@ -1,0 +1,81 @@
+<div class="page-container">
+    <header class="page-header">
+      <h1>Modifier le Vol</h1>
+      <p>Mettre à jour les informations du vol sélectionné.</p>
+    </header>
+  
+    <div class="flight-info">
+      <h3>Informations Actuelles du Vol</h3>
+      <ul>
+        <li><strong>Numéro de vol:</strong> {{ flight.numeroVol }}</li>
+        <li><strong>Compagnie:</strong> {{ flight.compagnie }}</li>
+        <li><strong>Aéroport de départ:</strong> {{ flight.aeroportDepart }}</li>
+        <li><strong>Aéroport d'arrivée:</strong> {{ flight.aeroportArrivee }}</li>
+        <li><strong>Prix:</strong> {{ flight.prix }} €</li>
+      </ul>
+    </div>
+  
+    <div class="edit-flight-container">
+      <h2>Modifier le Vol</h2>
+      <form (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="compagnie">Compagnie</label>
+          <input type="text" id="compagnie" [(ngModel)]="flight.compagnie" name="compagnie" required />
+        </div>
+  
+        <div class="form-group">
+          <label for="numeroVol">Numéro de vol</label>
+          <input type="text" id="numeroVol" [(ngModel)]="flight.numeroVol" name="numeroVol" required />
+        </div>
+  
+        <div class="form-group">
+          <label for="aeroportDepart">Aéroport de départ</label>
+          <input type="text" id="aeroportDepart" [(ngModel)]="flight.aeroportDepart" name="aeroportDepart" required />
+        </div>
+  
+        <div class="form-group">
+          <label for="aeroportArrivee">Aéroport d'arrivée</label>
+          <input type="text" id="aeroportArrivee" [(ngModel)]="flight.aeroportArrivee" name="aeroportArrivee" required />
+        </div>
+  
+        <div class="form-group">
+          <label for="dateDepart">Date de départ</label>
+          <input type="date" id="dateDepart" [(ngModel)]="flight.dateDepart" name="dateDepart" required />
+        </div>
+  
+        <div class="form-group">
+          <label for="dateArrivee">Date d'arrivée</label>
+          <input type="date" id="dateArrivee" [(ngModel)]="flight.dateArrivee" name="dateArrivee" required />
+        </div>
+  
+        <div class="form-group">
+          <label for="prix">Prix</label>
+          <input type="number" id="prix" [(ngModel)]="flight.prix" name="prix" required />
+        </div>
+  
+        <div class="form-group">
+          <label for="siegesDisponibles">Sièges disponibles</label>
+          <input type="number" id="siegesDisponibles" [(ngModel)]="flight.siegesDisponibles" name="siegesDisponibles" required />
+        </div>
+  
+        <div class="form-group">
+            <label for="statut">Statut</label>
+            <select id="statut" [(ngModel)]="flight.statut" name="statut" required>
+              <option value="Programmé">Programmé</option>
+              <option value="Retardé">Retardé</option>
+              <option value="Annulé">Annulé</option>
+            </select>
+          </div>
+          
+  
+        <div class="form-action">
+          <button type="submit" class="submit-btn">Mettre à jour le vol</button>
+        </div>
+      </form>
+    </div>
+  
+    <div *ngIf="flight.idVol" class="back-to-list">
+      <button (click)="router.navigate(['/listflight'])" class="back-btn">Retour à la liste des vols</button>
+    </div>
+  </div>
+  

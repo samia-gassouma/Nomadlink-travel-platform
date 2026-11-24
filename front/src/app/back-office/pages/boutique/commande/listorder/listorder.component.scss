@@ -1,0 +1,41 @@
+.titre-section {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b; // Bleu-gris foncé
+    margin-bottom: 0.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  
+    i {
+      font-size: 1.5rem;
+      color: #0d6efd;
+    }
+  }
+  
+  .titre-section-description {
+    font-size: 0.95rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+  }
+  .order-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+    width: 90%;
+    max-width: 700px;
+    background: white;
+    border-radius: 10px;
+  }
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1040;
+  }
+  

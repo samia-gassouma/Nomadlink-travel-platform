@@ -1,0 +1,102 @@
+<div class="form-container">
+    <div class="form-header">
+      <h2>{{ eventId ? 'Edit Event' : 'Create New Event' }}</h2>
+    </div>
+  
+    <div *ngIf="isLoading" class="loading">Loading...</div>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+  
+    <div class="form-content">
+      <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+        <!-- Title -->
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input id="title" formControlName="title" type="text" class="form-control" />
+        </div>
+        <div *ngIf="mapLoaded">
+            <iframe
+              [src]="safeMapUrl"
+              width="600"
+              height="450"
+              frameborder="0"
+              style="border:0"
+              allowfullscreen
+            ></iframe>
+          </div>
+      
+  
+        <!-- Event Type -->
+        <div class="form-group">
+          <label for="type">Event Type</label>
+          <select id="type" formControlName="type" class="form-control">
+            <option value="culturel">Culturel</option>
+            <option value="religieux">Religieux / Spirituel</option>
+            <option value="musicale">Musicale</option>
+            <option value="sociaux">Sociaux et Communautaires</option>
+            <option value="developpement-personnel">Développement Personnel</option>
+            <option value="educatifs">Éducatifs</option>
+          </select>
+        </div>
+  
+        <!-- Start Date and Time -->
+        <div class="form-group">
+          <label for="startDateTime">Start Date and Time</label>
+          <input id="startDateTime" formControlName="startDateTime" type="datetime-local" class="form-control" />
+        </div>
+  
+        <!-- End Date and Time -->
+        <div class="form-group">
+          <label for="endDateTime">End Date and Time</label>
+          <input id="endDateTime" formControlName="endDateTime" type="datetime-local" class="form-control" />
+        </div>
+        
+        <!-- Location -->
+        <div class="form-group">
+          <label for="location">Location</label>
+          <input id="location" formControlName="location" type="text" class="form-control" />
+        </div>
+  
+        <!-- Duration -->
+        <div class="form-group">
+          <label for="duration">Duration</label>
+          <input id="duration" formControlName="duration" type="text" class="form-control" />
+        </div>
+  
+        <!-- Language -->
+        <div class="form-group">
+          <label for="language">Language</label>
+          <input id="language" formControlName="language" type="text" class="form-control" />
+        </div>
+  
+        <!-- Schedule -->
+        <div class="form-group">
+          <label for="schedule">Schedule</label>
+          <input id="schedule" formControlName="schedule" type="text" class="form-control" />
+        </div>
+  
+        <!-- Description -->
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" formControlName="description" class="form-control"></textarea>
+        </div>
+  
+        <!-- Registration Fee -->
+        <div class="form-group">
+          <label for="registrationFee">Registration Fee</label>
+          <input id="registrationFee" formControlName="registrationFee" type="text" class="form-control" />
+        </div>
+  
+        <!-- Image -->
+        <div class="form-group">
+          <label for="image">Event Image</label>
+          <input id="image" type="file" (change)="onFileChange($event)" class="form-control" />
+        </div>
+  
+        <!-- Submit Button -->
+        <button type="submit" [disabled]="isLoading" class="btn btn-primary">
+          {{ eventId ? 'Update Event' : 'Add Event' }}
+        </button>
+      </form>
+    </div>
+  </div>
+  

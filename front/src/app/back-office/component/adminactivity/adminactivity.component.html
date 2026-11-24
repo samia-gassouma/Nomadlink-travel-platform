@@ -1,0 +1,52 @@
+<div class="activity-list">
+    <h2>Activities</h2>
+
+    <!-- Display loading indicator -->
+    <div *ngIf="loading">Loading activities...</div>
+
+    <!-- Display error message if any -->
+    <div *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <!-- Display message if no activities -->
+    <div *ngIf="activities.length === 0 && !loading">
+      No activities available.
+    </div>
+
+    <!-- Display activities in a table format -->
+    <table *ngIf="activities.length > 0" class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Location</th>
+          <th>Destination</th> <!-- NEW COLUMN -->
+          <th>Price Range</th>
+          <th>Image</th>
+          <th>Actions</th> <!-- Added actions column -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let activity of activities">
+          <td>{{ activity.activityName }}</td>
+          <td>{{ activity.activityDescription }}</td>
+          <td>{{ activity.activityLocation }}</td>
+          <td>{{ getDestinationName(activity.destinationId) }}</td> <!-- NEW DATA -->
+          <td>{{ activity.priceRange }}</td>
+          <td>
+            <!-- Display image if available -->
+            <img *ngIf="activity.mainImage" [src]="'http://localhost:9000/picloud/api/activities/images/' + activity.mainImage" alt="Activity image" width="50" />
+          </td>
+          <td>
+            <!-- Edit Icon -->
+            <button (click)="editActivity(activity)" class="btn btn-sm btn-warning me-2">
+                <i class="fas fa-edit"></i> <!-- edit icon -->
+              </button>
+            <!-- Delete Icon -->
+            <button (click)="deleteActivity(activity.id)" class="btn btn-danger">
+              <i class="fas fa-trash-alt"></i> <!-- FontAwesome Delete Icon -->
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+</div>

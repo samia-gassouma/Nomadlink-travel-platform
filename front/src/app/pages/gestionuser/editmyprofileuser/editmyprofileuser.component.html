@@ -1,0 +1,310 @@
+<app-header></app-header>
+<div class="container mt-5">
+    <!-- Profile header with cover color and profile image -->
+    <div class="position-relative mx-n4 mt-n4">
+        <div class="profile-wid-bg">
+            <!-- Cover color with gradient instead of solid color -->
+            <div class="bg-blue-gradient" style="height: 240px; width: 100%;">
+                <!-- You can add overlay content here if needed -->
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Profile photo section -->
+        <div class="col-xxl-3">
+            <div class="card mt-n5">
+                <div class="card-body p-4">
+                    <div class="text-center">
+                        <div class="profile-user position-relative d-inline-block mx-auto mb-4">
+                            <img *ngIf="imageUrl; else defaultImage"
+                                 [src]="imageUrl"
+                                 class="rounded-circle avatar-xl img-thumbnail user-profile-image shadow"
+                                 alt="user-profile-image"
+                                 (error)="handleImageError()">
+                            <ng-template #defaultImage>
+                                <img src="assets/gestionuser/profile.jpg"
+                                     class="rounded-circle avatar-xl img-thumbnail user-profile-image shadow"
+                                     alt="user-profile-image">
+                            </ng-template>
+                            <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
+                                <input id="profile-img-file-input" type="file" class="profile-img-file-input"
+                                       accept="image/*" (change)="onFileSelected($event)">
+                                <label for="profile-img-file-input" class="profile-photo-edit avatar-xs">
+                <span class="avatar-title rounded-circle bg-light text-body shadow">
+                    <i class="ri-camera-fill"></i>
+                </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Vous pouvez ajouter ici un indicateur de chargement pendant l'upload -->
+                        <div *ngIf="isLoading" class="mt-2">
+                            <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <small class="text-muted ms-1">Uploading image...</small>
+                        </div>
+
+                        <!-- Message d'erreur si l'upload échoue -->
+                        <div *ngIf="submitError" class="text-danger small mt-2">
+                            {{ submitError }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Main content area -->
+        <div class="col-xxl-9">
+            <div class="card mt-xxl-n5">
+                <div class="card-header">
+                    <ul ngbNav #customNav="ngbNav" [(activeId)]="activeTab"
+                        class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" [class.active]="activeTab === 1" (click)="changeTab(1)" role="tab">
+                                <i class="fas fa-home"></i>
+                                Personal Details
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [class.active]="activeTab === 2" (click)="changeTab(2)" role="tab">
+                                <i class="far fa-user"></i>
+                                Change Password
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <!-- Loading spinner -->
+                    <div *ngIf="isLoading" class="text-center p-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Loading your profile data...</p>
+                    </div>
+
+                    <!-- Error message -->
+                    <div *ngIf="submitError" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        {{ submitError }}
+                        <button type="button" class="btn-close" (click)="submitError = null" aria-label="Close"></button>
+                    </div>
+
+                    <!-- Personal Details Tab -->
+                    <div *ngIf="activeTab === 1 && !isLoading && currentUser">
+                        <form [formGroup]="userForm" (ngSubmit)="onUpdate()">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="firstnameInput" class="form-label">First Name</label>
+                                        <input type="text" class="form-control" id="firstnameInput"
+                                               formControlName="firstName" placeholder="Enter your firstname">
+                                        <div *ngIf="hasError('firstName', 'required')" class="text-danger small mt-1">
+                                            First name is required.
+                                        </div>
+                                        <div *ngIf="hasError('firstName', 'minlength')" class="text-danger small mt-1">
+                                            First name must be at least 3 characters.
+                                        </div>
+                                        <div *ngIf="hasError('firstName', 'maxlength')" class="text-danger small mt-1">
+                                            First name cannot exceed 15 characters.
+                                        </div>
+                                        <div *ngIf="hasError('firstName', 'pattern')" class="text-danger small mt-1">
+                                            First name must contain only letters.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="lastnameInput" class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" id="lastnameInput"
+                                               formControlName="lastName" placeholder="Enter your lastname">
+                                        <div *ngIf="hasError('lastName', 'required')" class="text-danger small mt-1">
+                                            Last name is required.
+                                        </div>
+                                        <div *ngIf="hasError('lastName', 'minlength')" class="text-danger small mt-1">
+                                            Last name must be at least 3 characters.
+                                        </div>
+                                        <div *ngIf="hasError('lastName', 'maxlength')" class="text-danger small mt-1">
+                                            Last name cannot exceed 15 characters.
+                                        </div>
+                                        <div *ngIf="hasError('lastName', 'pattern')" class="text-danger small mt-1">
+                                            Last name must contain only letters.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="phonenumberInput" class="form-label">Phone Number</label>
+                                        <input type="text" class="form-control" id="phonenumberInput"
+                                               formControlName="phoneNumber" placeholder="Enter your phone number">
+                                        <div *ngIf="hasError('phoneNumber', 'required')" class="text-danger small mt-1">
+                                            Phone number is required.
+                                        </div>
+                                        <div *ngIf="hasError('phoneNumber', 'pattern')" class="text-danger small mt-1">
+                                            Phone number must contain only digits.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="emailInput" class="form-label">Email Address</label>
+                                        <input type="email" class="form-control" id="emailInput"
+                                               formControlName="email" placeholder="Enter your email">
+                                        <div *ngIf="hasError('email', 'required')" class="text-danger small mt-1">
+                                            Email is required.
+                                        </div>
+                                        <div *ngIf="hasError('email', 'email') || hasError('email', 'pattern')" class="text-danger small mt-1">
+                                            Please enter a valid email address.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="genderInput" class="form-label">Gender</label>
+                                        <select class="form-select" id="genderInput" formControlName="gender">
+                                            <option value="">Select gender</option>
+                                            <option *ngFor="let genderOption of genders" [value]="genderOption.value">
+                                                {{ genderOption.label }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="dateOfBirthInput" class="form-label">Date of Birth</label>
+                                        <input class="form-control" type="date" id="dateOfBirthInput"
+                                               formControlName="dateOfBirth">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="countryInput" class="form-label">Country</label>
+                                        <select class="form-select" id="countryInput" formControlName="country">
+                                            <option value="">Select country</option>
+                                            <option *ngFor="let country of countries" [value]="country.code">
+                                                {{ country.name }}
+                                            </option>
+                                        </select>
+                                        <div *ngIf="hasError('country', 'required')" class="text-danger small mt-1">
+                                            Country is required.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="addressInput" class="form-label">Address</label>
+                                        <input type="text" class="form-control" id="addressInput"
+                                               formControlName="address" placeholder="Enter your address">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12">
+                                    <div class="hstack gap-2 justify-content-end">
+                                        <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid || isLoading">
+                                            <i class="ri-save-line align-bottom me-1"></i> Update Profile
+                                        </button>
+                                        <button type="button" class="btn btn-soft-secondary" (click)="populateForm(currentUser!)">
+                                            <i class="ri-refresh-line align-bottom me-1"></i> Reset
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Change Password Tab -->
+                    <div *ngIf="activeTab === 2 && !isLoading">
+                        <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
+                            <!-- Success message -->
+                            <div *ngIf="passwordChangeSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
+                                <i class="fas fa-check-circle me-2"></i>
+                                {{ passwordChangeSuccess }}
+                                <button type="button" class="btn-close" (click)="passwordChangeSuccess = null" aria-label="Close"></button>
+                            </div>
+
+                            <!-- Error message -->
+                            <div *ngIf="passwordChangeError" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                {{ passwordChangeError }}
+                                <button type="button" class="btn-close" (click)="passwordChangeError = null" aria-label="Close"></button>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-lg-6">
+                                    <div class="form-group password-field">
+                                        <label for="newPasswordInput" class="form-label">New Password*</label>
+                                        <div class="password-input-container">
+                                            <input [type]="passwordVisible ? 'text' : 'password'" class="form-control" id="newPasswordInput"
+                                                   formControlName="newPassword" placeholder="Enter new password">
+                                            <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+                                                <i [class]="passwordVisible ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                                            </button>
+                                        </div>
+                                        <div *ngIf="hasPasswordError('newPassword', 'required')" class="text-danger small mt-1">
+                                            New password is required.
+                                        </div>
+                                        <div *ngIf="hasPasswordError('newPassword', 'minlength')" class="text-danger small mt-1">
+                                            Password must be at least 8 characters.
+                                        </div>
+
+                                        <!-- Password strength indicators -->
+                                        <div class="password-strength" *ngIf="passwordForm.get('newPassword')?.value &&
+                                          (checkPasswordError('upperCase') || checkPasswordError('lowerCase') ||
+                                           checkPasswordError('numeric') || checkPasswordError('specialChar'))">
+                                            <div class="strength-check" [class.valid]="!checkPasswordError('upperCase')">
+                                                <i [class]="!checkPasswordError('upperCase') ? 'fas fa-check' : 'fas fa-times'"></i>
+                                                At least one uppercase letter
+                                            </div>
+                                            <div class="strength-check" [class.valid]="!checkPasswordError('lowerCase')">
+                                                <i [class]="!checkPasswordError('lowerCase') ? 'fas fa-check' : 'fas fa-times'"></i>
+                                                At least one lowercase letter
+                                            </div>
+                                            <div class="strength-check" [class.valid]="!checkPasswordError('numeric')">
+                                                <i [class]="!checkPasswordError('numeric') ? 'fas fa-check' : 'fas fa-times'"></i>
+                                                At least one number
+                                            </div>
+                                            <div class="strength-check" [class.valid]="!checkPasswordError('specialChar')">
+                                                <i [class]="!checkPasswordError('specialChar') ? 'fas fa-check' : 'fas fa-times'"></i>
+                                                At least one special character
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div>
+                                        <label for="confirmPasswordInput" class="form-label">Confirm Password*</label>
+                                        <input type="password" class="form-control" id="confirmPasswordInput"
+                                               formControlName="confirmPassword" placeholder="Confirm password">
+                                        <div *ngIf="hasPasswordError('confirmPassword', 'required')" class="text-danger small mt-1">
+                                            Please confirm your password.
+                                        </div>
+                                        <div *ngIf="hasPasswordMismatchError()" class="text-danger small mt-1">
+                                            Passwords do not match.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12">
+                                    <div class="text-end">
+                                        <button type="submit" class="btn btn-primary" [disabled]="passwordForm.invalid || isLoading">
+                                            <i class="ri-lock-password-line align-bottom me-1"></i> Change Password
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

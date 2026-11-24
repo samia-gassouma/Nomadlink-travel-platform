@@ -1,0 +1,27 @@
+<div *ngIf="pricePlan" class="col-lg-6 d-flex">
+  <div class="card pricing-box text-center shadow rounded-4 border-0" style="max-width: 400px; min-width: 300px;">
+    <div class="row g-0">
+      <div class="col-12">
+        <div class="card-body p-4" style="background: #f9f9f9;">
+          <div>
+            <h5 class="mb-3 fw-bold text-primary">{{ pricePlan.name }}</h5>
+          </div>
+
+          <div class="py-3">
+            <h2 class="fw-bold text-dark">
+              <sup><small class="text-muted">TND</small></sup>{{ pricePlan.price }}
+            </h2>
+          </div>
+
+          <p class="text-muted fst-italic">{{ pricePlan.description }}</p>
+
+          <div class="text-center plan-btn mt-3">
+            <a [routerLink]="['/back-office/packs/pack/get', pricePlan.pack?.id]" class="btn btn-outline-success rounded-pill px-4">
+              View Pack <i class="ri-arrow-right-line align-middle ms-1"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

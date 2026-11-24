@@ -1,0 +1,52 @@
+<div class="container">
+    <h2>Activités de la destination</h2>
+    
+    <div *ngIf="error" class="alert alert-danger">
+      {{ error }}
+    </div>
+  
+    <div *ngIf="isLoading" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Chargement...</span>
+      </div>
+    </div>
+  
+    <button class="btn btn-primary mb-3" 
+            (click)="showAddForm = !showAddForm" 
+            [disabled]="isLoading">
+      {{ showAddForm ? 'Annuler' : 'Ajouter une activité' }}
+    </button>
+  
+    <div *ngIf="showAddForm" class="card mb-4">
+      <div class="card-body">
+        <h4 class="card-title">Nouvelle activité</h4>
+        <form (ngSubmit)="addActivity()">
+          <div class="form-group">
+            <label>Nom *</label>
+            <input type="text" class="form-control" 
+                   [(ngModel)]="newActivity.activityName" 
+                   name="activityName" required>
+          </div>
+          <!-- Ajoutez les autres champs ici -->
+          <button type="submit" class="btn btn-success" [disabled]="isLoading">
+            {{ isLoading ? 'En cours...' : 'Ajouter' }}
+          </button>
+        </form>
+      </div>
+    </div>
+  
+    <div *ngIf="activities.length === 0 && !isLoading" class="alert alert-info">
+      Aucune activité disponible pour cette destination.
+    </div>
+  
+    <div class="row">
+      <div class="col-md-4 mb-4" *ngFor="let activity of activities">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{ activity.activityName }}</h5>
+            <p class="card-text">{{ activity.activityDescription }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

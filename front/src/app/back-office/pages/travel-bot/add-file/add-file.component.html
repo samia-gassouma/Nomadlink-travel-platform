@@ -1,0 +1,73 @@
+<div class="card">
+    <div class="card-header">
+      <h2>Knowledge Base File Operations</h2>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="fileForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label class="form-label">Operation</label>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" formControlName="action" id="actionLoad" value="load">
+            <label class="form-check-label" for="actionLoad">
+              Load from file
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" formControlName="action" id="actionSave" value="save">
+            <label class="form-check-label" for="actionSave">
+              Save to file
+            </label>
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          <label for="filepath" class="form-label">File Path</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="filepath" 
+            formControlName="filepath" 
+            placeholder="E.g., travel_data.json, /path/to/data.csv"
+          >
+          <div *ngIf="fileForm.get('filepath')?.invalid && fileForm.get('filepath')?.touched" class="text-danger">
+            File path is required.
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          <label for="file_format" class="form-label">File Format</label>
+          <select class="form-select" id="file_format" formControlName="file_format">
+            <option value="json">JSON</option>
+            <option value="csv">CSV</option>
+            <option value="excel">Excel</option>
+          </select>
+        </div>
+        
+        <div class="alert alert-info" *ngIf="fileForm.get('action')?.value === 'load'">
+          <p><strong>Loading a file:</strong> This will add all entries from the file to the knowledge base.</p>
+          <p>Make sure your file has the correct format:</p>
+          <ul>
+            <li><strong>JSON:</strong> Array of objects with "Question" and "Response" fields</li>
+            <li><strong>CSV/Excel:</strong> Spreadsheet with "Question" and "Response" columns</li>
+          </ul>
+        </div>
+        
+        <div class="alert alert-info" *ngIf="fileForm.get('action')?.value === 'save'">
+          <p><strong>Saving to a file:</strong> This will save the entire knowledge base to the specified file.</p>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" [disabled]="fileForm.invalid || loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          {{ fileForm.get('action')?.value === 'load' ? 'Load' : 'Save' }} File
+        </button>
+      </form>
+    </div>
+  </div>
+  
+  <div *ngIf="success" class="alert alert-success mt-3">
+    {{ success }}
+  </div>
+  
+  <div *ngIf="error" class="alert alert-danger mt-3">
+    {{ error }}
+  </div>

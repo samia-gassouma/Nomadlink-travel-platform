@@ -1,0 +1,121 @@
+<app-header></app-header>
+<div class="auth-page-wrapper pt-5">
+    <!-- auth page bg -->
+    <div class="auth-one-bg-position" id="auth-particles">
+        <!-- <div class="bg-overlay"></div> -->
+
+        <!-- <div class="shape">
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"
+                viewBox="0 0 1440 120">
+                <path d="M 0,36 C 144,53.6 432,123.2 720,124 C 1008,124.8 1296,56.8 1440,40L1440 140L0 140z"></path>
+            </svg>
+        </div> -->
+    </div>
+
+    <!-- auth page content -->
+    <div class="auth-page-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="text-center">
+                        <!-- <div class="mb-sm-5 pb-sm-4 pb-5">
+                            <img src="assets/back-office/images/comingsoon.png" alt="" height="120"
+                                class="move-animation">
+                        </div> -->
+                        <div class="mb-5">
+                            <h1 class="coming-soon-text">Sales end in:</h1>
+                        </div>
+                        <div>
+                            <div class="row justify-content-center mt-5">
+                                <div class="col-lg-8">
+                                    <!-- <div id="countdown" class="countdownlist"></div> -->
+                                    <div id="countdown" class="countdownlist">
+                                        <div class="countdownlist-item">
+                                            <div class="count-title">Days</div>
+                                            <div class="count-num">{{_days}}</div>
+                                        </div>
+                                        <div class="countdownlist-item">
+                                            <div class="count-title">Hours</div>
+                                            <div class="count-num">{{_hours}}</div>
+                                        </div>
+                                        <div class="countdownlist-item">
+                                            <div class="count-title">Minutes</div>
+                                            <div class="count-num">{{_minutes}}</div>
+                                        </div>
+                                        <div class="countdownlist-item">
+                                            <div class="count-title">Seconds</div>
+                                            <div class="count-num">{{_seconds}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+
+        </div>
+        <!-- end container -->
+    </div>
+</div>
+<section class="section-padding bg-light-white">
+    <div class="container">
+        <div class="row">
+            <aside class="col-lg-4">
+                <div class="sidebar_wrap mb-md-80">
+                    <app-car-sidebar></app-car-sidebar>
+                </div>
+            </aside>
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="listing-top-heading mb-xl-20">
+                            <h6 class="no-margin text-custom-black">Showing Results</h6>
+                            <div class="sort-by">
+                                <span class="text-custom-black fs-14 fw-600">Sort by</span>
+                                <div class="group-form">
+                                    <select class="form-control form-control-custom custom-select" nice-select>
+                                        <option>A to Z</option>
+                                        <option>Z to A</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Data -->
+                    <div *ngFor="let pack of listPacks; let i = index" class="col-md-6">
+                        <div class="hotel-grid mb-xl-30">
+                            <div class="hotel-grid-wrapper car-grid bx-wrapper">
+                                <div class="image-sec animate-img">
+                                    <a [routerLink]="['/front-office/pack', 'get', pack.id]">
+                                        <img [src]="imageBaseUrl + pack.packImage"
+                                            class="full-width">
+                                    </a>
+                                </div>
+                                <div class="hotel-grid-caption padding-20 bg-custom-white p-relative">
+                                    <h4 class="title fs-16"><a routerLink="/car-details/2" class="text-custom-black">{{
+                                            i + 1 }}. {{ pack.packName }}</a></h4>
+                                    <span *ngIf="pack?.discount?.reduction_percent"
+                                        class="price"><small>Discount</small>{{ pack?.discount?.reduction_percent
+                                        }}%</span>
+                                    <div class="action">
+                                        <a [routerLink]="['/front-office/pack', 'get', pack.id]"
+                                            class="btn-second btn-small">View</a>
+                                        <a routerLink="/booking" class="btn-first btn-submit yellow">Book</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- Data -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--//<app-footer></app-footer>-->

@@ -1,0 +1,48 @@
+<div class="card">
+    <div class="card-header">
+      <h2>Ask a Travel Question</h2>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="question" class="form-label">Your Question</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="question" 
+            formControlName="question" 
+            placeholder="E.g., What should I pack for a beach vacation?"
+          >
+          <div *ngIf="questionForm.get('question')?.invalid && questionForm.get('question')?.touched" class="text-danger">
+            Question is required and must be at least 5 characters.
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="top_n" class="form-label">Number of matches to consider</label>
+            <input type="number" class="form-control" id="top_n" formControlName="top_n">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="similarity_threshold" class="form-label">Similarity threshold (0-1)</label>
+            <input type="number" step="0.05" class="form-control" id="similarity_threshold" formControlName="similarity_threshold">
+          </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" [disabled]="questionForm.invalid || loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          Ask Question
+        </button>
+      </form>
+    </div>
+  </div>
+  
+  <div *ngIf="error" class="alert alert-danger mt-3">
+    {{ error }}
+  </div>
+  
+  <app-qa-result *ngIf="result" [result]="result"></app-qa-result>
+
+
+
+  

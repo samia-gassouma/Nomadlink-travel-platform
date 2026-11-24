@@ -1,0 +1,72 @@
+<app-header></app-header>
+
+<section class="section-padding bg-light-white">
+    <div class="container">
+      <div class="steps-wrapper">
+        <div class="step-line"></div>
+        <div class="step-indicator d-flex justify-content-between align-items-center">
+          <div class="step-box">
+            <div class="step-icon">🎉</div>
+            <div class="step-label">Événement</div>
+          </div>
+          <div class="step-box">
+            <div class="step-icon">📝</div>
+            <div class="step-label">Réservation</div>
+          </div>
+          <div class="step-box active">
+            <div class="step-icon">✅</div>
+            <div class="step-label">Confirmation</div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="row mt-4">
+        <!-- ✅ Informations de l'événement -->
+        <div class="col-md-6">
+          <div class="card shadow-sm bg-light p-3 rounded">
+            <div class="card-body">
+              <h5 class="card-title">🎉 Détails de l'événement</h5>
+              <p class="card-text">
+                <strong>Nom de l'événement :</strong> {{ eventDetails.title }}<br>
+                <strong>📅 Date :</strong> {{ eventDetails.startDateTime }}<br>
+                <strong>📅 Date :</strong> {{ eventDetails.endDateTime }}<br>
+                <strong>📍 Lieu :</strong> {{ eventDetails.location }}<br>
+                <strong>💰 Prix :</strong> ${{ eventDetails.prix }}<br>
+              </p>
+            </div>
+          </div>
+        </div>
+  
+        <!-- ✅ Détails de la réservation -->
+        <div class="col-md-6">
+          <div class="card shadow-sm p-3 rounded">
+            <div class="card-body">
+              <h5 class="card-title">✅ Réservation confirmée</h5>
+              <p class="card-text">
+                <strong>Passager :</strong> {{ reservationData.nomPassager }}<br>
+                <strong>Numéro de passeport :</strong> {{ reservationData.numeroPasseport }}<br>
+                <strong>Moyen de paiement :</strong> {{ reservationData.modePaiement }}<br>
+              </p>
+              <button class="btn btn-success mt-3" (click)="finalizeReservation()">Finaliser</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- ✅ Icône cliquable pour télécharger le PDF -->
+    <!-- ✅ Bouton de téléchargement du PDF affiché uniquement après avoir cliqué sur "Finaliser" -->
+    <div class="text-center mt-4" *ngIf="showDownloadButton">
+      <button class="btn btn-primary" (click)="generatePDF()">📄 Télécharger le PDF</button>
+    </div>
+  
+    <!-- ✅ Fenêtre modale de confirmation -->
+    <div *ngIf="showConfirmationModal" class="confirmation-modal">
+      <div class="modal-content text-center">
+        <img src="assets/images/confirmation.gif" alt="Confirmation" class="confirmation-logo">
+        <h4 class="text-success fw-bold mt-3">Votre réservation est confirmée ! ✅</h4>
+        <p class="text-secondary">Un e-mail de confirmation a été envoyé à {{ reservationData.email }}.</p>
+        <button class="btn btn-primary mt-3" (click)="goToHome()">Retourner à l’accueil</button>
+      </div>
+    </div>
+  </section>

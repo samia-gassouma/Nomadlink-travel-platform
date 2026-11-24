@@ -1,0 +1,95 @@
+<div class="container-fluid statistiques-container py-4">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3 col-lg-2 sidebar-wrapper p-0" [class.d-none]="isSidebarHidden">
+      <app-sidebar></app-sidebar>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="col ps-md-4 ps-lg-5">
+      <h2 class="text-primary fw-bold mb-4">
+        <i class="ri-bar-chart-line me-2"></i> Statistiques Globales
+      </h2>
+
+      <!-- Bloc statistiques -->
+      <div class="row g-4">
+        <!-- Bloc : Commandes -->
+        <div class="col-12 col-md-4">
+          <div class="card stats-card shadow border-0 h-100">
+            <div class="card-header d-flex align-items-center bg-light">
+              <i class="ri-shopping-cart-2-line icon bg-primary text-white rounded-circle p-2 me-2 fs-5"></i>
+              <h5 class="mb-0">Commandes</h5>
+            </div>
+            <div class="card-body">
+              <p><strong>Total :</strong> {{ stats?.commandes.total || 0 }}</p>
+              <p><strong>Montant cumulé :</strong> {{ stats?.commandes.totalMontant || 0 | number:'1.2-2' }} TND</p>
+              <p><strong>Moyenne :</strong> {{ stats?.commandes.moyenneMontant || 0  | number:'1.2-2' }} TND</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bloc : Produits -->
+        <div class="col-12 col-md-4">
+          <div class="card stats-card shadow border-0 h-100">
+            <div class="card-header d-flex align-items-center bg-light">
+              <i class="ri-box-3-line icon bg-success text-white rounded-circle p-2 me-2 fs-5"></i>
+              <h5 class="mb-0">Produits</h5>
+            </div>
+            <div class="card-body">
+              <p><strong>Total :</strong> {{ stats?.produits.total || 0 }}</p>
+              <p><strong>Stock moyen :</strong> {{ stats?.produits.stockMoyen || 0}}</p>
+              <p><strong>Top vente :</strong> {{ stats?.produits.produitTop?.nom || 0 }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bloc : Livraisons -->
+        <div class="col-12 col-md-4">
+          <div class="card stats-card shadow border-0 h-100">
+            <div class="card-header d-flex align-items-center bg-light">
+              <i class="ri-truck-line icon bg-warning text-white rounded-circle p-2 me-2 fs-5"></i>
+              <h5 class="mb-0">Livraisons</h5>
+            </div>
+            <div class="card-body">
+              <p><strong>Total :</strong> {{ stats?.livraisons.total || 0 }}</p>
+              <p><strong>En cours :</strong> {{ stats?.livraisons.enCours || 0}}</p>
+              <p><strong>Retards :</strong> {{ stats?.livraisons.retard || 0}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Graphiques Section -->
+      <div *ngIf="stats">
+        <div class="row">
+          <!-- Commandes par mois (Graphique en ligne) -->
+          <div class="col-12 col-md-6 mb-4">
+            <canvas baseChart
+              [data]="commandesChartData"
+              [options]="chartOptions"
+              chartType="line" class="w-100">
+            </canvas>
+          </div>
+
+          <!-- Produits les plus vendus (Graphique en barres) -->
+          <div class="col-12 col-md-6 mb-4">
+            <canvas baseChart
+              [data]="produitsChartData"
+              [options]="chartOptions"
+              chartType="bar" class="w-100">
+            </canvas>
+          </div>
+
+          <!-- Répartition des livraisons (Graphique en camembert) -->
+          <div class="col-12 col-md-6 mb-4">
+            <canvas baseChart
+              [data]="livraisonsChartData"
+              [options]="chartOptions"
+              chartType="pie" class="w-100">
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

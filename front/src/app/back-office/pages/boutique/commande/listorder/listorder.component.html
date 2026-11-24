@@ -1,0 +1,154 @@
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3 col-lg-2 p-0 sidebar-wrapper" [class.d-none]="isSidebarHidden">
+      <app-sidebar></app-sidebar>
+    </div>
+
+    <!-- Main content -->
+    <div class="col ps-md-4 ps-lg-5">
+      <div class="card mt-3">
+        <div class="container-fluid p-3">
+          <div class="row mb-3">
+            <div class="col-12">
+              <h2 class="fw-bold mb-1">📋 Gestion des Commandes</h2>
+              <p class="text-muted mb-0">
+                Suivez l'état de vos commandes récentes, consultez les détails des clients et des produits, ou effectuez des actions comme la modification ou la suppression.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-header d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-2 flex-wrap">
+          <h4 class="card-title mb-2 mb-sm-0">Commandes récentes</h4>
+          <div class="d-flex flex-wrap gap-2">
+            <button type="button" class="btn btn-outline-secondary btn-sm shadow-none" (click)="imprimerFacture()">
+              <i class="ri-printer-line align-middle"></i> Imprimer
+            </button>
+            <button type="button" class="btn btn-soft-info btn-sm shadow-none">
+              <i class="ri-file-list-3-line align-middle"></i> Générer un rapport
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body container-fluid">
+          <!-- Recherche + Filtres -->
+          <div class="row mb-3">
+            <div class="col-12 col-md-6 mb-2 mb-md-0">
+              <div class="input-group w-100">
+                <span class="input-group-text bg-light"><i class="ri-search-line"></i></span>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Rechercher une commande, un client, un produit..."
+                  [(ngModel)]="motCleRecherche"
+                  (ngModelChange)="rechercherCommandes()"
+                />
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="btn-group w-100 flex-wrap justify-content-start justify-content-md-end gap-2" role="group">
+                <button type="button" class="btn btn-outline-secondary btn-sm" (click)="filtrerCommandes('TOUTES')">
+                  <i class="ri-filter-3-line"></i> Toutes
+                </button>
+                <button type="button" class="btn btn-outline-success btn-sm" (click)="filtrerCommandes('LIVREE')">
+                  <i class="ri-check-line"></i> Livrées
+                </button>
+                <button type="button" class="btn btn-outline-warning btn-sm" (click)="filtrerCommandes('EN_PREPARATION')">
+                  <i class="ri-time-line d-none d-sm-inline"></i> En cours
+                </button>
+                <button type="button" class="btn btn-outline-danger btn-sm" (click)="filtrerCommandes('EN_ATTENTE')">
+                  <i class="ri-hourglass-line d-none d-sm-inline"></i> En attente
+                </button>
+                <button type="button" class="btn btn-outline-danger btn-sm" (click)="filtrerCommandes('ANNULEE')">
+                  <i class="ri-close-line"></i> Annulées
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tableau de commandes -->
+          <div class="table-responsive table-card">
+            <table class="table table-borderless table-hover align-middle">
+              <thead class="table-light text-muted">
+                <tr>
+                  <th>Client</th>
+                  <th>Produits</th>
+                  <th>Montant</th>
+                  <th>Statut</th>
+                  <th class="d-none d-md-table-cell">Date</th>
+                  <th class="text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let commande of paginatedCommandes">
+                  <td>
+                    <strong>{{ commande.nom }} {{ commande.prenom }}</strong><br />
+                    <small class="text-muted">{{ commande.telephone }}</small>
+                  </td>
+                  <td>
+                    <ul class="mb-0 ps-3 small">
+                      <li *ngFor="let ligne of commande.lignesCommande | slice:0:2">
+                        {{ ligne.produit.nom || 'Produit inconnu' }} (x{{ ligne.quantite }})
+                      </li>
+                      <li *ngIf="commande.lignesCommande.length > 2" class="text-muted">
+                        +{{ commande.lignesCommande.length - 2 }} autres
+                      </li>
+                    </ul>
+                  </td>
+                  <td>
+                    <span class="fw-semibold text-success">
+                      {{ getTotal(commande) | number:'1.2-2' }} TND
+                    </span>
+                    <div class="d-md-none small text-muted">
+                      {{ commande.dateCommande | date: 'shortDate' }}
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge px-2 px-sm-3 py-1 rounded-pill"
+                      [ngClass]="{
+                        'bg-success-subtle text-success': commande.statut === 'LIVREE',
+                        'bg-warning-subtle text-warning': commande.statut === 'EN_PREPARATION',
+                        'bg-danger-subtle text-danger': commande.statut === 'ANNULEE',
+                        'bg-secondary-subtle text-body': commande.statut === 'EN_ATTENTE'
+                      }">
+                      {{ commande.statut }}
+                    </span>
+                  </td>
+                  <td class="d-none d-md-table-cell">
+                    {{ commande.dateCommande | date: 'shortDate' }}
+                  </td>
+                  <td class="text-center">
+                    <div class="btn-group" role="group">
+                      <button class="btn btn-sm btn-outline-primary" (click)="viewDetail(commande)">
+                        <i class="ri-eye-line"></i>
+                      </button>
+                      <button class="btn btn-sm btn-outline-danger" (click)="deleteCommande(commande)">
+                        <i class="ri-delete-bin-line"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <nav *ngIf="commandes.length > itemsPerPageCommande" class="mt-3 d-flex justify-content-center">
+            <ul class="pagination pagination-sm flex-wrap">
+              <li class="page-item" [class.disabled]="currentPageCommande === 1">
+                <a class="page-link" (click)="setCommandePage(currentPageCommande - 1)">Précédent</a>
+              </li>
+              <li class="page-item" *ngFor="let page of totalCommandePages" [class.active]="currentPageCommande === page">
+                <a class="page-link" (click)="setCommandePage(page)">{{ page }}</a>
+              </li>
+              <li class="page-item" [class.disabled]="currentPageCommande === totalCommandePages.length">
+                <a class="page-link" (click)="setCommandePage(currentPageCommande + 1)">Suivant</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

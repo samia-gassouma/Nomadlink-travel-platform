@@ -1,0 +1,587 @@
+/* preference-list.component.scss */
+$white: #ffffff;
+$light-gray: #f0f0f0;
+$gray: #999;
+$dark-gray: #666;
+$darker-gray: #555;
+$darkest-gray: #333;
+$border-light: #ddd;
+$shadow-light: rgba(0, 0, 0, 0.1);
+$shadow-medium: rgba(0, 0, 0, 0.15);
+
+// Colors for buttons and UI elements
+$primary: #4CAF50;
+$primary-dark: #45a049;
+$secondary: #f8f9fa;
+$secondary-hover: #e9ecef;
+$blue: #3498db;
+$blue-dark: #2980b9;
+$green: #2ecc71;
+$green-dark: #27ae60;
+$red: #e74c3c;
+$red-dark: #c0392b;
+$active-blue: #007bff;
+
+// Category colors
+$category-colors: (
+        'destination': (#d4edda, #155724),
+        'activity': (#cce5ff, #004085),
+        'event': (#fff3cd, #856404),
+        'flight': (#e2e3e5, #383d41),
+        'service': (#d1ecf1, #0c5460),
+        'accommodation': (#f8d7da, #721c24),
+        'transport': (#e6d9f2, #583d72),
+        'guide': (#d6f5d6, #285928),
+        'culture': (#f5e6cc, #73510d),
+        'family': (#ffe6e6, #990000),
+        'accessibility': (#e6f9ff, #006080),
+        'travel_type': (#f2e6ff, #4d0099)
+);
+
+.preference-list-container {
+    background-color: $white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px $shadow-light;
+    padding: 24px;
+    margin: 20px auto;
+    max-width: 1200px;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid $light-gray;
+
+    h2 {
+        color: $darkest-gray;
+        font-size: 24px;
+        margin: 0;
+    }
+}
+
+.create-btn {
+    background-color: $primary;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px $shadow-light;
+
+    &:hover {
+        background-color: $primary-dark;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px $shadow-medium;
+    }
+
+    &:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px $shadow-light;
+    }
+}
+
+// Filters container
+.filters-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid $light-gray;
+}
+
+.search-box {
+    position: relative;
+    flex: 2;
+    min-width: 250px;
+
+    .search-input {
+        width: 100%;
+        padding: 10px 36px 10px 16px;
+        border-radius: 4px;
+        border: 1px solid $border-light;
+        font-size: 14px;
+    }
+
+    .search-icon {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $gray;
+    }
+}
+
+.category-filter {
+    flex: 1;
+    min-width: 200px;
+
+    .category-select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid $border-light;
+        font-size: 14px;
+        height: 40px;
+    }
+}
+
+.reset-btn {
+    background-color: $secondary;
+    border: 1px solid $border-light;
+    border-radius: 4px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background-color: $secondary-hover;
+    }
+}
+
+.results-info {
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: $dark-gray;
+}
+
+// Loading indicator
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 0;
+
+    .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top: 4px solid $blue;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin-bottom: 16px;
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+// Table styles
+.table-responsive {
+    overflow-x: auto;
+}
+
+.preference-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+
+    th, td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid #eaeaea;
+    }
+
+    th {
+        background-color: #f9f9f9;
+        font-weight: 600;
+        color: $darker-gray;
+    }
+
+    tr {
+        &:hover {
+            background-color: #f5f8fa;
+        }
+    }
+
+    .no-data {
+        text-align: center;
+        padding: 40px 0 !important;
+        color: $gray;
+        font-style: italic;
+    }
+}
+
+.actions-column {
+    white-space: nowrap;
+    min-width: 150px;
+}
+
+// Button styles
+.icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    margin-right: 8px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: white;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px $shadow-medium;
+    }
+
+    &:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px $shadow-light;
+    }
+}
+
+.view-btn {
+    background-color: $blue;
+
+    &:hover {
+        background-color: $blue-dark;
+    }
+}
+
+.edit-btn {
+    background-color: $green;
+
+    &:hover {
+        background-color: $green-dark;
+    }
+}
+
+.delete-btn {
+    background-color: $red;
+
+    &:hover {
+        background-color: $red-dark;
+    }
+}
+
+// Category badge styles
+.category-badge {
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+    display: inline-block;
+    min-width: 100px;
+    text-align: center;
+}
+
+// Generate category classes dynamically
+@each $category, $colors in $category-colors {
+    .category-#{$category} {
+        background-color: nth($colors, 1);
+        color: nth($colors, 2);
+    }
+}
+
+// Statistics dashboard
+.statistics-dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.stat-widget {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px $shadow-light;
+    padding: 16px;
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.total-preferences {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    .stat-icon {
+        background-color: $primary;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        i {
+            font-size: 20px;
+            color: white;
+        }
+    }
+
+    .stat-value {
+        font-size: 30px;
+        font-weight: 700;
+        margin: 0;
+        color: $darkest-gray;
+    }
+
+    .stat-label {
+        margin: 5px 0 0;
+        color: $dark-gray;
+        font-size: 14px;
+    }
+}
+
+.stat-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+
+    i {
+        color: $blue;
+        font-size: 18px;
+    }
+
+    h3 {
+        margin: 0;
+        font-size: 16px;
+        color: $darkest-gray;
+    }
+}
+
+// Chart styles
+.chart-bar {
+    margin-bottom: 8px;
+
+    .bar-label {
+        font-size: 13px;
+        margin-bottom: 3px;
+        font-weight: 500;
+        color: $darker-gray;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .bar-container {
+        height: 18px;
+        background-color: $light-gray;
+        border-radius: 4px;
+        position: relative;
+        overflow: hidden;
+
+        .bar-fill {
+            height: 100%;
+            background-color: $blue;
+            transition: width 0.5s ease;
+        }
+
+        .bar-value {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 12px;
+            font-weight: 600;
+            color: $darkest-gray;
+        }
+    }
+}
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+
+    .category-stat-card {
+        background-color: #f9f9f9;
+        border-radius: 6px;
+        padding: 8px;
+        text-align: center;
+
+        .category-label {
+            font-weight: 600;
+            margin-bottom: 6px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+    }
+}
+
+.popular-item {
+    margin-top: 10px;
+
+    .item-name {
+        font-size: 12px;
+        font-weight: 500;
+        margin-bottom: 3px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .item-count {
+        font-size: 11px;
+        color: $dark-gray;
+    }
+}
+
+.no-data, .no-data-text {
+    color: $gray;
+    font-style: italic;
+    font-size: 12px;
+    text-align: center;
+    padding: 20px 0;
+}
+
+// Sort buttons
+.sort-buttons {
+    display: flex;
+    gap: 8px;
+
+    .sort-btn {
+        background-color: $secondary;
+        border: 1px solid $border-light;
+        border-radius: 4px;
+        padding: 10px 16px;
+        cursor: pointer;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background-color: $secondary-hover;
+        }
+
+        &.active {
+            background-color: $active-blue;
+            color: white;
+            border-color: $active-blue;
+        }
+    }
+}
+
+// Responsive styles
+@media (max-width: 992px) {
+    .statistics-dashboard {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .create-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .filters-container {
+        flex-direction: column;
+    }
+
+    .search-box, .category-filter {
+        width: 100%;
+    }
+
+    .statistics-dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-widget {
+        max-height: 250px;
+    }
+
+    .sort-buttons {
+        width: 100%;
+        justify-content: space-between;
+
+        .sort-btn {
+            flex: 1;
+            justify-content: center;
+        }
+    }
+}
+/* Add these styles to your preference-list.component.scss file */
+
+/* Pagination */
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #eaeaea;
+}
+
+.pagination {
+    display: flex;
+    gap: 8px;
+}
+
+.pagination-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) {
+        background-color: #f0f0f0;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &.active {
+        background-color: #3498db;
+        color: white;
+        border-color: #3498db;
+    }
+}
+
+.pagination-info {
+    color: #777;
+    font-size: 14px;
+}
+
+/* Responsive adjustments for pagination */
+@media (max-width: 768px) {
+    .pagination-container {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .pagination {
+        justify-content: center;
+    }
+
+    .pagination-info {
+        text-align: center;
+    }
+}

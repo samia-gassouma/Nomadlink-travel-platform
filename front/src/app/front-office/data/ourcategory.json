@@ -1,0 +1,30 @@
+[
+    {
+        "id":1,
+        "title":"Flights",
+        "image":"assets/Homepic/f1.webp",
+        "text":"1150 flights",
+        "link":"/flight-grid"
+    },
+    {
+        "id":2,
+        "title":"Events",
+        "image":"assets/Homepic/ev1.jpg",
+        "text":"1100 events",
+        "link":"/cruise-grid"
+    },
+    {
+        "id":3,
+        "title":"Activities",
+        "image":"assets/Homepic/ac1.jpg",
+        "text":"1250 activities",
+        "link":"/hotel-grid"
+    },
+    {
+        "id":4,
+        "title":"Shop",
+        "image":"assets/Homepic/sh1.png",
+        "text":"1550 reservations",
+        "link":"/car-grid"
+    }
+]

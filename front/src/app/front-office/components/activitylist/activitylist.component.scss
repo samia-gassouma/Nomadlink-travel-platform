@@ -1,0 +1,91 @@
+/* General container styling */
+.activity-list {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Card style for each activity */
+  .activity-list ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .activity-list li {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .activity-list li:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Increased shadow on hover */
+    transform: translateY(-5px); /* Slight lift effect on hover */
+  }
+  
+  /* Activity name and description styling */
+  .activity-list h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 10px 0;
+  }
+  
+  .activity-list p {
+    font-size: 1rem;
+    color: #555;
+    margin: 5px 0;
+  }
+  
+  .activity-list strong {
+    color: #333;
+  }
+  
+  /* Styling for images */
+  .activity-list img {
+    margin-top: 10px;
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+  
+  /* Loading, error, and no activities message */
+  .activity-list div {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #777;
+  }
+  
+  .activity-list .loading {
+    color: #0056b3; /* Blue color for loading */
+  }
+  
+  .activity-list .error-message {
+    color: red;
+    font-weight: bold;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .activity-list {
+      width: 95%;
+    }
+  
+    .activity-list li {
+      padding: 15px;
+    }
+  
+    .activity-list h3 {
+      font-size: 1.2rem;
+    }
+  
+    .activity-list p {
+      font-size: 0.9rem;
+    }
+  }
+  

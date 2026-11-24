@@ -1,0 +1,193 @@
+<div class="service-details-container">
+    <!-- Loading spinner or error message -->
+    <div *ngIf="isLoading" class="loading-container">
+        <div class="spinner"></div>
+        <p>Loading service details...</p>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+        <i class="fas fa-exclamation-circle"></i> {{errorMessage}}
+    </div>
+
+    <div *ngIf="!isLoading && !errorMessage && service" class="service-details">
+        <!-- Header with back button and title -->
+        <div class="details-header">
+            <div class="header-left">
+                <button class="btn back-btn" (click)="goBackToList()">
+                    <i class="fas fa-arrow-left"></i> Back to Services
+                </button>
+                <h2 class="service-title">Service Details</h2>
+            </div>
+            <div class="header-actions">
+<!--                <button class="btn edit-btn" (click)="editService()">-->
+<!--                    <i class="fas fa-edit"></i> Edit-->
+<!--                </button>-->
+                <button class="btn delete-btn" (click)="deleteService()">
+                    <i class="fas fa-trash-alt"></i> Delete
+                </button>
+            </div>
+        </div>
+
+        <!-- Service detail cards -->
+        <div class="service-detail-cards">
+            <!-- Main info card -->
+            <div class="card service-main-card">
+                <div class="card-header">
+                    <div class="service-image-container">
+                        <img *ngIf="getServiceImageUrl(service.imageUrl)"
+                             [src]="getServiceImageUrl(service.imageUrl)"
+                             alt="Service image"
+                             (error)="handleImageError($event)">
+                        <div class="image-placeholder" [style.display]="getServiceImageUrl(service.imageUrl) ? 'none' : 'flex'">
+                            <i class="fas" [ngClass]="getIconForCategory(service.category)"></i>
+                        </div>
+                    </div>
+                    <div class="service-header-info">
+                        <h3>{{service.name}}</h3>
+                        <div class="badge-container">
+              <span class="category-badge">
+                <i class="fas" [ngClass]="getIconForCategory(service.category)"></i>
+                  {{service.category}}
+              </span>
+                            <span class="status-badge" [ngClass]="service.status === 'DISPONIBLE' ? 'badge-available' : 'badge-unavailable'">
+                {{service.status === 'DISPONIBLE' ? 'Available' : 'Unavailable'}}
+              </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <div class="info-label">Description:</div>
+                        <div class="info-value">{{service.description}}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Price:</div>
+                        <div class="info-value price-value">{{service.price | currency:'EUR'}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Partner info card -->
+            <div class="card partner-card" *ngIf="service.partner">
+                <div class="card-header">
+                    <h3>Partner Information</h3>
+                    <button class="btn view-partner-btn" (click)="viewPartnerDetails()">
+                        <i class="fas fa-user"></i> View Partner
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="partner-info-container">
+                        <div class="partner-avatar">
+                            <img *ngIf="getServiceImageUrl(service.partner.profilePicture)"
+                                 [src]="getServiceImageUrl(service.partner.profilePicture)"
+                                 alt="Partner profile"
+                                 (error)="handleImageError($event)">
+                            <div class="avatar-placeholder" [style.display]="getServiceImageUrl(service.partner.profilePicture) ? 'none' : 'flex'">
+                                {{service.partner.firstname?.charAt(0) || ''}}{{service.partner.lastname?.charAt(0) || ''}}
+                            </div>
+                        </div>
+                        <div class="partner-details">
+                            <h4>{{service.partner.firstname}} {{service.partner.lastname}}</h4>
+                            <div class="info-row">
+                                <div class="info-label">Email:</div>
+                                <div class="info-value">{{service.partner.email}}</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Partnership Status:</div>
+                                <div class="info-value">
+                  <span class="partnership-badge" [ngClass]="getPartnershipStatusClass(service.partner.partnershipStatus)">
+                    {{service.partner.partnershipStatus}}
+                  </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clients list section -->
+        <div class="clients-section">
+            <div class="section-header">
+                <h3>Clients using this service</h3>
+                <div class="client-count">
+                    <span class="count-badge">{{clients.length}}</span> clients
+                </div>
+            </div>
+
+            <!-- Search and filter for clients -->
+            <div class="client-filters">
+                <div class="search-container">
+                    <input
+                            type="text"
+                            [(ngModel)]="searchTerm"
+                            (ngModelChange)="applyClientFilters()"
+                            placeholder="Search clients..."
+                            class="search-input">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+            </div>
+
+            <!-- Client table -->
+            <div class="table-responsive">
+                <table class="clients-table">
+                    <thead>
+                    <tr>
+                        <th>Client ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Registration Date</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let client of displayedClients">
+                        <td>{{client.id}}</td>
+                        <td>{{client.firstname}} {{client.lastname}}</td>
+                        <td>{{client.email}}</td>
+                        <td>
+                            <button class="btn view-btn" (click)="viewClientDetails(client.id)">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="displayedClients.length === 0">
+                        <td colspan="5" class="no-data">
+                            <div class="no-data-message">
+                                <i class="fas fa-info-circle"></i>
+                                <p *ngIf="searchTerm">No clients match your search.</p>
+                                <p *ngIf="!searchTerm">No clients are using this service.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination for clients -->
+            <div class="pagination-container" *ngIf="totalPages > 1">
+                <div class="pagination">
+                    <button class="pagination-btn" [disabled]="currentPage === 1" (click)="prevPage()">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+
+                    <button *ngFor="let page of getPageArray()"
+                            class="pagination-btn"
+                            [class.active]="page === currentPage"
+                            (click)="changePage(page)">
+                        {{ page }}
+                    </button>
+
+                    <button class="pagination-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <div class="pagination-info">
+                    Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ Math.min(currentPage * itemsPerPage, filteredClients.length) }}
+                    of {{ filteredClients.length }} clients
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

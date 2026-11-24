@@ -1,0 +1,36 @@
+<div class="card">
+    <div class="card-header">
+      <h5>✏️ Modifier la commande n°{{ commande.id }}</h5>
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="modifierCommande()">
+        <div class="mb-3">
+          <label class="form-label">Nom du client</label>
+          <input class="form-control" [(ngModel)]="commande.nom" name="nom" required>
+        </div>
+  
+        <div class="mb-3">
+          <label class="form-label">Prénom</label>
+          <input class="form-control" [(ngModel)]="commande.prenom" name="prenom" required>
+        </div>
+  
+        <div class="mb-3">
+          <label class="form-label">Téléphone</label>
+          <input class="form-control" [(ngModel)]="commande.telephone" name="telephone">
+        </div>
+  
+        <div class="mb-3">
+          <label class="form-label">Statut</label>
+          <select class="form-select" [(ngModel)]="commande.statut" name="statut">
+            <option value="EN_ATTENTE">En attente</option>
+            <option value="EN_PREPARATION">En préparation</option>
+            <option value="LIVREE">Livrée</option>
+            <option value="ANNULEE">Annulée</option>
+          </select>
+        </div>
+  
+        <button type="submit" class="btn btn-primary">💾 Enregistrer</button>
+      </form>
+    </div>
+  </div>
+  

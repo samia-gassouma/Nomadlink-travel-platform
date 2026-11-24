@@ -1,0 +1,28 @@
+<app-header></app-header>
+<div class="activity-list">
+    <h2>Activities</h2>
+
+    <!-- Display loading indicator -->
+    <div *ngIf="loading" class="loading">Loading activities...</div>
+
+    <!-- Display error message if any -->
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+    <!-- Display message if no activities -->
+    <div *ngIf="activities.length === 0 && !loading">
+      No activities available.
+    </div>
+
+    <!-- List activities if they exist -->
+    <ul *ngIf="activities.length > 0">
+      <li *ngFor="let activity of activities">
+        <h3>{{ activity.activityName }}</h3>
+        <p>{{ activity.activityDescription }}</p>
+        <p><strong>Location:</strong> {{ activity.activityLocation }}</p>
+        <p><strong>Price Range:</strong> {{ activity.priceRange }}</p>
+
+        <!-- Display image if available -->
+        <img *ngIf="activity.mainImage" [src]="'http://localhost:9000/picloud/api/activities/images/' + activity.mainImage" alt="Activity image" width="50" />
+      </li>
+    </ul>
+</div>

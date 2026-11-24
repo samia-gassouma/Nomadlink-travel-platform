@@ -1,0 +1,74 @@
+<div class="container-fluid mt-0">
+
+    <!-- Main content area with improved card design -->
+
+                    <div class="card-header bg-transparent py-3">
+                        <h5 class="card-title fw-semibold mb-0">Admin Profile</h5>
+                        <button class="btn btn-light" [routerLink]="['/back-office/change-password']">Change password</button>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="card content-card mb-0">
+                            <div class="card-body">
+                                <h5 class="card-title mb-4 pb-2 border-bottom">My Information</h5>
+                                <div class="row g-4">
+                                    <div class="col-lg-6">
+                                        <div class="mb-0">
+                                            <label class="form-label text-muted fw-medium">First Name</label>
+                                            <p class="form-control-static border p-3 rounded bg-light mb-0">
+                                                {{currentUser?.firstname || 'Not provided'}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-0">
+                                            <label class="form-label text-muted fw-medium">Last Name</label>
+                                            <p class="form-control-static border p-3 rounded bg-light mb-0">
+                                                {{currentUser?.lastname || 'Not provided'}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-0">
+                                            <label class="form-label text-muted fw-medium">Phone Number</label>
+                                            <p class="form-control-static border p-3 rounded bg-light mb-0">
+                                                {{currentUser?.phoneNumber || 'Not provided'}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-0">
+                                            <label class="form-label text-muted fw-medium">Email Address</label>
+                                            <p class="form-control-static border p-3 rounded bg-light mb-0">
+                                                {{currentUser?.email || 'Not provided'}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-0">
+                                            <label class="form-label text-muted fw-medium">Last Modified</label>
+                                            <p class="form-control-static border p-3 rounded bg-light mb-0">
+                                                <ng-container *ngIf="currentUser?.lastModifiedDate; else noModifiedDate">
+                                                    <i class="ri-time-line me-2 text-primary"></i>
+                                                    {{currentUser?.lastModifiedDate | date:'medium'}}
+                                                </ng-container>
+                                                <ng-template #noModifiedDate>Not modified</ng-template>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-0">
+                                            <label class="form-label text-muted fw-medium">Account Created</label>
+                                            <p class="form-control-static border p-3 rounded bg-light mb-0">
+                                                <ng-container *ngIf="currentUser?.createdDate; else noCreatedDate">
+                                                    <i class="ri-calendar-check-line me-2 text-primary"></i>
+                                                    {{currentUser?.createdDate | date:'medium'}}
+                                                </ng-container>
+                                                <ng-template #noCreatedDate>Not available</ng-template>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
